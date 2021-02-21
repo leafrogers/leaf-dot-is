@@ -1,0 +1,50 @@
+{
+  "name": "fill-out--your-package-name",
+  "version": "0.0.0",
+  "description": "fill-out--your-description",
+  "main": "server/init.js",
+  "scripts": {
+    "lint": "npm run -s lint:syntax && npm run -s lint:types",
+    "lint:syntax": "eslint \"**/*.js\" --ignore-pattern \"public/**\" && echo \"✓ Linted syntax and styling\"",
+    "lint:types": "npx tsc && echo \"✓ Linted types\"",
+    "start": "node server/init.js",
+    "start:dev": "nodemon server/init.js",
+    "test": "npm run -s lint && node --experimental-vm-modules ./node_modules/.bin/jest",
+    "test:watch": "node --experimental-vm-modules ./node_modules/.bin/jest --watch",
+    "postinstall": "husky install",
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keirog/fill-out--your-repo-name.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "helmet": "^4.4.1",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.11",
+    "@types/jest": "^26.0.20",
+    "@types/supertest": "^2.0.10",
+    "eslint": "^7.4.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-jest": "^24.1.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "husky": "^5.0.9",
+    "jest": "^26.6.3",
+    "logform": "^2.2.0",
+    "nodemon": "^2.0.4",
+    "pinst": "^2.1.4",
+    "prettier": "^2.2.1",
+    "supertest": "^6.1.1",
+    "typescript": "^4.1.3"
+  },
+  "engines": {
+    "node": "^14.15.5"
+  }
+}
