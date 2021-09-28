@@ -38,7 +38,7 @@
     "husky": "^7.0.1",
     "jest": "^27.0.6",
     "logform": "^2.3.0",
-    "nodemon": "^2.0.12",
+    "nodemon": "^2.0.13",
     "pinst": "^2.1.6",
     "prettier": "^2.4.1",
     "supertest": "^6.1.1",
