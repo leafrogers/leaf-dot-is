@@ -16,7 +16,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/keirog/fill-out--your-repo-name.git"
+    "url": "git+https://github.com/leafrogers/fill-out--your-repo-name.git"
   },
   "license": "MIT",
   "dependencies": {

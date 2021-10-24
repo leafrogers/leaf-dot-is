@@ -1,6 +1,6 @@
 # :gear: fill-out--your-repo-or-app-name
 
-[![CircleCI](https://circleci.com/gh/keirog/fill-out--your-repo-or-app-name.svg?style=svg)](https://circleci.com/gh/keirog/fill-out--your-repo-or-app-name)
+[![CircleCI](https://circleci.com/gh/leafrogers/fill-out--your-repo-or-app-name.svg?style=svg)](https://circleci.com/gh/leafrogers/fill-out--your-repo-or-app-name)
 
 fill-out--your-description
 
@@ -38,10 +38,10 @@ Steps:
 ### :pager: Contact
 
 If you have any questions or comments about this app, or need help using it,
-please either [raise an issue](https://github.com/keirog/fill-out--your-repo-or-app-name/issues).
+please either [raise an issue](https://github.com/leafrogers/fill-out--your-repo-or-app-name/issues).
 
 ---
 
 ### Licence
 
-This software is published by the Financial Times under the [MIT licence](http://opensource.org/licenses/MIT).
+This software is published by the Leaf Rogers under the [MIT licence](http://opensource.org/licenses/MIT).
