@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "npm run -s lint:syntax && npm run -s lint:types",
     "lint:syntax": "eslint \"**/*.js\" --ignore-pattern \"public/**\" && echo \"✓ Linted syntax and styling\"",
-    "lint:types": "npx tsc && echo \"✓ Linted types\"",
+    "lint:types": "tsc -p jsconfig.json && echo \"✓ Linted types\"",
     "start": "node server/init.js",
     "start:dev": "nodemon server/init.js",
     "test": "npm run -s lint && node --experimental-vm-modules ./node_modules/.bin/jest",
