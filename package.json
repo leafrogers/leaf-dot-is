@@ -1,5 +1,5 @@
 {
-  "name": "fill-out--your-package-name",
+  "name": "fill-out--your-app-name",
   "version": "0.0.0",
   "description": "fill-out--your-description",
   "main": "server/init.js",
@@ -16,7 +16,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leafrogers/fill-out--your-repo-name.git"
+    "url": "git+https://github.com/leafrogers/fill-out--your-app-name.git"
   },
   "license": "MIT",
   "dependencies": {

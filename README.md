@@ -1,6 +1,6 @@
-# :gear: fill-out--your-repo-or-app-name
+# :gear: fill-out--your-app-name
 
-[![CircleCI](https://circleci.com/gh/leafrogers/fill-out--your-repo-or-app-name.svg?style=svg)](https://circleci.com/gh/leafrogers/fill-out--your-repo-or-app-name)
+[![CircleCI](https://circleci.com/gh/leafrogers/fill-out--your-app-name.svg?style=svg)](https://circleci.com/gh/leafrogers/fill-out--your-app-name)
 
 fill-out--your-description
 
@@ -24,7 +24,7 @@ fill-out--list-your-endpoints-and-why-they-exist
 This app requires the following to be installed to be able to run locally.
 
 - [Node](https://www.nodejs.org) (version 16.x.x)
-- fillout--any-other-requirements
+- fill-out--any-other-requirements
 
 ## :running: Running locally
 
@@ -38,7 +38,7 @@ Steps:
 ### :pager: Contact
 
 If you have any questions or comments about this app, or need help using it,
-please either [raise an issue](https://github.com/leafrogers/fill-out--your-repo-or-app-name/issues).
+please either [raise an issue](https://github.com/leafrogers/fill-out--your-app-name/issues).
 
 ---
 
