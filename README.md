@@ -38,7 +38,7 @@ Steps:
 ### :pager: Contact
 
 If you have any questions or comments about this app, or need help using it,
-please either [raise an issue](https://github.com/leafrogers/fill-out--your-app-name/issues).
+please [raise an issue](https://github.com/leafrogers/fill-out--your-app-name/issues).
 
 ---
 
