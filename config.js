@@ -1,5 +1,7 @@
-export default {
-	API_URL: process.env.API_URL || 'https://pokeapi.co/api/v2',
+const config = {
 	APP_FRIENDLY_NAME: 'Template',
-	PORT: process.env.PORT || 3000
+	IS_PRODUCTION: process.env.NODE_ENV === 'production',
+	PORT: process.env.PORT || 3001
 };
+
+export default config;
