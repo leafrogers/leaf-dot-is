@@ -4,7 +4,7 @@ import nock from 'nock';
 import supertest from 'supertest';
 
 import app from './app.js';
-import config from '../config.js';
+import config from './config.js';
 
 const request = supertest(app);
 const originalFriendlyTitle = config.APP_FRIENDLY_NAME;

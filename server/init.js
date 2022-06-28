@@ -1,4 +1,4 @@
-import config from '../config.js';
+import config from './config.js';
 import app from './app.js';
 import { logger } from './helpers.js';
 
