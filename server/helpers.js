@@ -1,6 +1,20 @@
 export const logger = console;
 
 /**
+ * @param {function} callback
+ */
+export const catchRejections = (callback) => {
+	/**
+	 * @param {ExpressRequest} req
+	 * @param {ExpressResponse} res
+	 * @param {NextFunction} next
+	 */
+	return (req, res, next) => {
+		callback(req, res, next).catch(next);
+	};
+};
+
+/**
  * @param {string} string
  */
 export const stripSpace = (string) =>
