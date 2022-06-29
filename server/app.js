@@ -1,10 +1,7 @@
 import express from 'express';
 import compression from 'compression';
 
-import {
-	disallowInProduction,
-	security
-} from './middleware.js';
+import { doNotCache, disallowInProduction, security } from './middleware.js';
 import { catchRejections } from './helpers.js';
 
 import { controller as catchErrors } from './pages/error-catch-all.js';
@@ -13,9 +10,9 @@ import { controller as home } from './pages/home.js';
 
 const app = express();
 
-
 app.use(security);
 app.use(compression());
+app.use(doNotCache);
 
 app.get('/', catchRejections(home));
 

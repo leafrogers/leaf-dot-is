@@ -40,6 +40,24 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 		});
 	});
 
+	describe('Caching', () => {
+		it('sets a no-cache header for the homepage', async () => {
+			const { headers, status } = await request.get('/');
+			expect(status).toBe(200);
+			expect(headers['cache-control']).toEqual(
+				'no-store, no-cache, must-revalidate, proxy-revalidate'
+			);
+		});
+
+		it('sets a no-cache header for 4xx/5xx pages', async () => {
+			const { headers, status } = await request.get('/made-up-path');
+			expect(status).toBe(404);
+			expect(headers['cache-control']).toEqual(
+				'no-store, no-cache, must-revalidate, proxy-revalidate'
+			);
+		});
+	});
+
 	describe('Not found page', () => {
 		/**
 		 * @type {supertest.Response}
