@@ -1,3 +1,4 @@
+import helmet from 'helmet';
 import config from './config.js';
 import { HttpError } from './helpers.js';
 
@@ -13,4 +14,13 @@ export const disallowInProduction = (_req, _res, next) => {
 		);
 	}
 	next();
+};
+
+/**
+ * @param {ExpressRequest} req
+ * @param {ExpressResponse} res
+ * @param {NextFunction} next
+ */
+export const security = (req, res, next) => {
+	helmet()(req, res, next);
 };
