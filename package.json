@@ -4,13 +4,15 @@
   "description": "fill-out--your-description",
   "main": "server/init.js",
   "scripts": {
+    "jest": "node --experimental-vm-modules --no-warnings ./node_modules/.bin/jest",
     "lint": "npm run -s lint:syntax && npm run -s lint:types",
     "lint:syntax": "eslint \"**/*.js\" --ignore-pattern \"public/**\" && echo \"✓ Linted syntax and styling\"",
     "lint:types": "tsc -p jsconfig.json && echo \"✓ Linted types\"",
     "start": "node server/init.js",
     "start:dev": "nodemon",
-    "test": "npm run -s lint && node --experimental-vm-modules ./node_modules/.bin/jest",
-    "test:watch": "node --experimental-vm-modules ./node_modules/.bin/jest --watch",
+    "test": "npm run -s lint && npm run -s test:coverage",
+    "test:coverage": "npm run -s jest -- --coverage --collectCoverageFrom=\"./server/**\"",
+    "test:watch": "npm run -s jest -- --watch",
     "postinstall": "husky install"
   },
   "type": "module",
