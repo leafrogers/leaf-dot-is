@@ -4,6 +4,8 @@
   "description": "fill-out--your-description",
   "main": "server/init.js",
   "scripts": {
+    "build": "esbuild client/init.js --minify --bundle --outfile=public/js/init.js",
+    "build:watch": "npm run -s build -- --watch",
     "jest": "node --experimental-vm-modules --no-warnings ./node_modules/.bin/jest",
     "lint": "npm run -s lint:syntax && npm run -s lint:types",
     "lint:syntax": "eslint \"**/*.js\" --ignore-pattern \"public/**\" && echo \"✓ Linted syntax and styling\"",
@@ -33,6 +35,7 @@
     "@types/jest": "^28.1.5",
     "@types/serve-favicon": "^2.5.3",
     "@types/supertest": "^2.0.12",
+    "esbuild": "^0.14.29",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^26.5.3",

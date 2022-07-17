@@ -71,6 +71,27 @@ export const toHtmlDocString = ({ body, styles = '', title }) => {
 		`.trim()
 	);
 
+	const enhancer = `\n\t\t<script type="module">${stripSpace(`
+			const docEl = document.documentElement;
+			const currentScript = document.scripts[document.scripts.length - 1];
+			const script = document.createElement('script');
+
+			docEl.classList.remove('core');
+			docEl.classList.add('enhanced');
+
+			script.onerror = () => {
+				if (docEl.classList.contains('enhanced')) {
+					console.warn('Script loading failed. Reverting to core experience.');
+					docEl.classList.add('core');
+					docEl.classList.remove('enhanced');
+				}
+			};
+			script.async = false;
+			script.src = '/js/init.js';
+
+			currentScript.parentNode.insertBefore(script, currentScript);
+		</script>`)}`;
+
 	return `<!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -81,7 +102,7 @@ export const toHtmlDocString = ({ body, styles = '', title }) => {
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 		<link rel="manifest" href="/site.webmanifest">
-		<title>${title}</title>
+		<title>${title}</title>${enhancer}
 		<style>${css}</style>
 	</head>
 	<body>
