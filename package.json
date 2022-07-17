@@ -1,7 +1,7 @@
 {
   "name": "fill-out--your-app-name",
   "version": "0.0.0",
-  "description": "fill-out--your-description",
+  "description": "fill-out--description",
   "main": "server/init.js",
   "scripts": {
     "build": "esbuild client/init.js --minify --bundle --outfile=public/js/init.js",
