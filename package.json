@@ -11,7 +11,7 @@
     "lint:syntax": "eslint \"**/*.js\" --ignore-pattern \"public/**\" && echo \"✓ Linted syntax and styling\"",
     "lint:types": "tsc -p jsconfig.json && echo \"✓ Linted types\"",
     "start": "node server/init.js",
-    "start:dev": "nodemon",
+    "start:dev": "nodemon -e js,html,css",
     "test": "npm run -s lint && npm run -s test:coverage",
     "test:coverage": "npm run -s jest -- --coverage --collectCoverageFrom=\"./server/**\"",
     "test:watch": "npm run -s jest -- --watch",
