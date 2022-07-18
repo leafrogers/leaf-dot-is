@@ -1,0 +1,26 @@
+body {
+	font-family: arial,sans-serif;
+	line-height: 1.6;
+	margin: 0;
+}
+
+main {
+	margin: 0 auto;
+	max-width: 550px;
+}
+
+.visually-hidden {
+	border: 0;
+	clip: rect(0, 0, 0, 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+.enhanced .core-only {
+	display: none;
+}
