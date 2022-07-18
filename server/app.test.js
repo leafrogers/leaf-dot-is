@@ -49,9 +49,16 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 			);
 		});
 
-		it('sets a no-cache header for 4xx/5xx pages', async () => {
+		it('sets a one-day cache header for 404 pages', async () => {
 			const { headers, status } = await request.get('/made-up-path');
 			expect(status).toBe(404);
+			expect(headers['cache-control']).toEqual('public, max-age=86400');
+		});
+
+		it('sets a no-cache header for non-404 error pages', async () => {
+			config.IS_PRODUCTION = true;
+			const { headers, status } = await request.get('/throw-error-in-prod');
+			expect(status).toBe(405);
 			expect(headers['cache-control']).toEqual(
 				'no-store, no-cache, must-revalidate, proxy-revalidate'
 			);
