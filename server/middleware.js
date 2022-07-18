@@ -59,14 +59,19 @@ export const disallowInProduction = (_req, _res, next) => {
  * @param {NextFunction} next
  */
 export const security = (req, res, next) => {
-	helmet({
-		contentSecurityPolicy: {
-			directives: {
-				'script-src': [
-					`'self'`,
-					`'sha256-BxipDLngHa9KSbGACViVDOeFGCKCGXaPUjSbEuOH5hk='` // Hash of the client-side JS bootstrapper
-				]
-			}
-		}
-	})(req, res, next);
+	const options = config.USES_CLIENT_JS
+		? {
+				contentSecurityPolicy: {
+					directives: {
+						'script-src': [
+							`'self'`,
+							// Hash of the client-side JS bootstrapper
+							`'sha256-BxipDLngHa9KSbGACViVDOeFGCKCGXaPUjSbEuOH5hk='`
+						]
+					}
+				}
+		  }
+		: undefined;
+
+	helmet(options)(req, res, next);
 };

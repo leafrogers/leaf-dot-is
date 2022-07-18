@@ -56,26 +56,9 @@ export const importFile = (filePath) => {
  * @param {string} settings.title
  */
 export const toHtmlDocString = ({ body, styles = '', title }) => {
-	const enhancer = `\n\t\t<script type="module">${stripSpace(`
-			const docEl = document.documentElement;
-			const currentScript = document.scripts[document.scripts.length - 1];
-			const script = document.createElement('script');
-
-			docEl.classList.remove('core');
-			docEl.classList.add('enhanced');
-
-			script.onerror = () => {
-				if (docEl.classList.contains('enhanced')) {
-					console.warn('Script loading failed. Reverting to core experience.');
-					docEl.classList.add('core');
-					docEl.classList.remove('enhanced');
-				}
-			};
-			script.async = false;
-			script.src = '/js/init.js';
-
-			currentScript.parentNode.insertBefore(script, currentScript);
-		</script>`)}`;
+	const maybeEnhancer = config.USES_CLIENT_JS
+		? `\n\t\t<script type="module">${stripSpace(bootstrapper)}</script>`
+		: '';
 
 	return `<!DOCTYPE html>
 <html lang="en">
@@ -88,7 +71,7 @@ export const toHtmlDocString = ({ body, styles = '', title }) => {
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 		<link rel="manifest" href="/site.webmanifest">
 		<title>${title}</title>
-		<style>${stripSpace(styles)}</style>${enhancer}
+		<style>${stripSpace(styles)}</style>${maybeEnhancer}
 	</head>
 	<body>
 		<main>
