@@ -1,23 +1,6 @@
-/**
- * @param {object} object
- */
-export const assertNoUndefinedValues = (object) => {
-	const keysWithUndefinedValues = [];
-
-	for (const [key, value] of Object.entries(object)) {
-		if (typeof value === 'undefined') {
-			keysWithUndefinedValues.push(key);
-		}
-	}
-
-	if (keysWithUndefinedValues.length) {
-		throw new Error(
-			`Expected all config variables to be defined but found the following undefined variables: ${keysWithUndefinedValues.join(
-				', '
-			)}.`
-		);
-	}
-};
+import fs from 'fs';
+import config from './config.js';
+import bootstrapper from '../client/bootstrapper.js';
 
 export const logger = console;
 
