@@ -1,7 +1,7 @@
 {
-  "name": "fill-out--your-app-name",
+  "name": "leaf-dot-is",
   "version": "0.0.0",
-  "description": "fill-out--description",
+  "description": "A website containing silly things",
   "main": "server/init.js",
   "scripts": {
     "build": "esbuild client/init.js --minify --bundle --outfile=public/js/init.js",
@@ -20,7 +20,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leafrogers/fill-out--your-app-name.git"
+    "url": "git+https://github.com/leafrogers/leaf-dot-is.git"
   },
   "license": "MIT",
   "dependencies": {

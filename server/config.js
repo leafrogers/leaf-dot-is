@@ -22,7 +22,7 @@ export const assertNoUndefinedValues = (object) => {
 };
 
 const config = {
-	APP_FRIENDLY_NAME: 'fill-out--your-user-facing-app-name',
+	APP_FRIENDLY_NAME: 'leaf.is',
 	IS_PRODUCTION: process.env.NODE_ENV === 'production',
 	PORT: process.env.PORT || 3001,
 	USES_CLIENT_JS: false
