@@ -1,16 +1,20 @@
 {
   "name": "fill-out--your-app-name",
   "version": "0.0.0",
-  "description": "fill-out--your-description",
+  "description": "fill-out--description",
   "main": "server/init.js",
   "scripts": {
+    "build": "esbuild client/init.js --minify --bundle --outfile=public/js/init.js",
+    "build:watch": "npm run -s build -- --watch",
+    "jest": "node --experimental-vm-modules --no-warnings ./node_modules/.bin/jest",
     "lint": "npm run -s lint:syntax && npm run -s lint:types",
     "lint:syntax": "eslint \"**/*.js\" --ignore-pattern \"public/**\" && echo \"✓ Linted syntax and styling\"",
     "lint:types": "tsc -p jsconfig.json && echo \"✓ Linted types\"",
     "start": "node server/init.js",
-    "start:dev": "nodemon",
-    "test": "npm run -s lint && node --experimental-vm-modules ./node_modules/.bin/jest",
-    "test:watch": "node --experimental-vm-modules ./node_modules/.bin/jest --watch",
+    "start:dev": "nodemon -e js,html,css",
+    "test": "npm run -s lint && npm run -s test:coverage",
+    "test:coverage": "npm run -s jest -- --coverage --collectCoverageFrom=\"./server/**\"",
+    "test:watch": "npm run -s jest -- --watch",
     "postinstall": "husky install"
   },
   "type": "module",
@@ -20,15 +24,18 @@
   },
   "license": "MIT",
   "dependencies": {
+    "compression": "^1.7.4",
     "express": "^4.18.1",
-    "got": "^12.1.0",
     "helmet": "^5.1.0",
-    "prettier": "^2.7.1"
+    "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
+    "@types/compression": "^1.7.2",
     "@types/express": "^4.17.13",
     "@types/jest": "^28.1.5",
+    "@types/serve-favicon": "^2.5.3",
     "@types/supertest": "^2.0.12",
+    "esbuild": "^0.14.29",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^26.5.3",
@@ -38,6 +45,7 @@
     "jest": "^28.1.3",
     "nock": "^13.2.8",
     "nodemon": "^2.0.19",
+    "prettier": "^2.7.1",
     "supertest": "^6.2.4",
     "typescript": "^4.7.4"
   },

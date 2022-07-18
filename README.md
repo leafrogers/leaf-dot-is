@@ -1,38 +1,43 @@
-# :gear: fill-out--your-app-name
+# fill-out--your-app-friendly-name
 
 [![CircleCI](https://circleci.com/gh/leafrogers/fill-out--your-app-name.svg?style=svg)](https://circleci.com/gh/leafrogers/fill-out--your-app-name)
 
-fill-out--your-description
+fill-out--description
 
-- [:thinking: What is this for?](#thinking-what-is-this-for)
-- [:dart: Endpoints](#dart-endpoints)
+- [:thinking: Why does this repo exist?](#thinking-why-does-this-repo-exist)
 - [:warning: Requirements](#warning-requirements)
 - [:running: Running locally](#running-running-locally)
+- [:gear: Developing locally](#gear-developing-locally)
 - [:pager: Contact](#pager-contact)
 - [Licence](#licence)
 
-## :thinking: What is this for?
+## :thinking: Why does this repo exist?
 
-fill-out--what-is-this-repo-for
-
-## :dart: Endpoints
-
-fill-out--list-your-endpoints-and-why-they-exist
+fill-out--why-does-this-exist
 
 ## :warning: Requirements
 
-This app requires the following to be installed to be able to run locally.
+This app requires the following to be installed in order to run locally.
 
 - [Node](https://www.nodejs.org) (version 16.x.x)
-- fill-out--any-other-requirements
 
 ## :running: Running locally
 
-Steps:
+Steps for running this app:
 
 - Clone this repo to a local directory
-- In your terminal, run `npm install`
-- After that’s finished, run `npm start`
+- In your terminal, run `npm cit && npm run build`. The output shouldn’t say the word “fail” or “failed” anywhere
+- Run `npm start`
+- With your favourite web browser, go to the URL that’s logged in your terminal
+
+## :gear: Developing locally
+
+Similar to the prior steps, but some varying commands to make it easier for
+checking your changes:
+
+- Clone this repo to a local directory
+- In your terminal, run `npm cit && npm run build:watch`
+- Open a new terminal tab or window and run `npm run start:dev`
 - Go to the URL that’s logged in the console output
 
 ### :pager: Contact
