@@ -76,9 +76,7 @@ export const toHtmlDocString = ({ body, styles = '', title }) => {
 		<title>${title}</title>${maybeStyles}${maybeEnhancer}
 	</head>
 	<body>
-		<main>
-			${body}
-		</main>
+		${body}
 	</body>
 </html>`;
 };

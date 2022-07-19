@@ -36,7 +36,7 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 			const { status, text } = await request.get('/');
 
 			expect(status).toBe(200);
-			expect(text).toContain('Hello');
+			expect(text).toContain('🍃');
 		});
 	});
 

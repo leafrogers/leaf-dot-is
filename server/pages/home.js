@@ -1,7 +1,4 @@
-import { importFile, toHtmlDocString } from '../helpers.js';
-import config from '../config.js';
-
-const commonCss = importFile('server/pages/common.css');
+import { toHtmlDocString } from '../helpers.js';
 
 /**
  * @param {ExpressRequest} _req
@@ -9,7 +6,7 @@ const commonCss = importFile('server/pages/common.css');
  */
 export const controller = async (_req, res) => {
 	const data = {
-		text: { title: config.APP_FRIENDLY_NAME }
+		text: { title: '🍃' }
 	};
 
 	res.send(view(data));
@@ -20,20 +17,11 @@ export const controller = async (_req, res) => {
  */
 const view = ({ text }) => {
 	const body = `
-			<h1>${text.title}</h1>
-			<p>Hello</p>
-	`;
+		<h1>${text.title}</h1>
+	`.trim();
 
 	return toHtmlDocString({
 		body,
-		styles: `
-			${commonCss}
-
-			p {
-				border: 1px solid green;
-				padding: 1rem;
-			}
-		`,
 		title: text.title
 	});
 };
