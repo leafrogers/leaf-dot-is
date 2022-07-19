@@ -50,6 +50,12 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 	});
 
 	describe('Caching', () => {
+		it('sets a 1 month cache header for favicon images', async () => {
+			const { headers, status } = await request.get('/apple-touch-icon.png');
+			expect(status).toBe(200);
+			expect(headers['cache-control']).toEqual('public, max-age=2592000');
+		});
+
 		it('sets a no-cache header for the homepage', async () => {
 			const { headers, status } = await request.get('/');
 			expect(status).toBe(200);

@@ -26,7 +26,7 @@ app.use(favicon('public/favicon.ico'));
 // express.static needs to be called *before* setting a
 // general Cache-Control header, otherwise express.static
 // cache options are ignored
-app.use(express.static('public', { maxAge: '1 month' }));
+app.use(express.static('public', { maxAge: '30 days' }));
 
 const cacheableRoutes = express.Router();
 
