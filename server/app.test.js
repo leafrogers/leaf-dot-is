@@ -44,15 +44,13 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 		it('sets a no-cache header for the homepage', async () => {
 			const { headers, status } = await request.get('/');
 			expect(status).toBe(200);
-			expect(headers['cache-control']).toEqual(
-				'no-store, no-cache, must-revalidate, proxy-revalidate'
-			);
+			expect(headers['cache-control']).toEqual('public, max-age=2592000');
 		});
 
 		it('sets a one-day cache header for 404 pages', async () => {
 			const { headers, status } = await request.get('/made-up-path');
 			expect(status).toBe(404);
-			expect(headers['cache-control']).toEqual('public, max-age=86400');
+			expect(headers['cache-control']).toEqual('public, max-age=2592000');
 		});
 
 		it('sets a no-cache header for non-404 error pages', async () => {

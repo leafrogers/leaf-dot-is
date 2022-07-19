@@ -16,6 +16,7 @@ import { controller as home } from './pages/home.js';
 
 const app = express();
 const oneDayInMs = 60 * 60 * 24;
+const oneMonthInMs = oneDayInMs * 30;
 
 app.use(security);
 app.use(compression());
@@ -23,14 +24,20 @@ app.use(favicon('public/favicon.ico'));
 // express.static needs to be called *before* setting a
 // general Cache-Control header, otherwise express.static
 // cache options are ignored
-app.use(express.static('public', { maxAge: '1 day' }));
-app.use(doNotCache);
+app.use(express.static('public', { maxAge: '1 month' }));
 
-app.get('/', catchRejections(home));
+const cacheableRoutes = express.Router();
+
+cacheableRoutes.use(cacheFor(oneMonthInMs));
+
+cacheableRoutes.get('/', catchRejections(home));
+
+app.use(cacheableRoutes);
+app.use(doNotCache);
 
 app.get('/throw-error-in-prod', disallowInProduction);
 
-app.use(cacheFor(oneDayInMs), catchRejections(notFound));
+app.use(cacheFor(oneMonthInMs), catchRejections(notFound));
 app.use(catchErrors);
 
 export default app;
