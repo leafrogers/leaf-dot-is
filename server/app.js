@@ -17,8 +17,8 @@ import { controller as cv } from './pages/cv/2022/index.js';
 import { controller as cv2015 } from './pages/cv/2015/index.js';
 
 const app = express();
-const oneDayInMs = 60 * 60 * 24;
-const oneMonthInMs = oneDayInMs * 30;
+const oneDayInSecs = 60 * 60 * 24;
+const oneMonthInSecs = oneDayInSecs * 30;
 
 app.use(security);
 app.use(compression());
@@ -30,7 +30,7 @@ app.use(express.static('public', { maxAge: '30 days' }));
 
 const cacheableRoutes = express.Router();
 
-cacheableRoutes.use(cacheFor(oneMonthInMs));
+cacheableRoutes.use(cacheFor(oneMonthInSecs));
 
 cacheableRoutes.get('/', catchRejections(home));
 cacheableRoutes.get('/contracting/cv', catchRejections(cv));
@@ -41,7 +41,7 @@ app.use(doNotCache);
 
 app.get('/throw-error-in-prod', disallowInProduction);
 
-app.use(cacheFor(oneMonthInMs), catchRejections(notFound));
+app.use(cacheFor(oneMonthInSecs), catchRejections(notFound));
 app.use(catchErrors);
 
 export default app;

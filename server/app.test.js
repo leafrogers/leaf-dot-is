@@ -62,7 +62,7 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 			expect(headers['cache-control']).toEqual('public, max-age=2592000');
 		});
 
-		it('sets a one-day cache header for 404 pages', async () => {
+		it('sets a 1 month cache header for 404 pages', async () => {
 			const { headers, status } = await request.get('/made-up-path');
 			expect(status).toBe(404);
 			expect(headers['cache-control']).toEqual('public, max-age=2592000');
