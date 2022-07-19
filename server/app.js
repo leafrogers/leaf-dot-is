@@ -13,6 +13,8 @@ import { catchRejections } from './helpers.js';
 import { controller as catchErrors } from './pages/error-catch-all.js';
 import { controller as notFound } from './pages/error-not-found.js';
 import { controller as home } from './pages/home.js';
+import { controller as cv } from './pages/cv/2022/index.js';
+import { controller as cv2015 } from './pages/cv/2015/index.js';
 
 const app = express();
 const oneDayInMs = 60 * 60 * 24;
@@ -31,6 +33,8 @@ const cacheableRoutes = express.Router();
 cacheableRoutes.use(cacheFor(oneMonthInMs));
 
 cacheableRoutes.get('/', catchRejections(home));
+cacheableRoutes.get('/contracting/cv', catchRejections(cv));
+cacheableRoutes.get('/contracting/cv/2015', catchRejections(cv2015));
 
 app.use(cacheableRoutes);
 app.use(doNotCache);

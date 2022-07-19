@@ -1,0 +1,287 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background: lightgrey;
+	color: yellow;
+	font-family: 'Helvetica Neue', Helvetica, sans-serif;
+	font-size: 16px;
+}
+
+h1 {
+	font-size: 55px;
+	font-weight: lighter;
+}
+
+h2,
+h3,
+h4,
+h5 {
+	font-size: 16px;
+	font-weight: normal;
+	margin: 0;
+}
+
+h2 {
+	margin-bottom: 10px;
+	text-transform: uppercase;
+}
+
+h2 + *,
+h2 + * + * {
+	color: #757575;
+}
+
+h3 {
+	color: black;
+	margin-bottom: 15px;
+}
+
+h4 {
+	color: #4a4949;
+}
+
+ul {
+	margin: 0 0 15px;
+	padding: 0 0 0 15px;
+}
+
+ul:last-child {
+	margin-bottom: 0;
+}
+
+ol {
+	margin: 0;
+}
+
+main {
+	background: white;
+	color: black;
+	margin: 0;
+	max-width: 980px;
+	padding: 20px;
+	transition: margin ease-in-out 0.4s, padding ease-in-out 0.4s;
+}
+
+section {
+	max-width: 100%;
+	margin-top: 30px;
+}
+
+strong {
+	color: black;
+	font-weight: normal;
+}
+
+header section {
+	margin: 0;
+}
+
+a {
+	color: green;
+}
+
+a:hover,
+a:focus {
+	text-decoration: underline;
+}
+
+h1,
+.title {
+	letter-spacing: 1px;
+	line-height: 1;
+	margin: 0;
+}
+
+.title {
+	color: green;
+	line-height: 1.3;
+	font-size: 32px;
+	font-weight: 200;
+	margin: 15px 0;
+}
+
+.contact a {
+	color: #595959;
+}
+
+.intro,
+.name {
+	padding-left: 0;
+}
+
+.intro {
+	margin-top: 0;
+}
+
+.conclusion {
+	align-self: end;
+	color: black;
+	margin: 0;
+}
+
+* + .compact-block {
+	margin-top: 15px;
+}
+
+.contrast-block {
+	background: #f7f7f7;
+	color: #6f6f6f;
+	padding: 8px;
+	margin: 10px 0;
+}
+
+* + .compact-sections section {
+	margin-top: 15px;
+}
+
+.compact-section {
+	margin-top: 0;
+}
+
+.compact-list {
+	display: flex;
+	flex-wrap: wrap;
+	list-style: none;
+	padding: 0;
+}
+
+.compact-list li::after {
+	content: ',';
+	padding-right: 0.3rem;
+}
+
+.compact-list li:last-child::after {
+	content: '';
+	padding-right: 0;
+}
+
+.time {
+	font-style: italic;
+}
+
+.company {
+	color: green;
+}
+
+@keyframes pulse {
+	100% {
+		transform: translate(-5px, 0);
+	}
+}
+
+a[href^='mailto']::before {
+	content: '→';
+	display: inline-block;
+	margin-right: 5px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	a[href^='mailto']::before {
+		animation: pulse 0.3s ease-in-out 8 alternate;
+	}
+}
+
+/* use clamp instead? */
+@media all and (min-width: 630px) {
+	.compact-sections {
+		display: flex;
+	}
+
+	.compact-section {
+		flex-basis: 50%;
+	}
+}
+
+/* use clamp instead? */
+@media all and (min-width: 790px) {
+	main {
+		padding: 50px 60px;
+		margin: 40px auto;
+	}
+
+	section {
+		padding-left: 20px;
+	}
+
+	section h2 {
+		margin-left: -20px;
+	}
+
+	.contact {
+		text-align: right;
+		margin-top: 4px;
+	}
+
+	.contact ul {
+		list-style: none;
+	}
+
+	.compact-block {
+		display: flex;
+	}
+
+	.compact-block h3 {
+		margin-bottom: 0;
+	}
+
+	.compact-block .compact-list:before {
+		content: ':';
+		margin-right: 5px;
+	}
+
+	a,
+	.time {
+		margin-left: 0.8rem;
+	}
+}
+
+@media print {
+	body {
+		background: initial;
+		margin: 0;
+		max-width: 795px;
+	}
+
+	h1 {
+		font-size: 52px;
+	}
+
+	body,
+	h2,
+	h3,
+	h4,
+	h5 {
+		font-size: 13px;
+	}
+
+	main {
+		margin: 0;
+		max-width: initial;
+		padding: 40px 42px;
+	}
+
+	section {
+		padding-left: 20px;
+	}
+
+	section h2 {
+		margin-left: -20px;
+	}
+
+	.title {
+		font-size: 29px;
+	}
+
+	.contact a[href*='https'] {
+		color: white;
+		text-decoration: none;
+	}
+
+	.contact a[href*='https']::after {
+		content: attr(href);
+		color: black;
+		text-decoration: underline;
+	}
+}

@@ -1,0 +1,235 @@
+body {
+	background: lightgrey;
+	color: yellow;
+	font-family: "Helvetica Neue", Helvetica, sans-serif;
+	font-size: 16px;
+}
+
+h1 {
+	font-size: 55px;
+	font-weight: lighter;
+}
+
+h2, h3, h4, h5 {
+	font-size: 16px;
+	font-weight: normal;
+	margin: 0;
+}
+
+h2 {
+	margin-bottom: 15px;
+	text-transform: uppercase;
+}
+
+h3 {
+	color: black;
+	margin-bottom: 15px;
+}
+
+h4 {
+	color: #4a4949;
+}
+
+ul {
+	margin: 0 0 15px;
+	padding: 0 0 0 15px;
+}
+
+ul:last-child {
+	margin-bottom: 0;
+}
+
+ol {
+	margin: 0;
+}
+
+main {
+	background: white;
+	box-sizing: border-box;
+	color: black;
+	display: grid;
+	gap: 10px 10px;
+	grid-auto-columns: 1fr;
+	grid-auto-rows: 1fr;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: repeat(6, auto);
+	grid-template-areas:
+		"title title"
+		"contact contact"
+		"intro intro"
+		"skills skills"
+		"experience experience"
+		"education education"
+		"software-platforms software-platforms"
+		"other-interests other-interests"
+		"conclusion conclusion";
+	margin: 10px auto;
+	max-width: 980px;
+	padding: 10px;
+}
+
+.title {
+	grid-area: title;
+	padding-left: 0;
+}
+
+h1,
+.title p {
+	letter-spacing: 1px;
+	margin: 0;
+}
+
+.title p {
+	color: green;
+	font-size: 32px;
+	font-weight: 200;
+}
+
+.contact {
+	grid-area: contact;
+}
+
+.contact ul {
+	list-style: none;
+}
+
+.contact a {
+	color: darkgrey;
+	text-decoration: none;
+}
+
+.intro {
+	grid-area: intro;
+	padding-left: 0;
+}
+
+.intro p {
+	margin: 0;
+}
+
+.skills {
+	grid-area: skills;
+}
+
+.skills h2 {
+	margin-bottom: 0;
+}
+
+.skills ul {
+	color: #757575;
+}
+
+.experience { grid-area: experience; }
+
+.education {
+	grid-area: education;
+}
+
+.software-platforms { grid-area: software-platforms; }
+.other-interests { grid-area: other-interests; }
+.conclusion {
+	align-self: end;
+	color: #757575;
+	grid-area: conclusion;
+	margin: 0;
+}
+
+.compact-block {
+	display: flex;
+}
+
+.compact-block h3 {
+	margin-bottom: 0;
+}
+
+* + .compact-block {
+	margin-top: 15px;
+}
+
+.contrast-block {
+	background: #f7f7f7;
+	color: #6f6f6f;
+	padding: 8px;
+	margin: 10px 0;
+}
+
+.compact-block .compact-list:before {
+	content: ':';
+	margin-right: 5px;
+}
+
+.compact-list {
+	display: flex;
+	flex-wrap: wrap;
+	list-style: none;
+	padding: 0;
+}
+
+.compact-list li::after {
+	content: ',';
+	padding-right: 0.3rem;
+}
+
+.compact-list li:last-child::after {
+	content: '';
+	padding-right: 0;
+}
+
+.time {
+	font-style: italic;
+}
+
+a, .time {
+	margin-left: 0.8rem;
+}
+
+a {
+	color: green;
+	text-decoration: none;
+}
+
+a:hover,
+a:focus {
+	text-decoration: underline;
+}
+
+.company {
+	color: green;
+}
+
+/* use clamp instead? */
+@media (min-width: 790px) {
+	main {
+		gap: 25px 25px;
+		grid-template-areas:
+			"title contact"
+			"intro intro"
+			"skills skills"
+			"experience experience"
+			"education software-platforms"
+			"other-interests conclusion";
+		padding: 50px 75px;
+		margin: 40px auto;
+	}
+
+	section {
+		padding-left: 35px;
+	}
+
+	section h2 {
+		margin-left: -35px;
+	}
+
+	.contact {
+		text-align: right;
+	}
+}
+
+@media print {
+	main {
+		display: initial;
+		margin: initial;
+		max-width: initial;
+		padding: initial;
+	}
+}

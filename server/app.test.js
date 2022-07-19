@@ -40,6 +40,15 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 		});
 	});
 
+	describe('GET /contracting/cv', () => {
+		it('serves a 200 status', async () => {
+			const { status, text } = await request.get('/contracting/cv');
+
+			expect(status).toBe(200);
+			expect(text).toContain('Leaf Rogers');
+		});
+	});
+
 	describe('Caching', () => {
 		it('sets a no-cache header for the homepage', async () => {
 			const { headers, status } = await request.get('/');
