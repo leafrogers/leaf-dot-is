@@ -56,6 +56,9 @@ export const importFile = (filePath) => {
  * @param {string} settings.title
  */
 export const toHtmlDocString = ({ body, styles = '', title }) => {
+	const maybeStyles = styles
+		? `\n\t\t<style>${stripSpace(styles)}</style>`
+		: '';
 	const maybeEnhancer = config.USES_CLIENT_JS
 		? `\n\t\t<script type="module">${stripSpace(bootstrapper)}</script>`
 		: '';
@@ -70,8 +73,7 @@ export const toHtmlDocString = ({ body, styles = '', title }) => {
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 		<link rel="manifest" href="/site.webmanifest">
-		<title>${title}</title>
-		<style>${stripSpace(styles)}</style>${maybeEnhancer}
+		<title>${title}</title>${maybeStyles}${maybeEnhancer}
 	</head>
 	<body>
 		<main>
