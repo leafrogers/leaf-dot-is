@@ -49,6 +49,15 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 		});
 	});
 
+	describe('GET /contracting/here/is/his/cv', () => {
+		it('serves a 200 status', async () => {
+			const { status, text } = await request.get('/contracting/here/is/his/cv');
+
+			expect(status).toBe(200);
+			expect(text).toContain('Leaf Rogers');
+		});
+	});
+
 	describe('Caching', () => {
 		it('sets a 1 month cache header for favicon images', async () => {
 			const { headers, status } = await request.get('/apple-touch-icon.png');

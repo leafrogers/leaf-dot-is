@@ -34,6 +34,7 @@ cacheableRoutes.use(cacheFor(oneMonthInSecs));
 
 cacheableRoutes.get('/', catchRejections(home));
 cacheableRoutes.get('/contracting/cv', catchRejections(cv));
+cacheableRoutes.get('/contracting/here/is/his/cv', catchRejections(cv));
 cacheableRoutes.get('/contracting/cv/2015', catchRejections(cv2015));
 
 app.use(cacheableRoutes);
