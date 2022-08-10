@@ -42,6 +42,11 @@ h4 {
 	color: #4a4949;
 }
 
+b {
+	color: black;;
+	font-weight: normal;
+}
+
 ul {
 	margin: 0 0 15px;
 	padding: 0 0 0 15px;
