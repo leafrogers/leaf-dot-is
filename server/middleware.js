@@ -20,7 +20,7 @@ export const doNotCache = (_req, res, next) => {
 
 /**
  * @param {number} maxAge Maximum cache time in seconds
- * @param {object} [options]
+ * @param {object} options
  * @param {boolean} [options.isPrivate] Set this to true if the response is personalised to a user or account
  */
 export const cacheFor = (maxAge, { isPrivate = false } = {}) => {
