@@ -19,7 +19,7 @@ TBC
 
 This app requires the following to be installed in order to run locally.
 
-- [Node](https://www.nodejs.org) (version 16.x.x)
+- [Node](https://www.nodejs.org) (version 18.x.x)
 
 ## :running: Running locally
 

@@ -1,4 +1,6 @@
-import { toHtmlDocString } from '../helpers.js';
+import { importFile, toHtmlDocString } from '../helpers.js';
+
+const commonCss = importFile('server/pages/common.css');
 
 /**
  * @param {ExpressRequest} _req
@@ -31,6 +33,14 @@ const view = ({ text }) => {
 
 	return toHtmlDocString({
 		body,
+		styles: `
+			${commonCss}
+
+			p {
+				border: 1px solid green;
+				padding: 1rem;
+			}
+		`,
 		title: text.title
 	});
 };
