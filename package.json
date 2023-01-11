@@ -12,7 +12,7 @@
     "lint:types": "tsc -p jsconfig.json && echo \"✓ Linted types\"",
     "postinstall": "husky install",
     "start": "node server/init.js",
-    "start:dev": "nodemon -e js,html,css",
+    "start:dev": "set -a; source .env; set +a && nodemon -e js,html,css",
     "test": "npm run -s lint && npm run -s test:coverage",
     "test:coverage": "npm run -s jest -- --coverage --collectCoverageFrom=\"./server/**\"",
     "test:watch": "npm run -s jest -- --watch"
