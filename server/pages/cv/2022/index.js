@@ -172,7 +172,7 @@ respon?
 
 Core Skills
 
-- nurtured a safe and blameless working environement
+- nurtured a safe and blameless working environment
 - provided emotional support to various colleagues across different departments
 - ran team-bonding chats and events
 - shielded juniors from the more stressful parts of everyday work

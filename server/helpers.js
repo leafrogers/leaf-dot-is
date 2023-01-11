@@ -5,7 +5,7 @@ import bootstrapper from '../client/bootstrapper.js';
 export const logger = console;
 
 /**
- * @param {function} callback
+ * @param {Function} callback
  */
 export const catchRejections = (callback) => {
 	/**
@@ -20,8 +20,8 @@ export const catchRejections = (callback) => {
 
 export class HttpError extends Error {
 	/**
-	 * @param {number} status
-	 * @param {string} message
+	 * @param {Number} status
+	 * @param {String} message
 	 */
 	constructor(status, message) {
 		super(message);
@@ -31,7 +31,7 @@ export class HttpError extends Error {
 }
 
 /**
- * @param {string} string
+ * @param {String} string
  */
 export const stripSpace = (string) =>
 	string.replace(/\n/g, '').replace(/\t/g, '').replace(/\s\s+/g, ' ');
@@ -50,10 +50,10 @@ export const importFile = (filePath) => {
 };
 
 /**
- * @param {object} settings
- * @param {string} settings.body
- * @param {string} [settings.styles]
- * @param {string} settings.title
+ * @param {Object} settings
+ * @param {String} settings.body
+ * @param {String} [settings.styles]
+ * @param {String} settings.title
  */
 export const toHtmlDocString = ({ body, styles = '', title }) => {
 	const maybeStyles = styles

@@ -10,12 +10,12 @@
     "lint": "npm run -s lint:syntax && npm run -s lint:types",
     "lint:syntax": "eslint \"**/*.js\" --ignore-pattern \"public/**\" && echo \"✓ Linted syntax and styling\"",
     "lint:types": "tsc -p jsconfig.json && echo \"✓ Linted types\"",
+    "postinstall": "husky install",
     "start": "node server/init.js",
     "start:dev": "nodemon -e js,html,css",
     "test": "npm run -s lint && npm run -s test:coverage",
     "test:coverage": "npm run -s jest -- --coverage --collectCoverageFrom=\"./server/**\"",
-    "test:watch": "npm run -s jest -- --watch",
-    "postinstall": "husky install"
+    "test:watch": "npm run -s jest -- --watch"
   },
   "type": "module",
   "repository": {
