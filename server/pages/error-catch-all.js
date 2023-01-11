@@ -1,5 +1,7 @@
 import config from '../config.js';
-import { logger, toHtmlDocString } from '../helpers.js';
+import { importFile, logger, toHtmlDocString } from '../helpers.js';
+
+const commonCss = importFile('server/pages/common.css');
 
 /**
  * @param {ExpressError} error
@@ -77,6 +79,7 @@ const view = ({ message, title }) => {
 			<h1>${title}</h1>
 			<p>${message}</p>
 		`,
+		styles: commonCss,
 		title
 	});
 };
