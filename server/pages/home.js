@@ -8,6 +8,7 @@ const commonCss = importFile('server/pages/common.css');
  */
 export const controller = async (_req, res) => {
 	const data = {
+		navLevels: [],
 		title: 'Hello I am Leaf'
 	};
 
@@ -32,6 +33,7 @@ const view = ({ title }) => {
 
 			<p>This content is a bit dry isn’t it! Yeah bit dry. Anyway you look nice today. Have <a href="/key.txt" rel="pgpkey authn">my PGP Key</a>.</p>
 		`,
+		navLevels: [],
 		styles: `
 			${commonCss}
 		`,

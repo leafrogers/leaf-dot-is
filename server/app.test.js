@@ -40,6 +40,15 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 		});
 	});
 
+	describe('GET /writing', () => {
+		it('serves a 200 status with expected content', async () => {
+			const { status, text } = await request.get('/writing');
+
+			expect(status).toBe(200);
+			expect(text).toContain('<h1>Writing</h1>');
+		});
+	});
+
 	describe('GET /contracting/cv', () => {
 		it('serves a 200 status', async () => {
 			const { status, text } = await request.get('/contracting/cv');

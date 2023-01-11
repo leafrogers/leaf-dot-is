@@ -9,6 +9,7 @@ const styles = importFile('server/pages/cv/2015/main.css');
  */
 export const controller = async (_req, res) => {
 	const data = {
+		navLevels: [],
 		title: 'Leaf Rogers'
 	};
 

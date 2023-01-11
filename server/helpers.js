@@ -51,12 +51,31 @@ export const importFile = (filePath) => {
 };
 
 /**
+ * @param {NavLink[]} navLevels
+ */
+const toHtmlNavString = (navLevels) => {
+	return navLevels.length
+		? `
+		<nav>
+			<ol class="nav-list">
+				${navLevels
+					.map(({ text, url }) => {
+						return `<li><a href="${url}">${text}</a></li>`;
+					})
+					.join('\n')}
+			</ol>
+		</nav>`
+		: '';
+};
+
+/**
  * @param {Object} settings
  * @param {String} settings.body
+ * @param {NavLink[]} settings.navLevels
  * @param {String} [settings.styles]
  * @param {String} settings.title
  */
-export const toHtmlDocString = ({ body, styles = '', title }) => {
+export const toHtmlDocString = ({ body, navLevels, styles = '', title }) => {
 	const maybeStyles = styles
 		? `\n\t\t<style>${stripSpace(styles)}</style>`
 		: '';
@@ -81,6 +100,7 @@ export const toHtmlDocString = ({ body, styles = '', title }) => {
 	${format(
 		`<body>
 			<div class="container">
+				${toHtmlNavString(navLevels)}
 				<main>
 					${body}
 				</main>

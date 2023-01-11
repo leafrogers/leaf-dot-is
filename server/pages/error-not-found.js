@@ -37,6 +37,7 @@ const getData = () => {
 	const data = {
 		message:
 			'Page not found.</p><p>Did you go to this address manually? Try going back and following the links, or starting again, back at the <a href="/">home page</a>. That <i>should</i> fix it for you, fingers crossed.',
+		navLevels: [],
 		title: 'An error happened (404)'
 	};
 
@@ -52,6 +53,7 @@ const view = ({ message, title }) => {
 			<h1>${title}</h1>
 			<p>${message}</p>
 		`,
+		navLevels: [],
 		styles: commonCss,
 		title
 	});

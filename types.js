@@ -1,6 +1,10 @@
 /**
+ * @typedef NavLink
+ * @property {String} text
+ * @property {String} url
  *
  * @typedef BaseUiViewModel
+ * @property {NavLink[]} navLevels
  * @property {String} title
  *
  * @typedef {import('express').Request} ExpressRequest
