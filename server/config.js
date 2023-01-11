@@ -21,6 +21,8 @@ export const assertNoUndefinedValues = (object) => {
 
 const config = {
 	APP_FRIENDLY_NAME: 'leaf.is',
+	APP_FRIENDLY_DESCRIPTION: 'The personal website of Leaf Rogers',
+	BASE_URL: process.env.BASE_URL,
 	IS_PRODUCTION: process.env.NODE_ENV === 'production',
 	PORT: process.env.PORT || 3001,
 	USES_CLIENT_JS: false

@@ -1,5 +1,4 @@
 import { logger, toHtmlDocString } from '../helpers.js';
-import config from '../config.js';
 
 /**
  * @param {ExpressRequest} req
@@ -35,8 +34,8 @@ const getData = () => {
 	 */
 	const data = {
 		message:
-			'Page not found.</p><p>Did you go to this address manually? Try going back and following the links, or starting again at the <a href="/">first page</a>. That <i>should</i> fix it for you, fingers crossed.',
-		text: { title: `An error happened (404) — ${config.APP_FRIENDLY_NAME}` }
+			'Page not found.</p><p>Did you go to this address manually? Try going back and following the links, or starting again, back at the <a href="/">home page</a>. That <i>should</i> fix it for you, fingers crossed.',
+		title: 'An error happened (404)'
 	};
 
 	return data;
@@ -45,13 +44,14 @@ const getData = () => {
 /**
  * @param {ViewModel} settings
  */
-const view = ({ message, text }) => {
-	const body = `
-		<h1>${text.title}</h1>
-		<p>${message}</p>
-	`;
-
-	return toHtmlDocString({ body, title: text.title });
+const view = ({ message, title }) => {
+	return toHtmlDocString({
+		body: `
+			<h1>${title}</h1>
+			<p>${message}</p>
+		`,
+		title
+	});
 };
 
 /**

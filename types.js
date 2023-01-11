@@ -1,9 +1,7 @@
 /**
- * @typedef ViewText
- * @property {string} title
  *
  * @typedef BaseUiViewModel
- * @property {ViewText} text
+ * @property {String} title
  *
  * @typedef {import('express').Request} ExpressRequest
  * @typedef {import('express').Response} ExpressResponse

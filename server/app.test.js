@@ -36,7 +36,7 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 			const { status, text } = await request.get('/');
 
 			expect(status).toBe(200);
-			expect(text).toContain('🍂');
+			expect(text).toContain('<h1>Hello I am Leaf</h1>');
 		});
 	});
 
@@ -45,7 +45,7 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 			const { status, text } = await request.get('/contracting/cv');
 
 			expect(status).toBe(200);
-			expect(text).toContain('Leaf Rogers');
+			expect(text).toContain('<h1>Leaf Rogers</h1>');
 		});
 	});
 
@@ -54,7 +54,16 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 			const { status, text } = await request.get('/contracting/here/is/his/cv');
 
 			expect(status).toBe(200);
-			expect(text).toContain('Leaf Rogers');
+			expect(text).toContain('<h1>Leaf Rogers</h1>');
+		});
+	});
+
+	describe('GET /contracting/cv/2015', () => {
+		it('serves a 200 status', async () => {
+			const { status, text } = await request.get('/contracting/cv/2015');
+
+			expect(status).toBe(200);
+			expect(text).toContain('<h1>Leaf Rogers</h1>');
 		});
 	});
 
@@ -99,7 +108,7 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 
 		it('renders the config file’s app title as the HTML title', () => {
 			expect(response.text).toMatch(
-				'<title>An error happened (404) — Test Title</title>'
+				'<title>An error happened (404) — leaf.is</title>'
 			);
 		});
 
@@ -120,9 +129,7 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 		});
 
 		it('renders a fallback document title', () => {
-			expect(response.text).toMatch(
-				'<h1>An error happened (405) — Test Title</h1>'
-			);
+			expect(response.text).toMatch('<h1>An error happened (405)</h1>');
 		});
 
 		it('renders a public-facing error message', () => {

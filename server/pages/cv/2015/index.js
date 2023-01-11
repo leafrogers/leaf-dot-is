@@ -1,4 +1,4 @@
-import { importFile, toHtmlDocString } from '../../../helpers.js';
+import { importFile, stripSpace } from '../../../helpers.js';
 
 const body = importFile('server/pages/cv/2015/partial.html');
 const styles = importFile('server/pages/cv/2015/main.css');
@@ -9,7 +9,7 @@ const styles = importFile('server/pages/cv/2015/main.css');
  */
 export const controller = async (_req, res) => {
 	const data = {
-		text: { title: 'Leaf Rogers' }
+		title: 'Leaf Rogers'
 	};
 
 	res.send(view(data));
@@ -18,13 +18,26 @@ export const controller = async (_req, res) => {
 /**
  * @param {ViewModel} settings
  */
-const view = ({ text }) => {
-	return toHtmlDocString({ body, styles, title: text.title });
+const view = ({ title }) => {
+	return `<!DOCTYPE html>
+<html lang="en-GB">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="A website containing silly things">
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+		<link rel="manifest" href="/site.webmanifest">
+		<title>${title}</title>
+		<style>${stripSpace(styles)}</style>
+	</head>
+	<body>
+		${body}
+	</body>
+</html>`;
 };
 
 /**
- * @typedef PageSpecificViewModel
- * @property {object} text
- *
- * @typedef {BaseUiViewModel & PageSpecificViewModel} ViewModel
+ * @typedef {BaseUiViewModel} ViewModel
  */

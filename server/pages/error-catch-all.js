@@ -54,20 +54,16 @@ const getData = ({ error, status = 0 }) => {
 
 	try {
 		return {
-			text: {
-				title: `An error happened (${publicStatus}) — ${config.APP_FRIENDLY_NAME}`
-			},
 			message: config.IS_PRODUCTION ? 'Something went wrong.' : error.message,
-			status: publicStatus
+			status: publicStatus,
+			title: `An error happened (${publicStatus})`
 		};
 	} catch (error) {
 		return {
-			text: {
-				title: 'A confusing error happened'
-			},
 			message:
-				'Something unexpected happened that messed up the serving of this page',
-			status: publicStatus
+				'Something unexpected happened that messed up the serving of this page.',
+			status: publicStatus,
+			title: 'A confusing error happened'
 		};
 	}
 };
@@ -75,13 +71,14 @@ const getData = ({ error, status = 0 }) => {
 /**
  * @param {ViewModel} settings
  */
-const view = ({ message, text }) => {
-	const body = `
-		<h1>${text.title}</h1>
-		<p>${message}</p>
-	`;
-
-	return toHtmlDocString({ body, title: text.title });
+const view = ({ message, title }) => {
+	return toHtmlDocString({
+		body: `
+			<h1>${title}</h1>
+			<p>${message}</p>
+		`,
+		title
+	});
 };
 
 /**
