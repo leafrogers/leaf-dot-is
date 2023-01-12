@@ -1,5 +1,6 @@
 // eslint-disable-next-line node/no-extraneous-import
 import { jest } from '@jest/globals';
+
 import nock from 'nock';
 import supertest from 'supertest';
 
@@ -15,6 +16,7 @@ jest.spyOn(global.console, 'error').mockImplementation(() => {});
 
 describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 	beforeAll(() => {
+		//jest.mock('@prismicios/client', () => {});
 		nock.disableNetConnect();
 		nock.enableNetConnect('127.0.0.1');
 	});

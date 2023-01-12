@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { format } from 'prettier';
+import { asHTML } from '@prismicio/helpers';
 import config from './config.js';
 import bootstrapper from '../client/bootstrapper.js';
 
@@ -71,11 +72,18 @@ const toHtmlNavString = (navLevels) => {
 /**
  * @param {Object} settings
  * @param {String} settings.body
+ * @param {String} [settings.header]
  * @param {NavLink[]} settings.navLevels
  * @param {String} [settings.styles]
  * @param {String} settings.title
  */
-export const toHtmlDocString = ({ body, navLevels, styles = '', title }) => {
+export const toHtmlDocString = ({
+	body,
+	header = '',
+	navLevels,
+	styles = '',
+	title
+}) => {
 	const maybeStyles = styles
 		? `\n\t\t<style>${stripSpace(styles)}</style>`
 		: '';
@@ -101,6 +109,9 @@ export const toHtmlDocString = ({ body, navLevels, styles = '', title }) => {
 		`<body>
 			<div class="container">
 				${toHtmlNavString(navLevels)}
+				<header>
+				${header || `<h1>${title}</h1>`}
+				</header>
 				<main>
 					${body}
 				</main>
@@ -109,4 +120,25 @@ export const toHtmlDocString = ({ body, navLevels, styles = '', title }) => {
 		{ parser: 'html' }
 	)}
 </html>`;
+};
+
+/**
+ * @param {WeeknoteDbDoc} weeknoteDbModel
+ * @returns {Weeknote}
+ */
+export const toWeeknoteViewModel = (weeknoteDbModel) => {
+	const bodyAsHtml = asHTML(weeknoteDbModel.data.body);
+	const bodyAsHtmlWithProxiedImages = bodyAsHtml.replaceAll(
+		`${config.DB_IMAGE_BASE_URL}/`,
+		'/images/db/'
+	);
+
+	return {
+		bodyAsHtml: bodyAsHtmlWithProxiedImages,
+		firstPublicationDate: new Date(weeknoteDbModel.first_publication_date),
+		lastPublicationDate: new Date(weeknoteDbModel.last_publication_date),
+		tags: weeknoteDbModel.tags,
+		titleAsText: weeknoteDbModel.data.title[0]?.text || '',
+		uid: weeknoteDbModel.uid
+	};
 };

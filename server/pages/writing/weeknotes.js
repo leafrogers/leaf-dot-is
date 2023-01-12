@@ -1,4 +1,9 @@
-import { importFile, toHtmlDocString } from '../../helpers.js';
+import {
+	importFile,
+	toHtmlDocString,
+	toWeeknoteViewModel
+} from '../../helpers.js';
+import { fetchWeeknotes } from '../../services.js';
 
 const commonCss = importFile('server/pages/common.css');
 
@@ -7,10 +12,14 @@ const commonCss = importFile('server/pages/common.css');
  * @param {ExpressResponse} res
  */
 export const controller = async (_req, res) => {
+	const weeknotes = await fetchWeeknotes();
 	const data = {
-		items: [{ text: 'Weeknotes', url: '/writing/weeknotes' }],
-		navLevels: [{ text: 'Leaf.is', url: '/' }],
-		title: 'Writing'
+		items: weeknotes.map(toWeeknoteViewModel),
+		navLevels: [
+			{ text: 'Leaf.is', url: '/' },
+			{ text: 'Writing', url: '/writing' }
+		],
+		title: 'Weeknotes'
 	};
 
 	res.send(view(data));
@@ -22,16 +31,16 @@ export const controller = async (_req, res) => {
 const view = ({ items, navLevels, title }) => {
 	return toHtmlDocString({
 		body: `
-			<ul>
+			<ol reversed>
 				${items
 					.map(
-						({ text, url }) =>
+						({ titleAsText, uid }) =>
 							`<li>
-								<a href="${url}">${text}</a>
+								<a href="/writing/weeknotes/${uid}">${titleAsText}</a>
 							</li>`
 					)
 					.join('\n')}
-			</ul>
+			</ol>
 		`.trim(),
 		navLevels,
 		styles: `
@@ -43,7 +52,7 @@ const view = ({ items, navLevels, title }) => {
 
 /**
  * @typedef PageSpecificViewModel
- * @property {NavLink[]} items
+ * @property {Weeknote[]} items
  *
  * @typedef {BaseUiViewModel & PageSpecificViewModel} ViewModel
  */
