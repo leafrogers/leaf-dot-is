@@ -9,7 +9,7 @@ const commonCss = importFile('server/pages/common.css');
 export const controller = async (_req, res) => {
 	const data = {
 		items: [{ text: 'Weeknotes', url: '/writing/weeknotes' }],
-		navLevels: [{ text: 'leaf.is', url: '/' }],
+		navLevels: [{ text: 'Leaf.is', url: '/' }],
 		title: 'Writing'
 	};
 
