@@ -39,8 +39,35 @@ export const controller = async (req, res, next) => {
  * @param {ViewModel} settings
  */
 const view = ({ bodyAsHtml, navLevels, firstPublicationDate, titleAsText }) => {
-	const body = parse(bodyAsHtml);
+	const body = parse(
+		bodyAsHtml.replace(/\[(\d+)\]/g, (_, footnoteNumber) => {
+			return `<sup>[<a href="#footnote-${footnoteNumber}" id="footnote-source-${footnoteNumber}"><span class="visually-hidden">Jump to footnote </span>${footnoteNumber}</a>]</sup>`;
+		})
+	);
 
+	const footnotesHeading = [...body.querySelectorAll('h2')].find(
+		(el) => el.textContent === 'Footnotes'
+	);
+
+	if (footnotesHeading) {
+		footnotesHeading.setAttribute('class', 'footnotes-heading');
+		footnotesHeading.innerHTML =
+			'<span class="visually-hidden">Footnoteshu</span>';
+	}
+
+	const footnotesList = footnotesHeading?.nextElementSibling;
+	const footnotesItems = footnotesList?.querySelectorAll('li') || [];
+
+	footnotesItems.forEach((footnote, index) => {
+		const oneIndexed = index + 1;
+		footnote.setAttribute('id', `footnote-${oneIndexed}`);
+		footnote.setAttribute('class', 'footnote');
+		footnote.appendChild(
+			parse(
+				` <a href="#footnote-source-${oneIndexed}" class="footnote-jumpback"><span class="visually-hidden">Jump to source of footnote ${oneIndexed}</span></a>`
+			)
+		);
+	});
 	return toHtmlDocString({
 		body: body.toString(),
 		header: `
@@ -53,6 +80,15 @@ const view = ({ bodyAsHtml, navLevels, firstPublicationDate, titleAsText }) => {
 		navLevels,
 		styles: `
 			${commonCss}
+			.footnotes-heading::before {
+				content: '—';
+			}
+			.footnote:target {
+				outline: 2px dotted;
+			}
+			.footnote-jumpback::before {
+				content: '↰';
+			}
 		`,
 		title: titleAsText
 	});

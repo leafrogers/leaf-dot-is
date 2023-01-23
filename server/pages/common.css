@@ -101,6 +101,18 @@ a:focus {
 	margin-right: 0.1rem;
 }
 
+.visually-hidden {
+	border: 0;
+	clip: rect(0, 0, 0, 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
 @media (min-width: 600px) {
 	h1 {
 		font-size: 5rem;
