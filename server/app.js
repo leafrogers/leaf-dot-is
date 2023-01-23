@@ -17,6 +17,7 @@ import { controller as home } from './pages/home.js';
 import { controller as notFound } from './pages/error-not-found.js';
 import { controller as weeknote } from './pages/writing/weeknote.js';
 import { controller as weeknotes } from './pages/writing/weeknotes.js';
+import { controller as weeknotesRss } from './pages/writing/weeknotes-rss.js';
 import { controller as writing } from './pages/writing/index.js';
 
 const app = express();
@@ -40,6 +41,7 @@ cacheableRoutes.get('/', catchRejections(home));
 cacheableRoutes.get('/writing', catchRejections(writing));
 cacheableRoutes.get('/writing/weeknotes', catchRejections(weeknotes));
 cacheableRoutes.get('/writing/weeknotes/:uid', catchRejections(weeknote));
+cacheableRoutes.get('/writing/weeknotes.rss', catchRejections(weeknotesRss));
 
 cacheableRoutes.get('/contracting/cv', catchRejections(cv));
 cacheableRoutes.get('/contracting/here/is/his/cv', catchRejections(cv));
