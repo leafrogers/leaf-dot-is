@@ -120,3 +120,15 @@ export const toHtmlDocString = ({
 	)}
 </html>`;
 };
+
+/**
+ * @param {WeeknoteDbDoc} weeknoteDbModel
+ * @returns {Weeknote}
+ */
+export const toWeeknoteViewModel = (weeknoteDbModel) => {
+	return {
+		firstPublicationDate: new Date(weeknoteDbModel.first_publication_date),
+		titleAsText: weeknoteDbModel.data.title[0]?.text || '',
+		uid: weeknoteDbModel.uid
+	};
+};

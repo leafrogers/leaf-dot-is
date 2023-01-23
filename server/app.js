@@ -15,6 +15,7 @@ import { controller as cv } from './pages/cv/2022/index.js';
 import { controller as cv2015 } from './pages/cv/2015/index.js';
 import { controller as home } from './pages/home.js';
 import { controller as notFound } from './pages/error-not-found.js';
+import { controller as weeknotes } from './pages/writing/weeknotes.js';
 import { controller as writing } from './pages/writing/index.js';
 
 const app = express();
@@ -36,6 +37,7 @@ cacheableRoutes.use(cacheFor(oneMonthInSecs));
 cacheableRoutes.get('/', catchRejections(home));
 
 cacheableRoutes.get('/writing', catchRejections(writing));
+cacheableRoutes.get('/writing/weeknotes', catchRejections(weeknotes));
 
 cacheableRoutes.get('/contracting/cv', catchRejections(cv));
 cacheableRoutes.get('/contracting/here/is/his/cv', catchRejections(cv));
