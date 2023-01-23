@@ -71,11 +71,18 @@ const toHtmlNavString = (navLevels) => {
 /**
  * @param {Object} settings
  * @param {String} settings.body
+ * @param {String} [settings.header]
  * @param {NavLink[]} settings.navLevels
  * @param {String} [settings.styles]
  * @param {String} settings.title
  */
-export const toHtmlDocString = ({ body, navLevels, styles = '', title }) => {
+export const toHtmlDocString = ({
+	body,
+	header = '',
+	navLevels,
+	styles = '',
+	title
+}) => {
 	const maybeStyles = styles
 		? `\n\t\t<style>${stripSpace(styles)}</style>`
 		: '';
@@ -101,6 +108,9 @@ export const toHtmlDocString = ({ body, navLevels, styles = '', title }) => {
 		`<body>
 			<div class="container">
 				${toHtmlNavString(navLevels)}
+				<header>
+				${header || `<h1>${title}</h1>`}
+				</header>
 				<main>
 					${body}
 				</main>

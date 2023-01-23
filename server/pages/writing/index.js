@@ -22,7 +22,6 @@ export const controller = async (_req, res) => {
 const view = ({ items, navLevels, title }) => {
 	return toHtmlDocString({
 		body: `
-			<h1>${title}</h1>
 			<ul>
 				${items
 					.map(
