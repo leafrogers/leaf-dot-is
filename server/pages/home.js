@@ -29,8 +29,7 @@ const view = ({ title }) => {
 				<li><a href="https://www.linkedin.com/in/leafrogers">LinkedIn</a> if that’s your thing</li>
 			</ul>
 			<p>I’m unavailable for work contracts until May 2023.</p>
-
-			<p>This content is a bit dry isn’t it! Yeah bit dry. Anyway you look nice today. Have <a href="/key.txt" rel="pgpkey authn">my PGP Key</a>.</p>
+			<p>This content is a bit dry isn’t it! Yeah. Anyway you look nice today. Have <a href="/key.txt" rel="pgpkey authn">a PGP Key</a>.</p>
 		`,
 		navLevels: [],
 		styles: `
