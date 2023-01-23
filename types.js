@@ -9,6 +9,7 @@
  *
  * @typedef Weeknote
  * @property {Date} firstPublicationDate
+ * @property {String} bodyAsHtml
  * @property {String} titleAsText
  * @property {String} uid
  *

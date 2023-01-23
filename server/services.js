@@ -21,3 +21,21 @@ export const fetchWeeknotes = () => {
 		orderings: { field: 'first_publication_date', direction: 'desc' }
 	});
 };
+
+/**
+ * @param {WeeknoteDbDoc['uid']} weeknoteUid
+ */
+export const fetchWeeknote = async (weeknoteUid) => {
+	try {
+		return await getDbClient().getByUID('weeknotes', weeknoteUid);
+	} catch (error) {
+		if (
+			error instanceof Error &&
+			error.message === 'No documents were returned'
+		) {
+			return null;
+		}
+
+		throw error;
+	}
+};

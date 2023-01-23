@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { format } from 'prettier';
+import { asHTML } from '@prismicio/helpers';
 import config from './config.js';
 import bootstrapper from '../client/bootstrapper.js';
 
@@ -126,7 +127,10 @@ export const toHtmlDocString = ({
  * @returns {Weeknote}
  */
 export const toWeeknoteViewModel = (weeknoteDbModel) => {
+	const bodyAsHtml = asHTML(weeknoteDbModel.data.body);
+
 	return {
+		bodyAsHtml,
 		firstPublicationDate: new Date(weeknoteDbModel.first_publication_date),
 		titleAsText: weeknoteDbModel.data.title[0]?.text || '',
 		uid: weeknoteDbModel.uid

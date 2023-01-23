@@ -6,7 +6,7 @@
   "scripts": {
     "build": "esbuild client/init.js --minify --bundle --outfile=public/js/init.js",
     "build:watch": "npm run -s build -- --watch",
-    "jest": "BASE_URL='' node --experimental-vm-modules --no-warnings ./node_modules/.bin/jest",
+    "jest": "BASE_URL='' DB_ACCESS_TOKEN='' DB_REPO_NAME='' DB_TYPES_TOKEN='' node --experimental-vm-modules --no-warnings ./node_modules/.bin/jest",
     "lint": "npm run -s lint:syntax && npm run -s lint:types",
     "lint:syntax": "eslint \"**/*.js\" --ignore-pattern \"public/**\" && echo \"✓ Linted syntax and styling\"",
     "lint:types": "tsc -p jsconfig.json && echo \"✓ Linted types\"",
@@ -27,6 +27,7 @@
     "@prismicio/client": "^6.7.3",
     "@prismicio/helpers": "^2.3.8",
     "compression": "^1.7.4",
+    "date-fns": "^2.29.3",
     "express": "^4.18.2",
     "helmet": "^6.0.1",
     "prettier": "^2.8.2",
