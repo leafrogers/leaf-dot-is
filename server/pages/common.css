@@ -25,7 +25,8 @@ main {
 
 h1,
 h2,
-.published {
+.published,
+.valediction {
 	font-family: 'Apfel Grotezk', arial, sans-serif;
 	font-weight: normal;
 	line-height: 1;

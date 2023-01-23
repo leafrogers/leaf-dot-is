@@ -55,6 +55,11 @@ const view = ({ bodyAsHtml, navLevels, firstPublicationDate, titleAsText }) => {
 			'<span class="visually-hidden">Footnoteshu</span>';
 	}
 
+	footnotesHeading?.insertAdjacentHTML(
+		'beforebegin',
+		'<p class="valediction">Yours,<span>Leaf</span></p>'
+	);
+
 	const footnotesList = footnotesHeading?.nextElementSibling;
 	const footnotesItems = footnotesList?.querySelectorAll('li') || [];
 
@@ -75,11 +80,23 @@ const view = ({ bodyAsHtml, navLevels, firstPublicationDate, titleAsText }) => {
 				new Date(firstPublicationDate),
 				'eee do MMM ’yy'
 			)}</p>
+			<p class="salutation">Dear Internet,</p>
 			<h1>${titleAsText}</h1>
 		`,
 		navLevels,
 		styles: `
 			${commonCss}
+			@font-face {
+				font-display: swap;
+				font-family: 'Cedarville Cursive Regular';
+				font-style: normal;
+				font-weight: normal;
+				src: url('/fonts/cedarvillecursive-regular.woff2') format('woff2');
+			}
+			.container {
+				padding: 1rem 2rem;
+				position: relative;
+			}
 			.footnotes-heading::before {
 				content: '—';
 			}
@@ -88,6 +105,39 @@ const view = ({ bodyAsHtml, navLevels, firstPublicationDate, titleAsText }) => {
 			}
 			.footnote-jumpback::before {
 				content: '↰';
+			}
+			.published {
+				font-size: 1.2rem;
+				margin: 0 10px 0 0;
+				right: 4rem;
+				top: 1.4rem;
+			}
+			.salutation {
+				margin: 3rem 0 0;
+			}
+			.valediction {
+				margin: 4rem 0 0;
+			}
+			.valediction span {
+				display: block;
+				font-family: 'Cedarville Cursive Regular', 'Apfel Grotezk', arial, sans-serif;
+				font-size: 4rem;
+				margin-top: 1rem;
+			}
+
+			@media (min-width: 500px) {
+				.published {
+					font-size: 1.3rem;
+					position: absolute;
+				}
+			}
+			@media (min-width: 600px) {
+				.container {
+					padding: 1rem 4rem 0;
+				}
+				.nav-list {
+					font-size: 1.3rem;
+				}
 			}
 		`,
 		title: titleAsText
