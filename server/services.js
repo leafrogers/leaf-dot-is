@@ -6,7 +6,7 @@ import config from './config.js';
  */
 let dbClient;
 
-const getDbClient = () => {
+export const getDbClient = () => {
 	if (!dbClient) {
 		dbClient = prismic.createClient(config.DB_REPO_NAME || '', {
 			accessToken: config.DB_ACCESS_TOKEN

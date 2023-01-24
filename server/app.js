@@ -19,6 +19,7 @@ import { controller as weeknote } from './pages/writing/weeknote.js';
 import { controller as weeknotes } from './pages/writing/weeknotes.js';
 import { controller as weeknotesRss } from './pages/writing/weeknotes-rss.js';
 import { controller as writing } from './pages/writing/index.js';
+import { getDbClient } from './services.js';
 
 const app = express();
 const oneDayInSecs = 60 * 60 * 24;
@@ -40,6 +41,22 @@ cacheableRoutes.get('/', catchRejections(home));
 
 cacheableRoutes.get('/writing', catchRejections(writing));
 cacheableRoutes.get('/writing/weeknotes', catchRejections(weeknotes));
+cacheableRoutes.get(
+	'/writing/weeknotes/preview',
+	catchRejections(
+		async (
+			/** @type {ExpressRequest} */ req,
+			/** @type {ExpressResponse} */ res
+		) => {
+			const client = getDbClient();
+			client.enableAutoPreviewsFromReq(req);
+			const redirectURL = await client.resolvePreviewURL({
+				defaultURL: '/'
+			});
+			res.redirect(302, redirectURL);
+		}
+	)
+);
 cacheableRoutes.get('/writing/weeknotes/:uid', catchRejections(weeknote));
 cacheableRoutes.get('/writing/weeknotes.rss', catchRejections(weeknotesRss));
 

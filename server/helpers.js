@@ -104,6 +104,7 @@ export const toHtmlDocString = ({
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 		<link rel="manifest" href="/site.webmanifest">
 		<title>${title} — leaf.is</title>${maybeStyles}${maybeEnhancer}
+		<script async defer src="https://static.cdn.prismic.io/prismic.js?new=true&repo=leafdb"></script>
 	</head>
 	${format(
 		`<body>
