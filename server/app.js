@@ -42,15 +42,18 @@ cacheableRoutes.get('/', catchRejections(home));
 cacheableRoutes.get('/writing', catchRejections(writing));
 cacheableRoutes.get('/writing/weeknotes', catchRejections(weeknotes));
 cacheableRoutes.get(
-	'/writing/weeknotes/preview',
+	'/preview',
+	(req, _, next) => {
+		const client = getDbClient();
+		client.enableAutoPreviewsFromReq(req);
+		next();
+	},
 	catchRejections(
 		async (
 			/** @type {ExpressRequest} */ req,
 			/** @type {ExpressResponse} */ res
 		) => {
-			const client = getDbClient();
-			client.enableAutoPreviewsFromReq(req);
-			const redirectURL = await client.resolvePreviewURL({
+			const redirectURL = await getDbClient().resolvePreviewURL({
 				defaultURL: '/'
 			});
 			res.redirect(302, redirectURL);
