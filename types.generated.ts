@@ -30,6 +30,17 @@ interface WeeknotesDocumentData {
      *
      */
     body: prismicT.RichTextField;
+    /**
+     * displayed published date field in *weeknotes*
+     *
+     * - **Field Type**: Timestamp
+     * - **Placeholder**: The timestamp you want to use as the cheaty “published” date
+     * - **API ID Path**: weeknotes.date
+     * - **Tab**: Main
+     * - **Documentation**: https://prismic.io/docs/core-concepts/timestamp
+     *
+     */
+    date: prismicT.TimestampField;
 }
 /**
  * weeknotes document from Prismic

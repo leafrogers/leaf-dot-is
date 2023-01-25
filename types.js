@@ -8,8 +8,8 @@
  * @property {String} title
  *
  * @typedef Weeknote
- * @property {Date} firstPublicationDate
  * @property {String} bodyAsHtml
+ * @property {Date} date
  * @property {String} titleAsText
  * @property {String} uid
  *

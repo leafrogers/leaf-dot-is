@@ -131,7 +131,9 @@ export const toWeeknoteViewModel = (weeknoteDbModel) => {
 
 	return {
 		bodyAsHtml,
-		firstPublicationDate: new Date(weeknoteDbModel.first_publication_date),
+		date: new Date(
+			weeknoteDbModel.data.date || weeknoteDbModel.first_publication_date
+		),
 		titleAsText: weeknoteDbModel.data.title[0]?.text || '',
 		uid: weeknoteDbModel.uid
 	};

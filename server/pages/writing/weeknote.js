@@ -38,7 +38,7 @@ export const controller = async (req, res, next) => {
 /**
  * @param {ViewModel} settings
  */
-const view = ({ bodyAsHtml, navLevels, firstPublicationDate, titleAsText }) => {
+const view = ({ bodyAsHtml, date, navLevels, titleAsText }) => {
 	const body = parse(
 		bodyAsHtml.replace(/\[(\d+)\]/g, (_, footnoteNumber) => {
 			return `<sup>[<a href="#footnote-${footnoteNumber}" id="footnote-source-${footnoteNumber}"><span class="visually-hidden">Jump to footnote </span>${footnoteNumber}</a>]</sup>`;
@@ -76,10 +76,7 @@ const view = ({ bodyAsHtml, navLevels, firstPublicationDate, titleAsText }) => {
 	return toHtmlDocString({
 		body: body.toString(),
 		header: `
-			<p class="published">${format(
-				new Date(firstPublicationDate),
-				'eee do MMM ’yy'
-			)}</p>
+			<p class="published">${format(new Date(date), 'eee do MMM ’yy')}</p>
 			<p class="salutation">Dear Internet,</p>
 			<h1>${titleAsText}</h1>
 		`,

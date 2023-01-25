@@ -1,4 +1,5 @@
 import { Feed } from 'feed';
+import { parse } from 'node-html-parser';
 import config from '../../config.js';
 import { toWeeknoteViewModel } from '../../helpers.js';
 import { fetchWeeknotes } from '../../services.js';
@@ -43,7 +44,7 @@ const view = ({ items, title }) => {
 	items.forEach((post) => {
 		feed.addItem({
 			content: post.bodyAsHtml,
-			date: post.firstPublicationDate,
+			date: post.date,
 			id: `${config.BASE_URL}/writing/weeknotes/${post.uid}`,
 			link: `${config.BASE_URL}/writing/weeknotes/${post.uid}`,
 			title: post.titleAsText
