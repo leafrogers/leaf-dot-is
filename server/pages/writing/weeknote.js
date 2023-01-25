@@ -52,7 +52,7 @@ const view = ({ bodyAsHtml, navLevels, firstPublicationDate, titleAsText }) => {
 	if (footnotesHeading) {
 		footnotesHeading.setAttribute('class', 'footnotes-heading');
 		footnotesHeading.innerHTML =
-			'<span class="visually-hidden">Footnoteshu</span>';
+			'<span class="visually-hidden">Footnotes</span>';
 	}
 
 	footnotesHeading?.insertAdjacentHTML(
