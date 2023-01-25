@@ -42,12 +42,22 @@ const view = ({ items, title }) => {
 	});
 
 	items.forEach((post) => {
+		const body = parse(post.bodyAsHtml);
+		const footnotesHeading = [...body.querySelectorAll('h2')].find(
+			(el) => el.textContent === 'Footnotes'
+		);
+
+		footnotesHeading?.insertAdjacentHTML(
+			'beforebegin',
+			'<p>Yours,<br>Leaf x</p>'
+		);
+
 		feed.addItem({
-			content: post.bodyAsHtml,
+			content: body.toString(),
 			date: post.date,
 			id: `${config.BASE_URL}/writing/weeknotes/${post.uid}`,
 			link: `${config.BASE_URL}/writing/weeknotes/${post.uid}`,
-			title: post.titleAsText
+			title: `Dear Internet: ${post.titleAsText}`
 		});
 	});
 
