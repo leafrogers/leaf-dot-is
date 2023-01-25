@@ -18,6 +18,7 @@ const getDbClient = () => {
 
 export const fetchWeeknotes = () => {
 	return getDbClient().getAllByType('weeknotes', {
+		predicates: [prismic.predicate.at('document.tags', ['live'])],
 		orderings: { field: 'first_publication_date', direction: 'desc' }
 	});
 };
