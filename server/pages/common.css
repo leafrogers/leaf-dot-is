@@ -135,7 +135,7 @@ a:focus {
 	}
 
 	.container {
-		border-left-width: 8px;
+		border-left-width: 6px;
 		font-size: 1.2rem;
 		max-width: 70ch;
 		padding: 3rem 4rem 0;
