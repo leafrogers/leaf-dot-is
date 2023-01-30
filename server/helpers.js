@@ -106,14 +106,16 @@ export const toHtmlDocString = ({
 		<title>${title} — leaf.is</title>${maybeStyles}${maybeEnhancer}
 	</head>
 	${format(
-		`<body>
+		`<body id="top">
+			<a href="#main-content" class="visually-hidden focusable">Skip to main content</a>
 			<div class="container">
 				${toHtmlNavString(navLevels)}
 				<header>
 				${header || `<h1>${title}</h1>`}
 				</header>
-				<main>
+				<main id="main-content">
 					${body}
+					<a href="#top" class="toppy"><span class="visually-hidden">Back to top</span>↑</a>
 				</main>
 			</div>
 		</body>`,

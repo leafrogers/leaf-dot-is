@@ -121,6 +121,13 @@ const view = ({ bodyAsHtml, date, navLevels, titleAsText }) => {
 				font-size: 4rem;
 				margin-top: 1rem;
 			}
+			.toppy {
+				bottom: 0;
+				color: white;
+				margin: 0 20px -5px 0;
+				position: absolute;
+				right: 100%;
+			}
 
 			@media (min-width: 500px) {
 				.published {

@@ -114,6 +114,19 @@ a:focus {
 	width: 1px;
 }
 
+.visually-hidden.focusable:active,
+.visually-hidden.focusable:focus {
+	clip: auto;
+	height: auto;
+	left: 0;
+	margin: 6px;
+	overflow: visible;
+	position: absolute;
+	top: 0;
+	white-space: inherit;
+	width: auto;
+}
+
 @media (min-width: 600px) {
 	h1 {
 		font-size: 5rem;
