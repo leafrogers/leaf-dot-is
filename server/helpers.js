@@ -115,7 +115,6 @@ export const toHtmlDocString = ({
 				</header>
 				<main id="main-content">
 					${body}
-					<a href="#top" class="toppy"><span class="visually-hidden">Back to top</span>↑</a>
 				</main>
 			</div>
 		</body>`,

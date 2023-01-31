@@ -74,7 +74,10 @@ const view = ({ bodyAsHtml, date, navLevels, titleAsText }) => {
 		);
 	});
 	return toHtmlDocString({
-		body: body.toString(),
+		body: `
+			${body.toString()}
+			<a href="#top" class="toppy"><span class="visually-hidden">Back to top</span>↑</a>
+		`,
 		header: `
 			<p class="published">${format(new Date(date), 'eee do MMM ’yy')}</p>
 			<p class="salutation">Dear Internet,</p>
