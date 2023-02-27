@@ -1,3 +1,4 @@
+import config from '../../config.js';
 import {
 	importFile,
 	toHtmlDocString,
@@ -16,8 +17,8 @@ export const controller = async (_req, res) => {
 	const data = {
 		items: weeknotes.map(toWeeknoteViewModel),
 		navLevels: [
-			{ text: 'Leaf.is', url: '/' },
-			{ text: 'Writing', url: '/writing' }
+			{ text: 'Leaf.is', url: `${config.BASE_URL}/` },
+			{ text: 'Writing', url: `${config.BASE_URL}/writing` }
 		],
 		title: 'Weeknotes'
 	};
@@ -36,7 +37,8 @@ const view = ({ items, navLevels, title }) => {
 					.map(
 						({ titleAsText, uid }) =>
 							`<li>
-								<a href="/writing/weeknotes/${uid}">${titleAsText}</a>
+								<a href="${config.BASE_URL}/writing/weeknotes/${uid}">
+								 ${titleAsText}</a>
 							</li>`
 					)
 					.join('\n')}

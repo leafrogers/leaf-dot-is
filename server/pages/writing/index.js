@@ -1,3 +1,4 @@
+import config from '../../config.js';
 import { importFile, toHtmlDocString } from '../../helpers.js';
 
 const commonCss = importFile('server/pages/common.css');
@@ -8,8 +9,8 @@ const commonCss = importFile('server/pages/common.css');
  */
 export const controller = async (_req, res) => {
 	const data = {
-		items: [{ text: 'Weeknotes', url: '/writing/weeknotes' }],
-		navLevels: [{ text: 'Leaf.is', url: '/' }],
+		items: [{ text: 'Weeknotes', url: `${config.BASE_URL}/writing/weeknotes` }],
+		navLevels: [{ text: 'Leaf.is', url: `${config.BASE_URL}/` }],
 		title: 'Writing'
 	};
 

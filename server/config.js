@@ -27,6 +27,7 @@ const config = {
 	DB_TYPES_TOKEN: process.env.DB_TYPES_TOKEN,
 	DB_REPO_NAME: process.env.DB_REPO_NAME,
 	IS_PRODUCTION: process.env.NODE_ENV === 'production',
+	PERMALINK_BASE_URL: process.env.PERMALINK_BASE_URL,
 	PORT: process.env.PORT || 3001,
 	USES_CLIENT_JS: false
 };

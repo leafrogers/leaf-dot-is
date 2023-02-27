@@ -27,17 +27,17 @@ const view = ({ items, title }) => {
 	const feed = new Feed({
 		author: {
 			name: 'Leaf Rogers',
-			link: `${config.BASE_URL}/writing/weeknotes.rss`
+			link: `${config.PERMALINK_BASE_URL}/writing/weeknotes.rss`
 		},
 		copyright: `© ${new Date().getFullYear()} Leaf Rogers`,
 		description: 'Leaf writes some words about the past week.',
-		favicon: `${config.BASE_URL}/favicon.ico`,
+		favicon: `${config.PERMALINK_BASE_URL}/favicon.ico`,
 		feedLinks: {
-			rss: `${config.BASE_URL}/writing/weeknotes.rss`
+			rss: `${config.PERMALINK_BASE_URL}/writing/weeknotes.rss`
 		},
-		id: `${config.BASE_URL}/writing/weeknotes.rss`,
+		id: `${config.PERMALINK_BASE_URL}/writing/weeknotes.rss`,
 		language: 'en',
-		link: `${config.BASE_URL}/writing/weeknotes.rss`,
+		link: `${config.PERMALINK_BASE_URL}/writing/weeknotes.rss`,
 		title: `Leaf Rogers’ ${title}`
 	});
 
@@ -55,8 +55,8 @@ const view = ({ items, title }) => {
 		feed.addItem({
 			content: body.toString(),
 			date: post.date,
-			id: `${config.BASE_URL}/writing/weeknotes/${post.uid}`,
-			link: `${config.BASE_URL}/writing/weeknotes/${post.uid}`,
+			id: `${config.PERMALINK_BASE_URL}/writing/weeknotes/${post.uid}`,
+			link: `${config.PERMALINK_BASE_URL}/writing/weeknotes/${post.uid}`,
 			title: `Dear Internet: ${post.titleAsText}`
 		});
 	});

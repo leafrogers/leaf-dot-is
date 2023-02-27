@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import { parse } from 'node-html-parser';
+import config from '../../config.js';
 import {
 	importFile,
 	toHtmlDocString,
@@ -25,9 +26,9 @@ export const controller = async (req, res, next) => {
 	const data = {
 		...toWeeknoteViewModel(weeknote),
 		navLevels: [
-			{ text: 'Leaf.is', url: '/' },
-			{ text: 'Writing', url: '/writing' },
-			{ text: 'Weeknotes', url: '/writing/weeknotes' }
+			{ text: 'Leaf.is', url: `${config.BASE_URL}/` },
+			{ text: 'Writing', url: `${config.BASE_URL}/writing` },
+			{ text: 'Weeknotes', url: `${config.BASE_URL}/writing/weeknotes` }
 		],
 		title: ''
 	};
