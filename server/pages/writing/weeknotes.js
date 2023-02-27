@@ -13,7 +13,8 @@ const commonCss = importFile('server/pages/common.css');
  * @param {ExpressResponse} res
  */
 export const controller = async (_req, res) => {
-	const weeknotes = await fetchWeeknotes();
+	const tags = config.IS_PRODUCTION ? ['live'] : ['draft', 'live'];
+	const weeknotes = await fetchWeeknotes({ tags });
 	const data = {
 		items: weeknotes.map(toWeeknoteViewModel),
 		navLevels: [

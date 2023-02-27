@@ -16,9 +16,14 @@ const getDbClient = () => {
 	return dbClient;
 };
 
-export const fetchWeeknotes = () => {
+/**
+ *
+ * @param {Object} _
+ * @param {string[]} _.tags
+ */
+export const fetchWeeknotes = ({ tags }) => {
 	return getDbClient().getAllByType('weeknotes', {
-		predicates: [prismic.predicate.at('document.tags', ['live'])],
+		predicates: [prismic.predicate.any('document.tags', tags)],
 		orderings: { field: 'first_publication_date', direction: 'desc' }
 	});
 };
