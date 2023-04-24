@@ -32,7 +32,7 @@
     "feed": "^4.2.2",
     "helmet": "^6.1.5",
     "node-html-parser": "^6.1.5",
-    "prettier": "^2.8.7",
+    "prettier": "^2.8.8",
     "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
