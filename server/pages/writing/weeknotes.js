@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import config from '../../config.js';
 import {
 	importFile,
@@ -36,10 +37,10 @@ const view = ({ items, navLevels, title }) => {
 			<ol reversed>
 				${items
 					.map(
-						({ titleAsText, uid }) =>
+						({ date, titleAsText, uid }) =>
 							`<li>
 								<a href="${config.BASE_URL}/writing/weeknotes/${uid}">
-								 ${titleAsText}</a>
+									${titleAsText}</a> <span class="published">${format(date, 'do MMM')}</span>
 							</li>`
 					)
 					.join('\n')}
@@ -48,6 +49,9 @@ const view = ({ items, navLevels, title }) => {
 		navLevels,
 		styles: `
 			${commonCss}
+			.published {
+				margin-left: 1rem;
+			}
 		`,
 		title
 	});
