@@ -6,7 +6,7 @@
   "scripts": {
     "build": "esbuild client/init.js --minify --bundle --outfile=public/js/init.js",
     "build:watch": "npm run -s build -- --watch",
-    "jest": "BASE_URL='' DB_ACCESS_TOKEN='' DB_REPO_NAME='' DB_TYPES_TOKEN='' PERMALINK_BASE_URL='' node --experimental-vm-modules --no-warnings ./node_modules/.bin/jest",
+    "jest": "BASE_URL='' DB_ACCESS_TOKEN='' DB_REPO_NAME='test' DB_TYPES_TOKEN='' PERMALINK_BASE_URL='' node --experimental-vm-modules --no-warnings ./node_modules/.bin/jest",
     "lint": "npm run -s lint:syntax && npm run -s lint:types",
     "lint:syntax": "eslint \"**/*.js\" --ignore-pattern \"public/**\" && echo \"✓ Linted syntax and styling\"",
     "lint:types": "tsc -p jsconfig.json && echo \"✓ Linted types\"",

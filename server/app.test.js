@@ -2,7 +2,6 @@
 import { jest } from '@jest/globals';
 import nock from 'nock';
 import supertest from 'supertest';
-
 import app from './app.js';
 import config from './config.js';
 
@@ -46,6 +45,24 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 
 			expect(status).toBe(200);
 			expect(text).toContain('<h1>Writing</h1>');
+		});
+	});
+
+	describe('GET /writing/weeknotes', () => {
+		it('serves a 200 status with expected content', async () => {
+			const { status, text } = await request.get('/writing/weeknotes');
+
+			expect(status).toBe(200);
+			expect(text).toContain('<h1>Weeknotes</h1>');
+		});
+	});
+
+	describe('GET /writing/weeknotes.rss', () => {
+		it('serves a 200 status with expected content', async () => {
+			const { status, text } = await request.get('/writing/weeknotes.rss');
+
+			expect(status).toBe(200);
+			expect(text).toContain('<title>Leaf Rogers’ Weeknotes</title>');
 		});
 	});
 
