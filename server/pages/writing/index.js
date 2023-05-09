@@ -1,5 +1,11 @@
+import { format } from 'date-fns';
 import config from '../../config.js';
-import { importFile, toHtmlDocString } from '../../helpers.js';
+import {
+	importFile,
+	toHtmlDocString,
+	toWeeknoteViewModel
+} from '../../helpers.js';
+import { fetchWeeknotes } from '../../services.js';
 
 const commonCss = importFile('server/pages/common.css');
 
@@ -8,8 +14,10 @@ const commonCss = importFile('server/pages/common.css');
  * @param {ExpressResponse} res
  */
 export const controller = async (_req, res) => {
+	const tags = config.IS_PRODUCTION ? ['live'] : ['draft', 'live'];
+	const weeknotes = await fetchWeeknotes({ tags });
 	const data = {
-		items: [{ text: 'Weeknotes', url: `${config.BASE_URL}/writing/weeknotes` }],
+		items: weeknotes.map(toWeeknoteViewModel),
 		navLevels: [{ text: 'Leaf.is', url: `${config.BASE_URL}/` }],
 		title: 'Writing'
 	};
@@ -23,16 +31,20 @@ export const controller = async (_req, res) => {
 const view = ({ items, navLevels, title }) => {
 	return toHtmlDocString({
 		body: `
-			<ul>
+			<div>
+				<h2>Weeknotes</h2>
+			</div>
+			<ol reversed>
 				${items
 					.map(
-						({ text, url }) =>
+						({ date, titleAsText, uid }) =>
 							`<li>
-								<a href="${url}">${text}</a>
+								<a href="${config.BASE_URL}/writing/weeknotes/${uid}">
+									${titleAsText}</a> <span class="published">${format(date, 'do MMM')}</span>
 							</li>`
 					)
 					.join('\n')}
-			</ul>
+			</ol>
 		`.trim(),
 		navLevels,
 		styles: `
@@ -44,7 +56,7 @@ const view = ({ items, navLevels, title }) => {
 
 /**
  * @typedef PageSpecificViewModel
- * @property {NavLink[]} items
+ * @property {Weeknote[]} items
  *
  * @typedef {BaseUiViewModel & PageSpecificViewModel} ViewModel
  */
