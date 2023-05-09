@@ -33,6 +33,7 @@ const view = ({ items, navLevels, title }) => {
 		body: `
 			<div>
 				<h2>Weeknotes</h2>
+				<a href="${config.BASE_URL}/writing/weeknotes.rss">RSS feed</a>
 			</div>
 			<ol reversed>
 				${items

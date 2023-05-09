@@ -22,6 +22,7 @@ export const controller = async (_req, res) => {
 			{ text: 'Leaf.is', url: `${config.BASE_URL}/` },
 			{ text: 'Writing', url: `${config.BASE_URL}/writing` }
 		],
+		rssUrl: `${config.BASE_URL}/writing/weeknotes.rss`,
 		title: 'Weeknotes'
 	};
 
@@ -31,7 +32,7 @@ export const controller = async (_req, res) => {
 /**
  * @param {ViewModel} settings
  */
-const view = ({ items, navLevels, title }) => {
+const view = ({ items, navLevels, rssUrl, title }) => {
 	return toHtmlDocString({
 		body: `
 			<ol reversed>
@@ -46,6 +47,10 @@ const view = ({ items, navLevels, title }) => {
 					.join('\n')}
 			</ol>
 		`.trim(),
+		header: `
+			<h1>${title}</h1>
+			<a href="${rssUrl}">RSS feed</a>
+		`,
 		navLevels,
 		styles: `
 			${commonCss}
@@ -60,6 +65,7 @@ const view = ({ items, navLevels, title }) => {
 /**
  * @typedef PageSpecificViewModel
  * @property {Weeknote[]} items
+ * @property {URL['href']} rssUrl
  *
  * @typedef {BaseUiViewModel & PageSpecificViewModel} ViewModel
  */
