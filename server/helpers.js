@@ -148,3 +148,6 @@ export const linkifyFootnoteRefs = [
 		return `<sup>[<a href="#footnote-${footnoteNumber}" id="footnote-source-${footnoteNumber}"><span class="visually-hidden">Jump to footnote </span>${footnoteNumber}</a>]</sup>`;
 	}
 ];
+
+/** @type {[RegExp, string]} **/
+export const stripFootnoteRefs = [/\[(\d+)\]/g, ''];

@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import config from '../../config.js';
 import {
 	importFile,
+	stripFootnoteRefs,
 	toHtmlDocString,
 	toWeeknoteViewModel
 } from '../../helpers.js';
@@ -41,7 +42,12 @@ const view = ({ items, navLevels, rssUrl, title }) => {
 						({ date, titleAsText, uid }) =>
 							`<li>
 								<a href="${config.BASE_URL}/writing/weeknotes/${uid}">
-									${titleAsText}</a> <span class="published">${format(date, 'do MMM')}</span>
+									${titleAsText.replace(
+										...stripFootnoteRefs
+									)}</a> <span class="published">${format(
+								date,
+								'do MMM'
+							)}</span>
 							</li>`
 					)
 					.join('\n')}
