@@ -4,6 +4,7 @@ import config from '../../config.js';
 import {
 	importFile,
 	linkifyFootnoteRefs,
+	stripFootnoteRefs,
 	toHtmlDocString,
 	toWeeknoteViewModel
 } from '../../helpers.js';
@@ -145,7 +146,7 @@ const view = ({ bodyAsHtml, date, navLevels, titleAsText }) => {
 				}
 			}
 		`,
-		title: titleAsText
+		title: titleAsText.replace(...stripFootnoteRefs)
 	});
 };
 
