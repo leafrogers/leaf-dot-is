@@ -140,3 +140,11 @@ export const toWeeknoteViewModel = (weeknoteDbModel) => {
 		uid: weeknoteDbModel.uid
 	};
 };
+
+/** @type {[RegExp, (_: any, arg1: string) => string]} **/
+export const linkifyFootnoteRefs = [
+	/\[(\d+)\]/g,
+	(_, footnoteNumber) => {
+		return `<sup>[<a href="#footnote-${footnoteNumber}" id="footnote-source-${footnoteNumber}"><span class="visually-hidden">Jump to footnote </span>${footnoteNumber}</a>]</sup>`;
+	}
+];

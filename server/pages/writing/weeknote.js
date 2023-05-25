@@ -3,6 +3,7 @@ import { parse } from 'node-html-parser';
 import config from '../../config.js';
 import {
 	importFile,
+	linkifyFootnoteRefs,
 	toHtmlDocString,
 	toWeeknoteViewModel
 } from '../../helpers.js';
@@ -35,14 +36,6 @@ export const controller = async (req, res, next) => {
 
 	res.send(view(data));
 };
-
-/** @type {RegExTuple} **/
-const linkifyFootnoteRefs = [
-	/\[(\d+)\]/g,
-	(_, footnoteNumber) => {
-		return `<sup>[<a href="#footnote-${footnoteNumber}" id="footnote-source-${footnoteNumber}"><span class="visually-hidden">Jump to footnote </span>${footnoteNumber}</a>]</sup>`;
-	}
-];
 
 /**
  * @param {ViewModel} settings
@@ -158,5 +151,4 @@ const view = ({ bodyAsHtml, date, navLevels, titleAsText }) => {
 
 /**
  * @typedef {BaseUiViewModel & Weeknote} ViewModel
- * @typedef {[RegExp, (_: any, arg1: string) => string]} RegExTuple
  */
