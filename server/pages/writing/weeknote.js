@@ -36,15 +36,19 @@ export const controller = async (req, res, next) => {
 	res.send(view(data));
 };
 
+/** @type {RegExTuple} **/
+const linkifyFootnoteRefs = [
+	/\[(\d+)\]/g,
+	(_, footnoteNumber) => {
+		return `<sup>[<a href="#footnote-${footnoteNumber}" id="footnote-source-${footnoteNumber}"><span class="visually-hidden">Jump to footnote </span>${footnoteNumber}</a>]</sup>`;
+	}
+];
+
 /**
  * @param {ViewModel} settings
  */
 const view = ({ bodyAsHtml, date, navLevels, titleAsText }) => {
-	const body = parse(
-		bodyAsHtml.replace(/\[(\d+)\]/g, (_, footnoteNumber) => {
-			return `<sup>[<a href="#footnote-${footnoteNumber}" id="footnote-source-${footnoteNumber}"><span class="visually-hidden">Jump to footnote </span>${footnoteNumber}</a>]</sup>`;
-		})
-	);
+	const body = parse(bodyAsHtml.replace(...linkifyFootnoteRefs));
 
 	const footnotesHeading = [...body.querySelectorAll('h2')].find(
 		(el) => el.textContent === 'Footnotes'
@@ -82,7 +86,7 @@ const view = ({ bodyAsHtml, date, navLevels, titleAsText }) => {
 		header: `
 			<p class="published">${format(new Date(date), 'eee do MMM ’yy')}</p>
 			<p class="salutation">Dear Internet,</p>
-			<h1>${titleAsText}</h1>
+			<h1>${titleAsText.replace(...linkifyFootnoteRefs)}</h1>
 		`,
 		navLevels,
 		styles: `
@@ -154,4 +158,5 @@ const view = ({ bodyAsHtml, date, navLevels, titleAsText }) => {
 
 /**
  * @typedef {BaseUiViewModel & Weeknote} ViewModel
+ * @typedef {[RegExp, (_: any, arg1: string) => string]} RegExTuple
  */
