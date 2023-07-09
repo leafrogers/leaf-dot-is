@@ -94,22 +94,22 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 	});
 
 	describe('Caching', () => {
-		it('sets a 1 month cache header for favicon images', async () => {
+		it('sets a 1 year cache header for favicon images', async () => {
 			const { headers, status } = await request.get('/apple-touch-icon.png');
 			expect(status).toBe(200);
-			expect(headers['cache-control']).toEqual('public, max-age=2592000');
+			expect(headers['cache-control']).toEqual('public, max-age=31536000');
 		});
 
 		it('sets a no-cache header for the homepage', async () => {
 			const { headers, status } = await request.get('/');
 			expect(status).toBe(200);
-			expect(headers['cache-control']).toEqual('public, max-age=2592000');
+			expect(headers['cache-control']).toEqual('public, max-age=31536000');
 		});
 
-		it('sets a 1 month cache header for 404 pages', async () => {
+		it('sets a 1 year cache header for 404 pages', async () => {
 			const { headers, status } = await request.get('/made-up-path');
 			expect(status).toBe(404);
-			expect(headers['cache-control']).toEqual('public, max-age=2592000');
+			expect(headers['cache-control']).toEqual('public, max-age=31536000');
 		});
 
 		it('sets a no-cache header for non-404 error pages', async () => {

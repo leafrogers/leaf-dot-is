@@ -22,7 +22,7 @@ import { controller as writing } from './pages/writing/index.js';
 
 const app = express();
 const oneDayInSecs = 60 * 60 * 24;
-const oneMonthInSecs = oneDayInSecs * 30;
+const oneYearInSecs = oneDayInSecs * 365;
 
 app.use(security);
 app.use(compression());
@@ -30,11 +30,11 @@ app.use(favicon('public/favicon.ico'));
 // express.static needs to be called *before* setting a
 // general Cache-Control header, otherwise express.static
 // cache options are ignored
-app.use(express.static('public', { maxAge: '30 days' }));
+app.use(express.static('public', { maxAge: '1 year' }));
 
 const cacheableRoutes = express.Router();
 
-cacheableRoutes.use(cacheFor(oneMonthInSecs));
+cacheableRoutes.use(cacheFor(oneYearInSecs));
 
 cacheableRoutes.get('/', catchRejections(home));
 
@@ -52,7 +52,7 @@ app.use(doNotCache);
 
 app.get('/throw-error-in-prod', disallowInProduction);
 
-app.use(cacheFor(oneMonthInSecs), catchRejections(notFound));
+app.use(cacheFor(oneYearInSecs), catchRejections(notFound));
 app.use(catchErrors);
 
 export default app;
