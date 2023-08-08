@@ -45,9 +45,9 @@ const view = ({ items, navLevels, rssUrl, title }) => {
 									${titleAsText.replace(
 										...stripFootnoteRefs
 									)}</a> <span class="published">${format(
-								date,
-								'do MMM'
-							)}</span>
+										date,
+										'do MMM'
+									)}</span>
 							</li>`
 					)
 					.join('\n')}

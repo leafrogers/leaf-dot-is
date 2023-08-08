@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { format } from 'prettier';
+import prettier from '@prettier/sync';
 import { asHTML } from '@prismicio/helpers';
 import config from './config.js';
 import bootstrapper from '../client/bootstrapper.js';
@@ -106,7 +106,7 @@ export const toHtmlDocString = ({
 		<link rel="alternate" type="application/rss+xml" href="/writing/weeknotes.rss" title="Weeknotes feed">
 		<title>${title} — leaf.is</title>${maybeStyles}${maybeEnhancer}
 	</head>
-	${format(
+	${prettier.format(
 		`<body id="top">
 			<a href="#main-content" class="visually-hidden focusable">Skip to main content</a>
 			<div class="container">
