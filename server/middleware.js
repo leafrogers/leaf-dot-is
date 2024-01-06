@@ -70,7 +70,7 @@ export const security = (req, res, next) => {
 						]
 					}
 				}
-		  }
+			}
 		: undefined;
 
 	helmet(options)(req, res, next);
