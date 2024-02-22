@@ -4,9 +4,11 @@ processes = []
 
 [build]
   builder = "paketobuildpacks/builder:base"
+  buildpacks = ["gcr.io/paketo-buildpacks/nodejs"]
 
 [env]
   NODE_ENV = "production"
+  NODE_OPTIONS = ""
   PORT = "8080"
 
 [experimental]
