@@ -35,7 +35,7 @@ export const controller = async (req, res, next) => {
 		title: ''
 	};
 
-	res.send(view(data));
+	res.send(await view(data));
 };
 
 /**
