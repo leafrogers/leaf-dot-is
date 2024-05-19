@@ -23,7 +23,7 @@ export const controller = async (_req, res) => {
 		title: 'Writing'
 	};
 
-	res.send(view(data));
+	res.send(await view(data));
 };
 
 /**

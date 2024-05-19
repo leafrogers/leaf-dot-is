@@ -1,5 +1,5 @@
 import fs from 'fs';
-import prettier from '@prettier/sync';
+import prettier from 'prettier';
 import { asHTML } from '@prismicio/helpers';
 import config from './config.js';
 import bootstrapper from '../client/bootstrapper.js';
@@ -77,7 +77,7 @@ const toHtmlNavString = (navLevels) => {
  * @param {String} [settings.styles]
  * @param {String} settings.title
  */
-export const toHtmlDocString = ({
+export const toHtmlDocString = async ({
 	body,
 	header = '',
 	navLevels,
@@ -106,7 +106,7 @@ export const toHtmlDocString = ({
 		<link rel="alternate" type="application/rss+xml" href="/writing/weeknotes.rss" title="Weeknotes feed">
 		<title>${title} — leaf.is</title>${maybeStyles}${maybeEnhancer}
 	</head>
-	${prettier.format(
+	${await prettier.format(
 		`<body id="top">
 			<a href="#main-content" class="visually-hidden focusable">Skip to main content</a>
 			<div class="container">

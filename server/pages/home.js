@@ -12,7 +12,7 @@ export const controller = async (_req, res) => {
 		title: 'Hello I am Leaf'
 	};
 
-	res.send(view(data));
+	res.send(await view(data));
 };
 
 /**

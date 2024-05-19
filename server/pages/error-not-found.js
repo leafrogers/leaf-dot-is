@@ -19,7 +19,7 @@ export const controller = async (req, res) => {
 	});
 
 	if (acceptsHtml) {
-		const html = view(data);
+		const html = await view(data);
 
 		return res.status(404).send(html);
 	}

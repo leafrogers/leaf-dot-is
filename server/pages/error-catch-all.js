@@ -9,7 +9,7 @@ const commonCss = importFile('server/pages/common.css');
  * @param {ExpressResponse} res
  * @param {NextFunction} next
  */
-export const controller = (error, req, res, next) => {
+export const controller = async (error, req, res, next) => {
 	const requestId = req.get('X-Request-ID');
 	const acceptsHtml = Boolean(req.accepts('html'));
 
@@ -31,7 +31,7 @@ export const controller = (error, req, res, next) => {
 		});
 
 		if (acceptsHtml) {
-			const html = view(data);
+			const html = await view(data);
 			return res.status(data.status).send(html);
 		}
 
