@@ -4,145 +4,110 @@
 
 body {
 	background: lightgrey;
-	color: yellow;
-	font-family: 'Helvetica Neue', Helvetica, sans-serif;
-	font-size: 16px;
+	color: #0b0c0c;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+	margin: 0;
+	padding: 0;
 }
 
-h1 {
-	font-size: 55px;
-	font-weight: lighter;
-}
-
+h1,
 h2,
 h3,
 h4,
 h5 {
-	font-size: 16px;
-	font-weight: normal;
-	margin: 0;
+	color: inherit;
+	font-weight: inherit;
+	margin-top: 1rem;
+	margin-bottom: 1.25rem;
+	letter-spacing: 1px;
+}
+
+h1 {
+	font-size: 3.6rem;
+	margin-top: 0;
 }
 
 h2 {
-	margin-bottom: 10px;
-	text-transform: uppercase;
-}
-
-h2 + *,
-h2 + * + * {
-	color: #757575;
+	font-size: 2.2rem;
 }
 
 h3 {
-	color: black;
-	margin-bottom: 15px;
+	font-size: 1.6rem;
 }
 
-h4 {
-	color: #4a4949;
+.contrast-block h3 {
+	font-size: 2rem;
+}
+
+.contrast-block h4 {
+	margin-top: 2rem;
+	font-size: 1.8rem;
+}
+
+.contrast-block h5 {
+	margin-top: 1.2rem;
+	font-size: 1.4rem;
+}
+
+.title {
+	display: block;
+	font-size: 2.6rem;
+    margin-top: 1rem;
+	color: green;
+}
+
+.time {
+	font-size: 0.8em;
+	font-style: italic;
+	color: #505a5f;
 }
 
 b {
-	color: black;;
-	font-weight: normal;
+	font-weight: 400;
 }
 
 ul {
-	margin: 0 0 15px;
-	padding: 0 0 0 15px;
-}
-
-ul:last-child {
-	margin-bottom: 0;
-}
-
-ol {
 	margin: 0;
+	padding: 0;
+	padding-left: 1em;
+    list-style-type: '—';
+}
+
+li {
+	padding-left: 0.5em;
+}
+li:not(:last-child) {
+	margin-bottom: 0.5em;
+}
+
+ul, ol, p {
+	font-size: 1.2rem;
+	line-height: 1.5;
+	margin-bottom: 2rem;
 }
 
 main {
 	background: white;
-	color: black;
 	margin: 0;
-	max-width: 980px;
-	padding: 20px;
-	transition: margin ease-in-out 0.4s, padding ease-in-out 0.4s;
-}
-
-section {
-	max-width: 100%;
-	margin-top: 30px;
-}
-
-strong {
-	color: black;
-	font-weight: normal;
-}
-
-header section {
-	margin: 0;
+	max-width: 62rem;
+	padding: 2rem 1.25rem;
+	margin: 0 auto;
 }
 
 a {
 	color: green;
 }
 
-a:hover,
-a:focus {
-	text-decoration: underline;
-}
-
-h1,
-.title {
-	letter-spacing: 1px;
-	line-height: 1;
-	margin: 0;
-}
-
-.title {
-	color: green;
-	line-height: 1.3;
-	font-size: 32px;
-	font-weight: 200;
-	margin: 15px 0;
-}
-
-.contact a {
-	color: #595959;
-}
-
-.intro,
-.name {
-	padding-left: 0;
-}
-
-.intro {
-	margin-top: 0;
-}
-
 .conclusion {
 	align-self: end;
-	color: black;
 	margin: 0;
-}
-
-* + .compact-block {
-	margin-top: 15px;
 }
 
 .contrast-block {
-	background: #f7f7f7;
-	color: #6f6f6f;
-	padding: 8px;
-	margin: 10px 0;
-}
-
-* + .compact-sections section {
-	margin-top: 15px;
-}
-
-.compact-section {
-	margin-top: 0;
+	background: #f3f2f1;
+	padding: 1.75rem 2.25rem;
+	margin-bottom: 2.5rem;
 }
 
 .compact-list {
@@ -150,20 +115,16 @@ h1,
 	flex-wrap: wrap;
 	list-style: none;
 	padding: 0;
+	margin: 0;
 }
 
-.compact-list li::after {
+.compact-list li {
+	padding-left: 0;
+}
+
+.compact-list li:not(:last-child)::after {
 	content: ',';
-	padding-right: 0.3rem;
-}
-
-.compact-list li:last-child::after {
-	content: '';
-	padding-right: 0;
-}
-
-.time {
-	font-style: italic;
+	padding-right: 0.4em;
 }
 
 .company {
@@ -188,57 +149,86 @@ a[href^='mailto']::before {
 	}
 }
 
-/* use clamp instead? */
-@media all and (min-width: 630px) {
-	.compact-sections {
-		display: flex;
+.experience h2 {
+	margin-top: 0;
+}
+
+
+/* Smaller screens */
+@media all and (max-width: 789px) {
+	.time {
+		display: block;
+		margin-top: 0.4rem;
 	}
 
-	.compact-section {
-		flex-basis: 50%;
+	h1 {
+		font-size: 3rem;
+	}
+
+	.title {
+		font-size: 2.2rem;
+	}
+
+	h2 {
+		font-size: 1.6rem;
+	}
+
+	h3 {
+		font-size: 1.4rem;
+	}
+
+	.contrast-block h3 {
+		font-size: 1.8rem;
+	}
+
+	.contrast-block h4 {
+		font-size: 1.4rem;
+	}
+
+	.contrast-block h5 {
+		font-size: 1.2rem;
+	}
+
+	ul, ol, p {
+		font-size: 1rem;
+	}
+
+	.contrast-block {
+		padding-left: 1.25rem;
+		padding-right: 1.25rem;
+		margin-left: -1.25rem;
+		margin-right: -1.25rem;
 	}
 }
 
-/* use clamp instead? */
+/* Larger screens */
 @media all and (min-width: 790px) {
 	main {
-		padding: 50px 60px;
-		margin: 40px auto;
+		padding: 4rem 3rem;
+		margin: 5rem auto;
 	}
 
-	section {
-		padding-left: 20px;
-	}
-
-	section h2 {
-		margin-left: -20px;
-	}
-
-	.contact {
-		text-align: right;
-		margin-top: 4px;
+	.time {
+		margin-left: 0.4em;
 	}
 
 	.contact ul {
 		list-style: none;
+		margin-top: 0.5rem;
 	}
 
-	.compact-block {
-		display: flex;
+	.compact-sections {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 1rem;
+	}
+	
+	.compact-sections:first-of-type {
+		grid-template-columns: 1fr auto;
 	}
 
-	.compact-block h3 {
-		margin-bottom: 0;
-	}
-
-	.compact-block .compact-list:before {
-		content: ':';
-		margin-right: 5px;
-	}
-
-	a,
-	.time {
-		margin-left: 0.8rem;
+	.experience h2 {
+		margin-bottom: 3rem;
 	}
 }
 
@@ -249,44 +239,17 @@ a[href^='mailto']::before {
 		max-width: 795px;
 	}
 
-	h1 {
-		font-size: 52px;
-	}
-
-	body,
-	h2,
-	h3,
-	h4,
-	h5 {
-		font-size: 13px;
-	}
-
 	main {
-		margin: 0;
 		max-width: initial;
-		padding: 40px 42px;
-	}
-
-	section {
-		padding-left: 20px;
-	}
-
-	section h2 {
-		margin-left: -20px;
-	}
-
-	.title {
-		font-size: 29px;
 	}
 
 	.contact a[href*='https'] {
-		color: white;
 		text-decoration: none;
 	}
 
 	.contact a[href*='https']::after {
-		content: attr(href);
-		color: black;
+		padding-left: 0.3em;
+		content: "(" attr(href) ")";
 		text-decoration: underline;
 	}
 }
