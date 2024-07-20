@@ -13,10 +13,12 @@ jest.spyOn(global.console, 'debug').mockImplementation(() => {});
 jest.spyOn(global.console, 'error').mockImplementation(() => {});
 
 describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
-	beforeAll(() => {
-		nock.disableNetConnect();
-		nock.enableNetConnect('127.0.0.1');
-	});
+	beforeAll(() =>
+		nock(config.SUPABASE_URL || '')
+			.get('/rest/v1/grooklets')
+			.query(true)
+			.reply(200, [{ title: 'Grooklet title', body: 'Grooklet body' }])
+	);
 
 	beforeEach(() => {
 		config.APP_FRIENDLY_NAME = 'Test Title';
@@ -25,10 +27,9 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 	afterEach(() => {
 		config.APP_FRIENDLY_NAME = originalFriendlyTitle;
 		config.IS_PRODUCTION = originalIsProduction;
-		nock.cleanAll();
 	});
 
-	afterAll(() => nock.enableNetConnect());
+	afterAll(() => nock.cleanAll());
 
 	describe('GET /', () => {
 		it('serves a 200 status', async () => {
@@ -45,6 +46,19 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 
 			expect(status).toBe(200);
 			expect(text).toContain('<h1>Writing</h1>');
+			expect(text).toContain('<a href="/writing/weeknotes">Weeknotes</a>');
+			expect(text).toContain('<a href="/writing/grooklets">Grooklets</a>');
+		});
+	});
+
+	describe('GET /writing/grooklets', () => {
+		it('serves a 200 status with expected content', async () => {
+			const { status, text } = await request.get('/writing/grooklets');
+
+			expect(text).toContain('<h1>Grooklets</h1>');
+			expect(text).toContain('<h2>Grooklet title</h2>');
+			expect(text).toContain('<p>Grooklet body</p>');
+			expect(status).toBe(200);
 		});
 	});
 

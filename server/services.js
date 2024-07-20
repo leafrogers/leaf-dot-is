@@ -1,10 +1,15 @@
 import { createClient as createPrismicClient, filter } from '@prismicio/client';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import config from './config.js';
 
 /**
  * @type {PrismicClient}
  */
 let prismicClient;
+/**
+ * @type {SupabaseClient}
+ */
+let supabaseClient;
 
 const getPrismicClient = () => {
 	if (!prismicClient) {
@@ -14,6 +19,17 @@ const getPrismicClient = () => {
 	}
 
 	return prismicClient;
+};
+
+const getSupabaseClient = () => {
+	if (!supabaseClient) {
+		supabaseClient = createSupabaseClient(
+			config.SUPABASE_URL || '',
+			config.SUPABASE_KEY || ''
+		);
+	}
+
+	return supabaseClient;
 };
 
 /**
@@ -43,4 +59,17 @@ export const fetchWeeknote = async (weeknoteUid) => {
 
 		throw error;
 	}
+};
+
+/**
+ * @returns {Promise<Grooklet[] | []>}
+ */
+export const fetchGrooklets = async () => {
+	const { data, error } = await getSupabaseClient().from('grooklets').select();
+
+	if (error) {
+		throw new Error(`Error fetching grooklets: ${error.message}`);
+	}
+
+	return data ?? [];
 };

@@ -1,8 +1,6 @@
-import { format } from 'date-fns';
 import config from '../../config.js';
 import {
 	importFile,
-	stripFootnoteRefs,
 	toHtmlDocString,
 	toWeeknoteViewModel
 } from '../../helpers.js';
@@ -27,43 +25,28 @@ export const controller = async (_req, res) => {
 };
 
 /**
- * @param {ViewModel} settings
+ * @param {BaseUiViewModel} settings
  */
-const view = ({ items, navLevels, title }) => {
+const view = ({ navLevels, title }) => {
 	return toHtmlDocString({
 		body: `
-			<div>
-				<h2>Weeknotes</h2>
-				<a href="${config.BASE_URL}/writing/weeknotes.rss">RSS feed</a>
-			</div>
-			<ol reversed>
-				${items
-					.map(
-						({ date, titleAsText, uid }) =>
-							`<li>
-								<a href="${config.BASE_URL}/writing/weeknotes/${uid}">
-									${titleAsText.replace(
-										...stripFootnoteRefs
-									)}</a> <span class="published">${format(
-										date,
-										'do MMM'
-									)}</span>
-							</li>`
-					)
-					.join('\n')}
-			</ol>
+			<ul>
+				<li>
+					<a href="${config.BASE_URL}/writing/weeknotes">Weeknotes</a>
+					<span>(<a href="${config.BASE_URL}/writing/weeknotes.rss">RSS feed</a>)</span>
+				</li>
+				<li>
+					<a href="${config.BASE_URL}/writing/grooklets">Grooklets</a>
+				</li>
+			</ul>
 		`.trim(),
 		navLevels,
 		styles: `
 			${commonCss}
+			li span {
+				font-size: smaller;
+			}
 		`,
 		title
 	});
 };
-
-/**
- * @typedef PageSpecificViewModel
- * @property {Weeknote[]} items
- *
- * @typedef {BaseUiViewModel & PageSpecificViewModel} ViewModel
- */

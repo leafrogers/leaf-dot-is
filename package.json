@@ -6,7 +6,7 @@
   "scripts": {
     "build": "esbuild client/init.js --minify --bundle --outfile=public/js/init.js",
     "build:watch": "npm run -s build -- --watch",
-    "jest": "BASE_URL='' PERMALINK_BASE_URL='' PRISMIC_ACCESS_TOKEN='' PRISMIC_REPO_NAME='test' PRISMIC_TYPES_TOKEN='' node --experimental-vm-modules --no-warnings ./node_modules/.bin/jest",
+    "jest": "BASE_URL='' PERMALINK_BASE_URL='' PRISMIC_ACCESS_TOKEN='' PRISMIC_REPO_NAME='test' PRISMIC_TYPES_TOKEN='' SUPABASE_KEY='test' SUPABASE_URL='http://localhost:1234' node --experimental-vm-modules --no-warnings ./node_modules/.bin/jest",
     "lint": "npm run -s lint:syntax && npm run -s lint:types",
     "lint:syntax": "eslint \"**/*.js\" --ignore-pattern \"public/**\" && echo \"✓ Linted syntax and styling\"",
     "lint:types": "tsc -p jsconfig.json && echo \"✓ Linted types\"",
@@ -26,6 +26,7 @@
   "dependencies": {
     "@prismicio/client": "^7.3.1",
     "@prismicio/helpers": "^2.3.9",
+    "@supabase/supabase-js": "^2.44.3",
     "compression": "^1.7.4",
     "date-fns": "^3.3.1",
     "express": "^4.18.2",
@@ -49,7 +50,7 @@
     "eslint-plugin-prettier": "^5.1.3",
     "husky": "^9.0.11",
     "jest": "^29.7.0",
-    "nock": "^13.5.3",
+    "nock": "^14.0.0-beta",
     "nodemon": "^3.0.3",
     "prismic-ts-codegen": "^0.1.19",
     "supertest": "^6.3.4",
