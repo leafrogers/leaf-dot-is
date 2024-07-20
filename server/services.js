@@ -1,29 +1,28 @@
-import * as prismic from '@prismicio/client';
+import { createClient as createPrismicClient, filter } from '@prismicio/client';
 import config from './config.js';
 
 /**
  * @type {PrismicClient}
  */
-let dbClient;
+let prismicClient;
 
-const getDbClient = () => {
-	if (!dbClient) {
-		dbClient = prismic.createClient(config.DB_REPO_NAME || '', {
-			accessToken: config.DB_ACCESS_TOKEN
+const getPrismicClient = () => {
+	if (!prismicClient) {
+		prismicClient = createPrismicClient(config.PRISMIC_REPO_NAME || '', {
+			accessToken: config.PRISMIC_ACCESS_TOKEN
 		});
 	}
 
-	return dbClient;
+	return prismicClient;
 };
 
 /**
- *
  * @param {Object} _
  * @param {string[]} _.tags
  */
 export const fetchWeeknotes = ({ tags }) => {
-	return getDbClient().getAllByType('weeknotes', {
-		predicates: [prismic.predicate.any('document.tags', tags)],
+	return getPrismicClient().getAllByType('weeknotes', {
+		predicates: [filter.any('document.tags', tags)],
 		orderings: { field: 'my.weeknotes.date', direction: 'desc' }
 	});
 };
@@ -33,7 +32,7 @@ export const fetchWeeknotes = ({ tags }) => {
  */
 export const fetchWeeknote = async (weeknoteUid) => {
 	try {
-		return await getDbClient().getByUID('weeknotes', weeknoteUid);
+		return await getPrismicClient().getByUID('weeknotes', weeknoteUid);
 	} catch (error) {
 		if (
 			error instanceof Error &&
