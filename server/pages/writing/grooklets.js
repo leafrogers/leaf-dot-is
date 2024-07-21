@@ -62,7 +62,7 @@ const view = ({ items, navLevels, title }) => {
 
 			.grooklet::before,
 			.grooklet:last-of-type::after {
-				content: '~~~ ❀ ~~~';
+				content: '~~~ ❀ ~~~' / '';
 				display: block;
 				line-height: 1;
 				margin: 2.5rem 0;
