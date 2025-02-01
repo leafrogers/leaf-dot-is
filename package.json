@@ -10,7 +10,6 @@
     "lint": "npm run -s lint:syntax && npm run -s lint:types",
     "lint:syntax": "eslint \"**/*.js\" --ignore-pattern \"public/**\" && echo \"✓ Linted syntax and styling\"",
     "lint:types": "tsc -p jsconfig.json && echo \"✓ Linted types\"",
-    "postinstall": "husky",
     "start": "node server/init.js",
     "start:dev": "set -a; source .env; set +a && nodemon -e js,html,css",
     "test": "npm run -s lint && npm run -s test:coverage",

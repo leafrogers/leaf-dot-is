@@ -1,0 +1,13 @@
+services:
+  server:
+    build:
+      context: .
+    environment:
+      NODE_ENV: production
+      BASE_URL: abc
+      PERMALINK_BASE_URL: abc
+      PRISMIC_ACCESS_TOKEN: abc
+      PRISMIC_TYPES_TOKEN: abc
+      PRISMIC_REPO_NAME: abc
+    ports:
+      - 3001:3001
