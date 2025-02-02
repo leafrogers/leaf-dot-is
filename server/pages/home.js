@@ -25,14 +25,16 @@ const view = ({ title }) => {
 			<ul>
 				<li><a href="/writing">Writing</a></li>
 			</ul>
-			<p>Find me elsewhere on:</p>
+			<p>Find me elsewhere:</p>
 			<ul>
-				<li><a rel="me" href="https://neurodifferent.me/@leaf">Mastodon</a></li>
-				<li><a rel="me" href="https://twitter.com/LeafRogers">Twitter</a> while stocks last</li>
+				<li>
+					<a rel="me" href="https://bsky.app/profile/www.leaf.is">Bluesky</a>,
+					<a rel="me" href="https://neurodifferent.me/@leaf">Mastodon</a>
+				</li>
 				<li><a rel="me" href="https://github.com/leafrogers">GitHub</a> although my current work is in a private GitLab account, boo</li>
 				<li><a href="https://www.linkedin.com/in/leafrogers">LinkedIn</a> if that’s your thing</li>
 			</ul>
-			<p>I’m unavailable for work contracts until January 2025.</p>
+			<p>I’m unavailable for work contracts until March 2025.</p>
 			<p>This content is a bit dry isn’t it! Yeah. Anyway you look nice today.</p>
 		`,
 		navLevels: [],
