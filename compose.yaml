@@ -4,6 +4,7 @@ services:
       context: .
     environment:
       NODE_ENV: production
+      PG_CONNECTION_STRING: abc
       BASE_URL: abc
       PERMALINK_BASE_URL: abc
       PRISMIC_ACCESS_TOKEN: abc

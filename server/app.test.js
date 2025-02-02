@@ -14,7 +14,7 @@ jest.spyOn(global.console, 'error').mockImplementation(() => {});
 
 describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 	beforeAll(() =>
-		nock(config.SUPABASE_URL || '')
+		nock(config.PG_CONNECTION_STRING || '')
 			.get('/rest/v1/grooklets')
 			.query(true)
 			.reply(200, [{ title: 'Grooklet title', body: 'Grooklet body' }])

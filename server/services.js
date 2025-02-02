@@ -1,15 +1,45 @@
 import { createClient as createPrismicClient, filter } from '@prismicio/client';
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { Pool } from 'postgres-pool';
 import config from './config.js';
 
 /**
  * @type {PrismicClient}
  */
 let prismicClient;
-/**
- * @type {SupabaseClient}
- */
-let supabaseClient;
+
+const pool = new Pool({
+	connectionString: config.PG_CONNECTION_STRING || '',
+	connectionTimeoutMillis: 16_000,
+	idleTimeoutMillis: 8_000,
+	poolSize: 8
+});
+
+[
+	'connectionAddedToPool',
+	'connectionIdle',
+	'connectionRemovedFromIdlePool',
+	'connectionRemovedFromPool',
+	'connectionRequestDequeued',
+	'connectionRequestQueued',
+	'error',
+	'idleConnectionActivated',
+	'queryDeniedForConnectionError',
+	'queryDeniedForReadOnlyTransaction',
+	'retryConnectionOnError',
+	'waitingForDatabaseToStart'
+].forEach((event) => {
+	// @ts-ignore
+	pool.on(event, (something) => {
+		console.log(
+			`IN ${event}`,
+			JSON.stringify(
+				something,
+				(_, v) => (typeof v === 'bigint' ? v.toString() : v),
+				2
+			)
+		);
+	});
+});
 
 const getPrismicClient = () => {
 	if (!prismicClient) {
@@ -19,17 +49,6 @@ const getPrismicClient = () => {
 	}
 
 	return prismicClient;
-};
-
-const getSupabaseClient = () => {
-	if (!supabaseClient) {
-		supabaseClient = createSupabaseClient(
-			config.SUPABASE_URL || '',
-			config.SUPABASE_KEY || ''
-		);
-	}
-
-	return supabaseClient;
 };
 
 /**
@@ -62,14 +81,18 @@ export const fetchWeeknote = async (weeknoteUid) => {
 };
 
 /**
- * @returns {Promise<Grooklet[] | []>}
+ * @returns {Promise<Grooklet[]>}
  */
 export const fetchGrooklets = async () => {
-	const { data, error } = await getSupabaseClient().from('grooklets').select();
+	let grooklets = [];
 
-	if (error) {
+	try {
+		const result = await pool.query(`select * from lis_grooklets`);
+		grooklets = result.rows;
+	} catch (error) {
+		// @ts-ignore
 		throw new Error(`Error fetching grooklets: ${error.message}`);
 	}
 
-	return data ?? [];
+	return grooklets;
 };
