@@ -30,7 +30,7 @@ const config = {
 	PRISMIC_ACCESS_TOKEN: process.env.PRISMIC_ACCESS_TOKEN,
 	PRISMIC_TYPES_TOKEN: process.env.PRISMIC_TYPES_TOKEN,
 	PRISMIC_REPO_NAME: process.env.PRISMIC_REPO_NAME,
-	USES_CLIENT_JS: false
+	USES_CLIENT_JS: true
 };
 
 assertNoUndefinedValues(config);

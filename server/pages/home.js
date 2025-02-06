@@ -21,9 +21,10 @@ export const controller = async (_req, res) => {
 const view = ({ title }) => {
 	return toHtmlDocString({
 		body: `
-			<p>One day I will make this nice. Until then, here’s a list of things I’ve done:</p>
+			<p>One day I will make this nice. Until then, here’s a list of things I’ve been doing:</p>
 			<ul>
 				<li><a href="/writing">Writing</a></li>
+				<li><a href="/consuming">Consuming</a></li>
 			</ul>
 			<p>Find me elsewhere:</p>
 			<ul>

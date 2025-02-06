@@ -96,3 +96,25 @@ export const fetchGrooklets = async () => {
 
 	return grooklets;
 };
+
+export const fetchMeEvents = async () => {
+	let meEvents = [];
+
+	try {
+		const result = await pool.query(`
+			select meta,title,type,type_short,timestamp
+			from lis_me_events
+			join lis_me_event_types on type_id = lis_me_event_types.id
+			where timestamp >= current_date at time zone 'UTC' - interval '6 days'
+			and timestamp < current_date
+			order by timestamp desc
+			limit 200
+		`);
+		meEvents = result.rows;
+	} catch (error) {
+		// @ts-ignore
+		throw new Error(`Error fetching me events: ${error.message}`);
+	}
+
+	return meEvents;
+};
