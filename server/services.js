@@ -106,7 +106,6 @@ export const fetchMeEvents = async () => {
 			from lis_me_events
 			join lis_me_event_types on type_id = lis_me_event_types.id
 			where timestamp >= current_date at time zone 'UTC' - interval '6 days'
-			and timestamp < current_date
 			order by timestamp desc
 			limit 200
 		`);
