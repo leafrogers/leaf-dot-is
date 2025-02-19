@@ -35,7 +35,7 @@ const buildGroupsFromEvents = (meEvents) => {
 				.map((meEvent) =>
 					meEvent
 						? `
-							<div class="group ${meEvent.type_short}">
+							<div class="group ${meEvent.typeShort}">
 								<dt class="group__tag">${meEvent.type}</dt>
 								<dd class="group__timestamp">
 									<time datetime="${meEvent.timestamp.toISOString()}">${new Intl.DateTimeFormat(
@@ -43,7 +43,7 @@ const buildGroupsFromEvents = (meEvents) => {
 										{ dateStyle: 'short', timeStyle: 'short' }
 									).format(meEvent.timestamp)}</time>
 								</dd>
-								<dd class="group__title">${meEvent.title}${meEvent.meta ? ` (${meEvent.meta})` : ''}</dd>
+								<dd class="group__title">${meEvent.groupTitle}${meEvent.eventTitle ? `: ${meEvent.eventTitle}` : ''}</dd>
 							</div>
 						`
 						: ''
@@ -79,7 +79,8 @@ const view = ({ meEvents, navLevels, title }) =>
 			.group.books + .group.books,
 			.group.games + .group.games,
 			.group.movies + .group.movies,
-			.group.music + .group.music {
+			.group.music + .group.music,
+			.group.tv + .group.tv {
 				padding-top: 0.3rem;
 			}
 
@@ -87,12 +88,9 @@ const view = ({ meEvents, navLevels, title }) =>
 				border-radius: 6px;
 				border: 1px solid;
 				display: inline-block;
-				font-family: unset;
-				font-size: 0.8rem;
-				line-height: 1;
+				font-size: 1rem;
 				margin-inline-end: 0;
-				padding: 0.4rem;
-				text-transform: uppercase;
+				padding: 0.2rem 0.4rem 0.4rem;
 			}
 
 			.group__title {
@@ -138,10 +136,11 @@ const view = ({ meEvents, navLevels, title }) =>
 /**
  * @typedef MeEvent
  * @property {string} className
- * @property {string} [meta]
+ * @property {string} [eventTitle]
+ * @property {string} groupTitle
  * @property {Date} timestamp
- * @property {string} title
  * @property {string} type
+ * @property {string} typeShort
  *
  * @typedef {(MeEvent | null)[]} MeEvents
  *

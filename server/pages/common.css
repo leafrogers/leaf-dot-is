@@ -25,6 +25,8 @@ main {
 
 h1,
 h2,
+.group__tag,
+.group__timestamp,
 .published,
 .valediction {
 	font-family: 'Apfel Grotezk', arial, sans-serif;
