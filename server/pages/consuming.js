@@ -29,27 +29,63 @@ const buildGroupsFromEvents = (meEvents) => {
 		return '';
 	}
 
+	const sprinkledEvents = [];
+
+	// FIXME: Possible bug if consecutive non-event-title events
+	for (const meEvent of meEvents) {
+		const lastThing = sprinkledEvents[sprinkledEvents.length - 1];
+
+		if (!lastThing || lastThing.parentEvent.groupTitle !== meEvent.groupTitle) {
+			const e = {
+				parentEvent: meEvent,
+				childEvents: []
+			};
+			if (meEvent.eventTitle) {
+				e.childEvents.push(meEvent);
+			}
+			sprinkledEvents.push(e);
+		} else {
+			lastThing.childEvents.push(meEvent);
+		}
+	}
+
 	return `
-		<dl>
-			${meEvents
-				.map((meEvent) =>
-					meEvent
-						? `
-							<div class="group ${meEvent.typeShort}">
-								<dt class="group__tag">${meEvent.type}</dt>
+		<ol class="group__container">
+			${sprinkledEvents
+				.map(
+					(sprinkledEvent) => `
+						<li>
+							<dl class="group ${sprinkledEvent.parentEvent.typeShort}">
+								<dt class="visually-hidden">Event type</dt>
+								<dd class="group__tag">${sprinkledEvent.parentEvent.type}</dd>
+
+								<dt class="visually-hidden">Timestamp</dt>
 								<dd class="group__timestamp">
-									<time datetime="${meEvent.timestamp.toISOString()}">${new Intl.DateTimeFormat(
+									<time datetime="${sprinkledEvent.parentEvent.timestamp.toISOString()}">${new Intl.DateTimeFormat(
 										'en-GB',
 										{ dateStyle: 'short', timeStyle: 'short' }
-									).format(meEvent.timestamp)}</time>
+									).format(sprinkledEvent.parentEvent.timestamp)}</time>
 								</dd>
-								<dd class="group__title">${meEvent.groupTitle}${meEvent.eventTitle ? `: ${meEvent.eventTitle}` : ''}</dd>
-							</div>
-						`
-						: ''
+
+								<dt class="visually-hidden">Group title</dt>
+								<dd class="group__title">${sprinkledEvent.parentEvent.groupTitle}${sprinkledEvent.childEvents.length ? ':' : ''}</dd>
+
+								${sprinkledEvent.childEvents
+									.map(
+										(childEvent) => `
+											<dt class="visually-hidden">Sub event</dt>
+											<dd class="group__child">
+												<span class="group__icon" aria-hidden="true">↳ </span>${childEvent.eventTitle}
+											</dd>
+										`
+									)
+									.join('\n')}
+							</dl>
+						</li>
+					`
 				)
 				.join('\n')}
-		</dl>
+		</ol>
 	`;
 };
 
@@ -66,69 +102,51 @@ const view = ({ meEvents, navLevels, title }) =>
 		styles: `
 			${commonCss}
 
+			.group__container {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+
 			.group {
-				align-items: center;
-				padding-top: 1.5rem;
-				transition: opacity 100ms ease-in-out 100ms;
-			}
-
-			.group:first-child {
-				padding-top: 0;
-			}
-
-			.group.books + .group.books,
-			.group.games + .group.games,
-			.group.movies + .group.movies,
-			.group.music + .group.music,
-			.group.tv + .group.tv {
-				padding-top: 0.3rem;
+				display: grid;
+				grid-template-columns: max-content 1fr;
+				margin-top: 1.7rem;
 			}
 
 			.group__tag {
 				border-radius: 6px;
 				border: 1px solid;
-				display: inline-block;
-				font-size: 1rem;
-				margin-inline-end: 0;
+				grid-column: 1/2;
+				margin: 0;
 				padding: 0.2rem 0.4rem 0.4rem;
 			}
 
-			.group__title {
-				margin-left: 0;
-				overflow: hidden;
-				padding-top: 0.3rem;
-				text-overflow: ellipsis;
-				text-wrap: nowrap;
-			}
-
 			.group__timestamp {
-				display: inline-block;
+				align-self: center;
 				margin-left: auto;
-				min-width: max-content;
 			}
 
-			@media (min-width: 600px) {
-				.container {
-					padding-bottom: 1rem;
-				}
+			.group__title {
+				border-right: 1px dashed;
+				grid-column: 1/-1;
+				margin-left: 0.4rem;
+				padding: 0.5rem 0.5rem 0 0;
+			}
 
-				.group {
-					display: flex;
-				}
+			.group__child {
+				border-right: 1px dashed;
+				display: flex;
+				grid-column: 1/-1;
+				line-height: 1.4;
+				margin-left: 0.5rem;
+				padding: 0.4rem 0.4rem 0.4rem 0;
+			}
 
-				.group__tag {
-					margin-inline-end: 0.5rem;
-					min-width: max-content;
-				}
-
-				.group__timestamp {
-					order: 3;
-					padding-left: 1rem;
-				}
-
-				.group__title {
-					padding-top: 0;
-				}
+			.group__icon {
+				border-radius: 6px;
+				margin-right: 0.3rem;
+			}
 		`,
 		title
 	});
