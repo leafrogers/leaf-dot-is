@@ -87,7 +87,7 @@ export const fetchGrooklets = async () => {
 	let grooklets = [];
 
 	try {
-		const result = await pool.query(`select * from lis_grooklets`);
+		const result = await pool.query(`select * from lis.grooklets`);
 		grooklets = result.rows;
 	} catch (error) {
 		// @ts-ignore
@@ -103,9 +103,8 @@ export const fetchMeEvents = async () => {
 	try {
 		const result = await pool.query(`
 			select event_title as "eventTitle",group_title as "groupTitle",type,type_short as "typeShort",timestamp
-			from lis_me_events
-			join lis_me_event_types on type_id = lis_me_event_types.id
-			where verb = 'consuming'
+			from lis.me_events
+			join lis.me_event_types on type_id = lis.me_event_types.id
 			and timestamp >= current_date at time zone 'UTC' - interval '6 days'
 			order by timestamp desc
 			limit 200
