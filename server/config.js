@@ -26,7 +26,7 @@ const config = {
 	IS_PRODUCTION: process.env.NODE_ENV === 'production',
 	PERMALINK_BASE_URL: process.env.PERMALINK_BASE_URL,
 	PG_CONNECTION_STRING: process.env.PG_CONNECTION_STRING,
-	PORT: process.env.PORT || 3001,
+	PORT: process.env.PORT || 3002,
 	PRISMIC_ACCESS_TOKEN: process.env.PRISMIC_ACCESS_TOKEN,
 	PRISMIC_TYPES_TOKEN: process.env.PRISMIC_TYPES_TOKEN,
 	PRISMIC_REPO_NAME: process.env.PRISMIC_REPO_NAME,

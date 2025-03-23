@@ -11,4 +11,4 @@ services:
       PRISMIC_TYPES_TOKEN: ${PRISMIC_TYPES_TOKEN}
       PRISMIC_REPO_NAME: ${PRISMIC_REPO_NAME}
     ports:
-      - 3001:3001
+      - 3002:3002
