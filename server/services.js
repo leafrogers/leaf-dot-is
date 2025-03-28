@@ -97,7 +97,10 @@ export const fetchGrooklets = async () => {
 	return grooklets;
 };
 
-export const fetchMeEvents = async () => {
+/**
+ * @param {string} eventType
+ */
+export const fetchMeEvents = async (eventType) => {
 	let meEvents = [];
 
 	try {
@@ -106,7 +109,8 @@ export const fetchMeEvents = async () => {
 			from lis.me_events
 			join lis.me_event_types on type_id = lis.me_event_types.id
 			and timestamp <= current_timestamp
-			and timestamp >= current_timestamp at time zone 'UTC' - interval '6 days'
+			${eventType ? '' : `and timestamp >= current_timestamp at time zone 'UTC' - interval '6 days'`}
+			${eventType ? `where type_short = '${eventType}'` : ''}
 			order by timestamp desc
 			limit 200
 		`);
@@ -117,4 +121,21 @@ export const fetchMeEvents = async () => {
 	}
 
 	return meEvents;
+};
+
+export const fetchMeEventTypes = async () => {
+	let meEventTypes = [];
+
+	try {
+		const result = await pool.query(`
+			select type,type_short as "typeShort"
+			from lis.me_event_types
+			order by type asc
+		`);
+		meEventTypes = result.rows;
+	} catch (error) {
+		throw new Error(`Error fetching me event types: ${error.message}`);
+	}
+
+	return meEventTypes;
 };

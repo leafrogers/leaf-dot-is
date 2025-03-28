@@ -11,12 +11,12 @@ import {
 import { catchRejections } from './helpers.js';
 
 import { controller as catchErrors } from './pages/error-catch-all.js';
-import { controller as consuming } from './pages/consuming.js';
 import { controller as cv } from './pages/cv/2025/index.js';
 import { controller as cv2015 } from './pages/cv/2015/index.js';
 import { controller as cv2022 } from './pages/cv/2022/index.js';
 import { controller as grooklets } from './pages/writing/grooklets.js';
 import { controller as home } from './pages/home.js';
+import { controller as inhaling } from './pages/inhaling.js';
 import { controller as notFound } from './pages/error-not-found.js';
 import { controller as weeknote } from './pages/writing/weeknote.js';
 import { controller as weeknotes } from './pages/writing/weeknotes.js';
@@ -41,6 +41,7 @@ cacheableRoutes.use(cacheFor(oneYearInSecs));
 
 cacheableRoutes.get('/', catchRejections(home));
 
+cacheableRoutes.get('/consuming', ({ res }) => res.redirect(301, '/inhaling'));
 cacheableRoutes.get('/contracting/cv', catchRejections(cv));
 cacheableRoutes.get('/contracting/here/is/his/cv', ({ res }) =>
 	res.redirect('/contracting/here/is/their/cv')
@@ -49,13 +50,13 @@ cacheableRoutes.get('/contracting/here/is/their/cv', catchRejections(cv));
 cacheableRoutes.get('/contracting/cv/2015', catchRejections(cv2015));
 cacheableRoutes.get('/contracting/cv/2022', catchRejections(cv2022));
 cacheableRoutes.get('/contracting/cv/2025', catchRejections(cv));
+cacheableRoutes.get('/inhaling', catchRejections(inhaling));
+cacheableRoutes.get('/inhaling/:eventType', catchRejections(inhaling));
 cacheableRoutes.get('/writing', catchRejections(writing));
 cacheableRoutes.get('/writing/grooklets', catchRejections(grooklets));
 cacheableRoutes.get('/writing/weeknotes', catchRejections(weeknotes));
 cacheableRoutes.get('/writing/weeknotes/:uid', catchRejections(weeknote));
 cacheableRoutes.get('/writing/weeknotes.rss', catchRejections(weeknotesRss));
-
-cacheableRoutes.get('/consuming', catchRejections(consuming));
 
 app.use(cacheableRoutes);
 app.use(doNotCache);
