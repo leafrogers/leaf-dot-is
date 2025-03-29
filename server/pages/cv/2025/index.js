@@ -34,7 +34,30 @@ const view = ({ title }) => {
 		<title>${title}</title>
 		<style>${stripSpace(styles)}</style>
 	</head>
-	<body>
+	<body${config.IS_PRODUCTION ? '' : ' contenteditable'}>
+		${
+			config.IS_PRODUCTION
+				? ''
+				: `
+				<script>
+					const wrapSelectionWithB = (event) => {
+						const selection = document.getSelection();
+
+						if (selection.type !== 'Range') { return; }
+						if (event.target.tagName !== 'LI') { return; }
+
+						const range = selection.getRangeAt(0);
+						const selectionContents = range.extractContents();
+						const b = document.createElement('b');
+
+						b.appendChild(selectionContents);
+
+						range.insertNode(b);
+					};
+
+					document.body.addEventListener('click', wrapSelectionWithB);
+				</script>`
+		}
 		${body}
 	</body>
 </html>`;
