@@ -73,5 +73,9 @@ export const security = (req, res, next) => {
 			}
 		: undefined;
 
-	helmet(options)(req, res, next);
+	if (config.IS_PRODUCTION) {
+		return helmet(options)(req, res, next);
+	}
+
+	next();
 };
