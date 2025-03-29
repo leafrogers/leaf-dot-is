@@ -13,7 +13,7 @@ export const controller = async (_req, res) => {
 		title: 'Leaf Rogers'
 	};
 
-	res.send(await view(data));
+	res.send(view(data));
 };
 
 /**
