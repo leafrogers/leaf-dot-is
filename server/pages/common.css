@@ -156,7 +156,7 @@ a:focus {
 		border-left-width: 6px;
 		font-size: 1.2rem;
 		max-width: 70ch;
-		padding: 3rem 4rem 0;
+		padding: 3rem 4rem 2rem;
 	}
 
 	.nav-list {
