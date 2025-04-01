@@ -1,3 +1,4 @@
+import { relativeTimestampStyles } from '../../shared/components/relative-timestamps/styles.js';
 import { importFile, toHtmlDocString } from '../helpers.js';
 import { fetchMeEventTypes, fetchMeEvents } from '../services.js';
 
@@ -263,6 +264,7 @@ const view = ({ meEvents, meEventTypes, navLevels, title }) =>
 			.group__timestamp {
 				align-self: center;
 				margin-left: auto;
+				position: relative;
 			}
 
 			.group__title {
@@ -306,6 +308,8 @@ const view = ({ meEvents, meEventTypes, navLevels, title }) =>
 			.inline-list li:last-child::after {
 				content: '.';
 			}
+
+			${relativeTimestampStyles}
 		`,
 		title
 	});
