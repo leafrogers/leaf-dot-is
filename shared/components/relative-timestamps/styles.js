@@ -15,6 +15,7 @@ export const relativeTimestampStyles = `
 	.${popoverClassName}[${attributeName}="true"] + .${popoverClassName}-target {
 		background: #08111c;
 		border: 5px solid;
+		color: #fff0e3;
 		display: block;
 		padding: 0.5rem;
 		position: absolute;
