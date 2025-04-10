@@ -272,6 +272,7 @@ const view = ({ meEvents, meEventTypes, navLevels, title }) =>
 				grid-column: 1/-1;
 				margin-left: 0.4rem;
 				padding: 0.5rem 0.5rem 0 0;
+				text-wrap: balance;
 			}
 
 			.group__child {
@@ -281,6 +282,7 @@ const view = ({ meEvents, meEventTypes, navLevels, title }) =>
 				line-height: 1.4;
 				margin-left: 0.5rem;
 				padding: 0.4rem 0.4rem 0.4rem 0;
+				text-wrap: balance;
 			}
 
 			.group__icon {
