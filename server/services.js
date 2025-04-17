@@ -105,7 +105,7 @@ export const fetchMeEvents = async (eventType) => {
 
 	try {
 		const result = await pool.query(`
-			select event_title as "eventTitle",group_title as "groupTitle",type,type_short as "typeShort",timestamp
+			select event_title as "eventTitle", grouping_threshold as "groupingThreshold", group_title as "groupTitle",type,type_short as "typeShort",timestamp
 			from lis.me_events
 			join lis.me_event_types on type_id = lis.me_event_types.id
 			and timestamp <= current_timestamp

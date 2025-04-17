@@ -1,3 +1,5 @@
+/* eslint-disable complexity */
+/* eslint-disable max-depth */
 import { relativeTimestampStyles } from '../../shared/components/relative-timestamps/styles.js';
 import { importFile, toHtmlDocString } from '../helpers.js';
 import { fetchMeEventTypes, fetchMeEvents } from '../services.js';
@@ -8,6 +10,7 @@ const commonCss = importFile('server/pages/common.css');
  * @typedef MeEvent
  * @property {string} className
  * @property {string} [eventTitle]
+ * @property {number} groupingThreshold
  * @property {string} groupTitle
  * @property {Date} timestamp
  * @property {string} type
@@ -20,16 +23,94 @@ const commonCss = importFile('server/pages/common.css');
  * @typedef {MeEvent[]} MeEvents
  * @typedef {MeEventType[]} MeEventTypes
  *
- * @typedef GroupedEvent
- * @property {MeEvent} parentEvent
- * @property {MeEvents} childEvents
+ * @typedef {MeEventGroup[]} MeEventGroups
+ *
+ * @typedef MeEventGroup
+ * @property {(string | undefined)[]} events
+ * @property {Date} timestamp
+ * @property {string} title
+ * @property {string} type
  *
  * @typedef PageSpecificViewModel
- * @property {MeEvents} meEvents
+ * @property {MeEventGroups} meEventGroups
  * @property {MeEventTypes} meEventTypes
  *
  * @typedef {BaseUiViewModel & PageSpecificViewModel} ViewModel
  */
+
+/**
+ * @param {MeEvents} meEvents
+ */
+const groupEvents = (meEvents) => {
+	/**
+	 * @type {MeEventGroups}
+	 */
+	const groupedEvents = [];
+
+	// For each meEvent…
+	for (let i = 0, l = meEvents.length; i < l; i += 1) {
+		const currentEvent = meEvents[i];
+
+		/** @type {MeEvents} */
+		let consecutiveEvents = [currentEvent];
+
+		// …if there’s an event title then start collecting any consecutive events
+		// with the same event type
+		for (let j = i; j < l - 1; j += 1, i += 1) {
+			const thisEvent = meEvents[j];
+			const nextEvent = meEvents[j + 1];
+
+			if (
+				!nextEvent ||
+				nextEvent.typeShort !== currentEvent.typeShort ||
+				new Date(thisEvent.timestamp).getTime() -
+					new Date(nextEvent.timestamp).getTime() >
+					currentEvent.groupingThreshold * 60000
+			) {
+				break;
+			}
+
+			consecutiveEvents.push(nextEvent);
+		}
+
+		/**
+		 * @type {string[]}
+		 */
+		let processedEvents = [];
+		let title = '';
+
+		if (consecutiveEvents.length > 1) {
+			if (
+				consecutiveEvents.every((e) => e.groupTitle === currentEvent.groupTitle)
+			) {
+				processedEvents = consecutiveEvents.map(({ eventTitle }) => eventTitle);
+
+				title = `${currentEvent.groupTitle}:`;
+			} else {
+				processedEvents = consecutiveEvents.map(
+					({ groupTitle, eventTitle }) => `${groupTitle}: ${eventTitle}`
+				);
+			}
+		} else {
+			if (currentEvent.eventTitle) {
+				processedEvents = [currentEvent.eventTitle];
+				title = `${currentEvent.groupTitle}:`;
+			} else {
+				processedEvents = [];
+				title = currentEvent.groupTitle;
+			}
+		}
+
+		groupedEvents.push({
+			events: processedEvents,
+			timestamp: new Date(currentEvent.timestamp),
+			title,
+			type: currentEvent.type
+		});
+	}
+
+	return groupedEvents;
+};
 
 /**
  * @param {ExpressRequest} req
@@ -61,7 +142,7 @@ export const controller = async (req, res, next) => {
 
 	/** @type {ViewModel} */
 	const data = {
-		meEvents,
+		meEventGroups: groupEvents(meEvents),
 		meEventTypes,
 		navLevels,
 		title
@@ -71,132 +152,52 @@ export const controller = async (req, res, next) => {
 };
 
 /**
- * @param {MeEvents} meEvents
+ * @param {MeEventGroups} meEventGroups
  */
-// eslint-disable-next-line complexity
-const groupEvents = (meEvents) => {
-	const groupedEvents = [];
-
-	for (const meEvent of meEvents) {
-		const lastThing = groupedEvents[groupedEvents.length - 1];
-
-		if (lastThing && lastThing.parentEvent.groupTitle === meEvent.groupTitle) {
-			lastThing.childEvents.push(meEvent);
-			continue;
-		}
-
-		const e = {
-			parentEvent: meEvent,
-			/** @type {MeEvents} */
-			childEvents: []
-		};
-		if (meEvent.eventTitle) {
-			e.childEvents.push(meEvent);
-		}
-		groupedEvents.push(e);
-	}
-
-	return groupedEvents;
-};
-
-/**
- * @param {MeEvent} childEvent
- */
-const buildChildEvent = (childEvent) => `
-	<dt class="visually-hidden">Sub event</dt>
-	<dd class="group__child">
-		<span class="group__icon" aria-hidden="true">↳ </span>${childEvent.eventTitle}
-	</dd>
-`;
-
-/**
- * @param {GroupedEvent} groupedEvent
- */
-const buildGroupedEvent = (groupedEvent) => `
-	<dl class="group ${groupedEvent.parentEvent.typeShort}">
-		<dt class="visually-hidden">Event type</dt>
-		<dd class="group__tag">${groupedEvent.parentEvent.type}</dd>
-
-		<dt class="visually-hidden">Timestamp</dt>
-		<dd class="group__timestamp">
-			<time datetime="${groupedEvent.parentEvent.timestamp.toISOString()}">${new Intl.DateTimeFormat(
-				'en-GB',
-				{ dateStyle: 'short', timeStyle: 'short' }
-			).format(groupedEvent.parentEvent.timestamp)}</time>
-		</dd>
-
-		<dt class="visually-hidden">Group title</dt>
-		<dd class="group__title">${
-			groupedEvent.parentEvent.groupTitle
-		}${groupedEvent.childEvents.length ? ':' : ''}</dd>
-
-		${groupedEvent.childEvents.map(buildChildEvent).join('\n')}
-	</dl>
-`;
-
-/**
- * @param {MeEvents} meEvents
- */
-const buildGroupedEvents = (meEvents) => {
-	if (!meEvents || !meEvents.length) {
+const buildEvents = (meEventGroups) => {
+	if (!meEventGroups?.length) {
 		return '';
 	}
 
 	return `
 		<ol class="group__container">
-			${groupEvents(meEvents)
-				.map((meEvent) => `<li>${buildGroupedEvent(meEvent)}</li>`)
+			${meEventGroups
+				.map(
+					(eventGroup) => `
+						<li>
+							<dl class="group">
+								<dt class="visually-hidden">Event type</dt>
+								<dd class="group__tag">${eventGroup.type}</dd>
+
+								<dt class="visually-hidden">Timestamp</dt>
+								<dd class="group__timestamp">
+									<time datetime="${eventGroup.timestamp.toISOString()}">${new Intl.DateTimeFormat(
+										'en-GB',
+										{ dateStyle: 'short', timeStyle: 'short' }
+									).format(eventGroup.timestamp)}</time>
+								</dd>
+
+								<dt class="visually-hidden">Group title</dt>
+								<dd class="group__title">${eventGroup.title}</dd>
+
+								${eventGroup.events
+									.map(
+										(text) => `
+											<dt class="visually-hidden">Sub event</dt>
+											<dd class="group__child">
+												<span class="group__icon" aria-hidden="true">↳ </span>${text}
+											</dd>
+										`
+									)
+									.join('\n')}
+								</dl>
+							</li>
+						`
+				)
 				.join('\n')}
 		</ol>
-	`;
+		`;
 };
-
-/**
- * @param {MeEvent} ungroupedEvent
- */
-const buildUngroupedEvent = (ungroupedEvent) => `
-	<dl class="group ${ungroupedEvent.typeShort}">
-		<dt class="visually-hidden">Event type</dt>
-		<dd class="group__tag">${ungroupedEvent.type}</dd>
-
-		<dt class="visually-hidden">Timestamp</dt>
-		<dd class="group__timestamp">
-			<time datetime="${ungroupedEvent.timestamp.toISOString()}">${new Intl.DateTimeFormat(
-				'en-GB',
-				{ dateStyle: 'short', timeStyle: 'short' }
-			).format(ungroupedEvent.timestamp)}</time>
-		</dd>
-
-		<dt class="visually-hidden">Group title</dt>
-		<dd class="group__title">${
-			ungroupedEvent.groupTitle
-		}${ungroupedEvent.eventTitle ? ':' : ''}</dd>
-
-		${
-			ungroupedEvent.eventTitle
-				? `
-				<dt class="visually-hidden">Sub event</dt>
-				<dd class="group__child">
-					<span class="group__icon" aria-hidden="true">↳ </span>${ungroupedEvent.eventTitle}
-				</dd>`
-				: ''
-		}
-	</dl>
-`;
-
-/**
- * @param {MeEvents} meEvents
- */
-const buildUngroupedEvents = (meEvents) =>
-	meEvents && meEvents.length
-		? `
-		<ol class="group__container">
-			${meEvents
-				.map((meEvent) => `<li>${buildUngroupedEvent(meEvent)}</li>`)
-				.join('\n')}
-		</ol>
-		`
-		: '';
 
 /**
  * @param {MeEventTypes} meEventTypes
@@ -218,21 +219,21 @@ const buildEventTypeList = (meEventTypes) =>
 /**
  * @param {ViewModel} settings
  */
-const view = ({ meEvents, meEventTypes, navLevels, title }) =>
+const view = ({ meEventGroups, meEventTypes, navLevels, title }) =>
 	toHtmlDocString({
-		body:
-			navLevels.length > 1
-				? `
-					<p>Here’s a feed of just ${meEvents[0].type.toLowerCase()} (capped at the last 200, to keep things snappy):</p>
-					${buildUngroupedEvents(meEvents)}
-				`
-				: `
-					<p>Here’s a mostly automated feed of things that have happened in m’life this past week.</p>
-					<p>Categories I’m tracking:</p>
+		body: `
+			${
+				navLevels.length > 1
+					? `<p>Here’s a feed of just ${meEventGroups[0].type.toLowerCase()} (capped at the last 200, to keep things snappy):</p>`
+					: `
+						<p>Here’s a mostly automated feed of things that have happened in m’life this past week.</p>
+						<p>Categories I’m tracking:</p>
 
-					${buildEventTypeList(meEventTypes)}
-					${buildGroupedEvents(meEvents)}
-				`,
+						${buildEventTypeList(meEventTypes)}
+					`
+			}
+			${buildEvents(meEventGroups)}
+		`,
 		navLevels,
 		styles: `
 			${commonCss}
