@@ -4,8 +4,14 @@ export const relativeTimestampStyles = `
 	.${popoverClassName} {
 		background: none;
 		border: 0;
+		border-radius: 100vw;
 		color: inherit;
 		padding: 0;
+		vertical-align: top;
+
+		& svg {
+			display: block;
+		}
 	}
 
 	.${popoverClassName}-target {
