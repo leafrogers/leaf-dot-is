@@ -11,7 +11,7 @@ const styles = importFile('server/pages/cv/2025/main.css');
 export const controller = async (_req, res) => {
 	const data = {
 		navLevels: [],
-		title: 'Leaf Rogers'
+		title: 'CV - Leaf Rogers - Senior Full-stack and JavaScript Engineer'
 	};
 
 	res.send(view(data));
