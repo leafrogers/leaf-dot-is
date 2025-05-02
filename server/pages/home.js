@@ -35,7 +35,7 @@ const view = ({ title }) => {
 				<li><a rel="me" href="https://github.com/leafrogers">GitHub</a> although my most recent work is in a private GitLab account, boo</li>
 				<li><a href="https://www.linkedin.com/in/leafrogers">LinkedIn</a> if that’s your thing</li>
 			</ul>
-			<p>I’m available for contract work from April 2025.</p>
+			<p>I’m available for contract work from May 2025.</p>
 			<p>This content is a bit dry isn’t it! Yeah. Anyway you look nice today.</p>
 		`,
 		navLevels: [],
