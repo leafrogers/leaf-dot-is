@@ -93,7 +93,7 @@ const view = ({ bodyAsHtml, date, navLevels, titleAsText }) => {
 				src: url('/fonts/cedarvillecursive-regular.woff2') format('woff2');
 			}
 			.container {
-				padding: 1rem 2rem;
+				padding: 1rem 1.5rem;
 				position: relative;
 			}
 			.footnotes-heading::before {
@@ -107,9 +107,7 @@ const view = ({ bodyAsHtml, date, navLevels, titleAsText }) => {
 			}
 			.published {
 				font-size: 1.2rem;
-				margin: 0 10px 0 0;
-				right: 4rem;
-				top: 1.4rem;
+				margin: 1rem 1rem 0 0;
 			}
 			.salutation {
 				margin: 3rem 0 0;
@@ -135,6 +133,8 @@ const view = ({ bodyAsHtml, date, navLevels, titleAsText }) => {
 				.published {
 					font-size: 1.3rem;
 					position: absolute;
+					right: 4rem;
+					top: 0.5rem;
 				}
 			}
 			@media (min-width: 600px) {

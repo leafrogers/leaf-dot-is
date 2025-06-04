@@ -30,7 +30,7 @@ export const controller = async (_req, res) => {
 const view = ({ navLevels, title }) => {
 	return toHtmlDocString({
 		body: `
-			<ul>
+			<ul class="subnav-list">
 				<li>
 					<a href="${config.BASE_URL}/writing/weeknotes">Weeknotes</a>
 					<span>(<a href="${config.BASE_URL}/writing/weeknotes.rss">RSS feed</a>)</span>

@@ -36,7 +36,7 @@ export const controller = async (_req, res) => {
 const view = ({ items, navLevels, rssUrl, title }) => {
 	return toHtmlDocString({
 		body: `
-			<ol reversed>
+			<ol class="subnav-list" reversed>
 				${items
 					.map(
 						({ date, titleAsText, uid }) =>
