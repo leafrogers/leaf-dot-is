@@ -11,8 +11,11 @@ const commonCss = importFile('server/pages/common.css');
  * @property {string} className
  * @property {string} [eventTitle]
  * @property {number} groupingThreshold
- * @property {string} groupTitle
+ * @property {string} [groupTitle]
+ * @property {MeEvent[]} [items]
  * @property {Date} timestamp
+ * @property {string} [title]
+ * @property {string} [titleParent]
  * @property {string} type
  * @property {string} typeShort
  *
@@ -26,9 +29,9 @@ const commonCss = importFile('server/pages/common.css');
  * @typedef {MeEventGroup[]} MeEventGroups
  *
  * @typedef MeEventGroup
- * @property {(string | undefined)[]} events
+ * @property {MeEvent[]} items
  * @property {Date} timestamp
- * @property {string} title
+ * @property {string} [title]
  * @property {string} type
  *
  * @typedef PageSpecificViewModel
@@ -39,77 +42,167 @@ const commonCss = importFile('server/pages/common.css');
  */
 
 /**
- * @param {MeEvents} meEvents
+ * @param {MeEvent} currentEvent
+ * @param {MeEvent} previousEventInGroup
  */
-const groupEvents = (meEvents) => {
-	/**
-	 * @type {MeEventGroups}
-	 */
-	const groupedEvents = [];
+const doesEventBelongInGroup = (currentEvent, previousEventInGroup) => {
+	const timeBetweenEvents =
+		previousEventInGroup.timestamp.getTime() - currentEvent.timestamp.getTime();
+	const timeThresholdInMinutes = currentEvent.groupingThreshold * 60000;
 
-	// For each meEvent…
-	for (let i = 0, l = meEvents.length; i < l; i += 1) {
-		const currentEvent = meEvents[i];
+	return (
+		timeBetweenEvents < timeThresholdInMinutes &&
+		previousEventInGroup.typeShort === currentEvent.typeShort
+	);
+};
 
-		/** @type {MeEvents} */
-		let consecutiveEvents = [currentEvent];
-
-		// …if there’s an event title then start collecting any consecutive events
-		// with the same event type
-		for (let j = i; j < l - 1; j += 1, i += 1) {
-			const thisEvent = meEvents[j];
-			const nextEvent = meEvents[j + 1];
-
-			if (
-				!nextEvent ||
-				nextEvent.typeShort !== currentEvent.typeShort ||
-				new Date(thisEvent.timestamp).getTime() -
-					new Date(nextEvent.timestamp).getTime() >
-					currentEvent.groupingThreshold * 60000
-			) {
-				break;
-			}
-
-			consecutiveEvents.push(nextEvent);
-		}
-
-		/**
-		 * @type {string[]}
-		 */
-		let processedEvents = [];
-		let title = '';
-
-		if (consecutiveEvents.length > 1) {
-			if (
-				consecutiveEvents.every((e) => e.groupTitle === currentEvent.groupTitle)
-			) {
-				processedEvents = consecutiveEvents.map(({ eventTitle }) => eventTitle);
-
-				title = `${currentEvent.groupTitle}:`;
-			} else {
-				processedEvents = consecutiveEvents.map(
-					({ groupTitle, eventTitle }) => `${groupTitle}: ${eventTitle}`
-				);
-			}
-		} else {
-			if (currentEvent.eventTitle) {
-				processedEvents = [currentEvent.eventTitle];
-				title = `${currentEvent.groupTitle}:`;
-			} else {
-				processedEvents = [];
-				title = currentEvent.groupTitle;
-			}
-		}
-
-		groupedEvents.push({
-			events: processedEvents,
-			timestamp: new Date(currentEvent.timestamp),
-			title,
-			type: currentEvent.type
-		});
+/**
+ * @param {MeEvent[]} meEvents
+ */
+function groupEventsByCategoryAndTime(meEvents) {
+	if (!meEvents.length) {
+		return [];
 	}
 
-	return groupedEvents;
+	const categoryAndTimeGroups = [];
+	let currentCategoryAndTimeGroup = /** @type {MeEventGroup} */ ({});
+
+	for (const currentEvent of meEvents) {
+		if (Object.keys(currentCategoryAndTimeGroup).length === 0) {
+			currentCategoryAndTimeGroup = {
+				items: [currentEvent],
+				timestamp: currentEvent.timestamp,
+				type: currentEvent.type
+			};
+			continue;
+		}
+
+		const previousEventInGroup =
+			currentCategoryAndTimeGroup.items[
+				currentCategoryAndTimeGroup.items.length - 1
+			];
+		const shouldAddEventToCurrentGroup = doesEventBelongInGroup(
+			currentEvent,
+			previousEventInGroup
+		);
+
+		// Either add event to current group…
+		if (shouldAddEventToCurrentGroup) {
+			currentCategoryAndTimeGroup.items.push(currentEvent);
+			continue;
+		}
+
+		// …or start a new group
+		categoryAndTimeGroups.push(currentCategoryAndTimeGroup);
+
+		currentCategoryAndTimeGroup = {
+			timestamp: currentEvent.timestamp,
+			type: currentEvent.type,
+			items: [currentEvent]
+		};
+	}
+
+	if (currentCategoryAndTimeGroup.items.length > 0) {
+		categoryAndTimeGroups.push(currentCategoryAndTimeGroup);
+	}
+
+	return categoryAndTimeGroups;
+}
+
+/**
+ * @param {MeEvent} item
+ * @param {number} numberOfSiblings
+ * @param {number} depth
+ */
+const buildEvent = (item, numberOfSiblings = 0, depth = 1) => {
+	const titleHtml = (item.title ?? '').replaceAll(/\n/g, '<br>');
+	const title = item.title;
+	const shouldShowListItemSeparator =
+		(depth === 2 && title) || (depth === 3 && numberOfSiblings !== 1);
+
+	let eventHtml = '';
+
+	if (depth === 3 && numberOfSiblings === 1) {
+		eventHtml += ' — ';
+	}
+
+	eventHtml += titleHtml || '';
+
+	if (item.items?.length) {
+		eventHtml +=
+			item.items.length === 1
+				? buildEvent(item.items[0], item.items.length ?? 0, depth + 1)
+				: `
+					<ol class="event-list">
+						${item.items
+							.map(
+								(subItem) =>
+									`<li>${buildEvent(subItem, item?.items?.length ?? 0, depth + 1)}</li>`
+							)
+							.join('\n')}
+					</ol>
+				`;
+	}
+
+	const content = `
+		${eventHtml}
+	`;
+
+	return shouldShowListItemSeparator
+		? `
+			<div class="feed-item">
+				${content}
+			</div>
+		`
+		: content;
+};
+
+/**
+ * @param {MeEventGroup[]} groups
+ */
+const determineParentTitles = (groups) => {
+	return groups.map((group) => {
+		const { items } = group;
+
+		if (
+			items.every(
+				(item) =>
+					item.titleParent && item.titleParent === group.items[0].titleParent
+			)
+		) {
+			group.title = group.items[0].titleParent ?? '';
+			group.items = items;
+		} else if (group.items.length === 1) {
+			Object.assign(group, group.items[0]);
+			group.items = [];
+		} else {
+			group.title = '';
+
+			const subGroupedItems = [];
+
+			for (let index = 0; index < group.items.length; index++) {
+				const thisItemUnsubgrouped = group.items[index];
+				const latestSubgroupedItem =
+					subGroupedItems[subGroupedItems.length - 1];
+
+				if (
+					latestSubgroupedItem &&
+					(!latestSubgroupedItem.items.length ||
+						latestSubgroupedItem.title === thisItemUnsubgrouped.titleParent)
+				) {
+					latestSubgroupedItem.items.push(thisItemUnsubgrouped);
+				} else {
+					subGroupedItems.push({
+						title: thisItemUnsubgrouped.titleParent,
+						items: [thisItemUnsubgrouped]
+					});
+				}
+			}
+
+			group.items = subGroupedItems;
+		}
+		return group;
+	});
 };
 
 /**
@@ -136,13 +229,18 @@ export const controller = async (req, res, next) => {
 	const navLevels = [{ text: 'Leaf.is', url: '/' }];
 
 	if (eventType) {
-		navLevels.push({ text: 'Inhaling', url: '/inhaling' });
+		navLevels.push({
+			text: 'Inhaling',
+			url: `/inhaling`
+		});
 		title = eventTypeObj.type;
 	}
 
 	/** @type {ViewModel} */
 	const data = {
-		meEventGroups: groupEvents(meEvents),
+		meEventGroups: determineParentTitles(
+			groupEventsByCategoryAndTime(meEvents)
+		),
 		meEventTypes,
 		navLevels,
 		title
@@ -164,35 +262,21 @@ const buildEvents = (meEventGroups) => {
 			${meEventGroups
 				.map(
 					(eventGroup) => `
-						<li>
-							<dl class="group">
-								<dt class="visually-hidden">Event type</dt>
-								<dd class="group__tag">${eventGroup.type}</dd>
-
-								<dt class="visually-hidden">Timestamp</dt>
-								<dd class="group__timestamp">
+						<li class="group">
+							<header class="group__header">
+								<p class="group__tag">${eventGroup.type}</p>
+								<p class="group__timestamp">
 									<time datetime="${eventGroup.timestamp.toISOString()}">${new Intl.DateTimeFormat(
 										'en-GB',
 										{ dateStyle: 'short', timeStyle: 'short' }
 									).format(eventGroup.timestamp)}</time>
-								</dd>
-
-								<dt class="visually-hidden">Group title</dt>
-								<dd class="group__title">${eventGroup.title}</dd>
-
-								${eventGroup.events
-									.map(
-										(text) => `
-											<dt class="visually-hidden">Sub event</dt>
-											<dd class="group__child">
-												<span class="group__icon" aria-hidden="true">↳ </span>${text}
-											</dd>
-										`
-									)
-									.join('\n')}
-								</dl>
-							</li>
-						`
+								</p>
+							</header>
+							<div class="group__content">
+								${buildEvent(eventGroup)}
+							</div>
+						</li>
+					`
 				)
 				.join('\n')}
 		</ol>
@@ -246,50 +330,67 @@ const view = ({ meEventGroups, meEventTypes, navLevels, title }) =>
 				list-style: none;
 				margin: 0;
 				padding: 0;
+
+				li {
+					text-wrap: balance;
+				}
 			}
 
 			.group {
-				display: grid;
-				grid-template-columns: max-content 1fr;
-				margin-top: 1.7rem;
+				margin: 1.5rem 0;
+			}
+
+			.group__header {
+				align-items: center;
+				display: flex;
+				margin-block-end: 0.3rem;
 			}
 
 			.group__tag {
 				border-radius: 6px;
 				border: 1px solid;
-				grid-column: 1/2;
 				margin: 0;
 				padding: 0.2rem 0.4rem 0.4rem;
 			}
 
 			.group__timestamp {
-				align-self: center;
-				margin-left: auto;
-				position: relative;
+				margin: 0 0 0 auto;
 			}
 
-			.group__title {
+			.group__content {
 				border-right: 1px dashed;
-				grid-column: 1/-1;
-				margin-left: 0.4rem;
-				padding: 0.5rem 0.5rem 0 0;
-				text-wrap: balance;
+				padding: 0.1rem 1rem 0 0.5rem;
 			}
 
-			.group__child {
-				border-right: 1px dashed;
-				display: flex;
-				grid-column: 1/-1;
-				line-height: 1.4;
-				margin-left: 0.5rem;
-				padding: 0.4rem 0.4rem 0.4rem 0;
-				text-wrap: balance;
+			.feed-item {
+				background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBzdHJva2U9IiNmZmYwZTMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjY4Ij48cGF0aCBkPSJtMTkgMTVoLTkuNmE0LjQgNC40IDAgMCAxIC00LjQtNC40di01LjYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIvPjxwYXRoIGQ9Im0xNSAxOSA0LTQtNC00IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9nPjwvc3ZnPg==);
+				background-position: 0 2px;
+				background-repeat: no-repeat;
+			  background-size: 1.25rem;
+				padding-left: 1.5rem;
+
+				&:not(:has(.event-list)) {
+					display: flex;
+					gap: 0.5rem;
+				}
 			}
 
-			.group__icon {
-				border-radius: 6px;
-				margin-right: 0.3rem;
+			@media (prefers-color-scheme: light) {
+				.feed-item {
+					background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBzdHJva2U9IiMwODExMWMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjY4Ij48cGF0aCBkPSJtMTkgMTVoLTkuNmE0LjQgNC40IDAgMCAxIC00LjQtNC40di01LjYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIvPjxwYXRoIGQ9Im0xNSAxOSA0LTQtNC00IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9nPjwvc3ZnPg==);
+				}
 			}
+
+			.event-list {
+				list-style: none;
+				margin: 0 0 0.5rem 0;
+				padding: 0;
+
+				li {
+					margin: 0.2rem 0;
+				}
+			}
+
 
 			.inline-list {
 				column-gap: 0.3rem;
