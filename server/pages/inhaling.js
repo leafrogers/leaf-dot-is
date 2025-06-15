@@ -13,6 +13,7 @@ const commonCss = importFile('server/pages/common.css');
  * @property {number} groupingThreshold
  * @property {string} [groupTitle]
  * @property {MeEvent[]} [items]
+ * @property {number} [repeatCount]
  * @property {Date} timestamp
  * @property {string} [title]
  * @property {string} [titleParent]
@@ -88,7 +89,17 @@ function groupEventsByCategoryAndTime(meEvents) {
 
 		// Either add event to current group…
 		if (shouldAddEventToCurrentGroup) {
-			currentCategoryAndTimeGroup.items.push(currentEvent);
+			if (
+				currentEvent.titleParent === previousEventInGroup.titleParent &&
+				currentEvent.title === previousEventInGroup.title
+			) {
+				previousEventInGroup.repeatCount =
+					previousEventInGroup.repeatCount ?? 1;
+				previousEventInGroup.repeatCount += 1;
+				previousEventInGroup.timestamp = currentEvent.timestamp;
+			} else {
+				currentCategoryAndTimeGroup.items.push(currentEvent);
+			}
 			continue;
 		}
 
@@ -116,7 +127,7 @@ function groupEventsByCategoryAndTime(meEvents) {
  */
 const buildEvent = (item, numberOfSiblings = 0, depth = 1) => {
 	const titleHtml = (item.title ?? '').replaceAll(/\n/g, '<br>');
-	const title = item.title;
+	const { repeatCount, title } = item;
 	const shouldShowListItemSeparator =
 		(depth === 2 && title) || (depth === 3 && numberOfSiblings !== 1);
 
@@ -146,6 +157,7 @@ const buildEvent = (item, numberOfSiblings = 0, depth = 1) => {
 
 	const content = `
 		${eventHtml}
+		${repeatCount ? ` <span class="repeat-count">${repeatCount} times</span>` : ''}
 	`;
 
 	return shouldShowListItemSeparator
@@ -391,6 +403,17 @@ const view = ({ meEventGroups, meEventTypes, navLevels, title }) =>
 				}
 			}
 
+			.repeat-count {
+				align-self: center;
+				background: #fff0e3;
+				border-radius: 5px;
+				color: #000;
+				font-size: small;
+				height: fit-content;
+				line-height: 1;
+				padding: 2px 3px;
+				text-wrap: nowrap;
+			}
 
 			.inline-list {
 				column-gap: 0.3rem;
