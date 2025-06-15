@@ -27,5 +27,6 @@ export const relativeTimestampStyles = `
 		position: absolute;
 		right: 0;
 		text-wrap: nowrap;
+		top: 100%;
 	}
 `;

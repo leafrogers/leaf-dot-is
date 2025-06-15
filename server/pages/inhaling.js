@@ -366,7 +366,10 @@ const view = ({ meEventGroups, meEventTypes, navLevels, title }) =>
 			}
 
 			.group__timestamp {
+				display: flex;
+				gap: 0.2rem;
 				margin: 0 0 0 auto;
+				position: relative;
 			}
 
 			.group__content {
