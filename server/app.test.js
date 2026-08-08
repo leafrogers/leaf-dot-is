@@ -1,6 +1,5 @@
-// eslint-disable-next-line node/no-extraneous-import
 import { jest } from '@jest/globals';
-import nock from 'nock';
+import { Pool } from 'postgres-pool';
 import supertest from 'supertest';
 import app from './app.js';
 import config from './config.js';
@@ -9,17 +8,17 @@ const request = supertest(app);
 const originalFriendlyTitle = config.APP_FRIENDLY_NAME;
 const originalIsProduction = config.IS_PRODUCTION;
 
-jest.spyOn(global.console, 'debug').mockImplementation(() => {});
-jest.spyOn(global.console, 'error').mockImplementation(() => {});
+jest.spyOn(global.console, 'debug').mockReturnValue();
+jest.spyOn(global.console, 'error').mockReturnValue();
+jest.spyOn(Pool.prototype, 'query').mockResolvedValue({
+	command: 'SELECT',
+	fields: [],
+	oid: 0,
+	rowCount: 1,
+	rows: [{ title: 'Grooklet title', body: 'Grooklet body' }]
+});
 
 describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
-	beforeAll(() =>
-		nock(config.PG_CONNECTION_STRING || '')
-			.get('/rest/v1/grooklets')
-			.query(true)
-			.reply(200, [{ title: 'Grooklet title', body: 'Grooklet body' }])
-	);
-
 	beforeEach(() => {
 		config.APP_FRIENDLY_NAME = 'Test Title';
 	});
@@ -28,8 +27,6 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 		config.APP_FRIENDLY_NAME = originalFriendlyTitle;
 		config.IS_PRODUCTION = originalIsProduction;
 	});
-
-	afterAll(() => nock.cleanAll());
 
 	describe('GET /', () => {
 		it('serves a 200 status', async () => {

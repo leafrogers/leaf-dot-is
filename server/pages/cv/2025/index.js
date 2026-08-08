@@ -1,5 +1,5 @@
-import { importFile, stripSpace } from '../../../helpers.js';
 import config from '../../../config.js';
+import { importFile, stripSpace } from '../../../helpers.js';
 
 const body = importFile('server/pages/cv/2025/partial.html');
 const styles = importFile('server/pages/cv/2025/main.css');

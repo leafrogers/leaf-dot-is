@@ -5,7 +5,7 @@
 body {
 	background: lightgrey;
 	color: yellow;
-	font-family: 'Helvetica Neue', Helvetica, sans-serif;
+	font-family: "Helvetica Neue", Helvetica, sans-serif;
 	font-size: 15px;
 }
 
@@ -160,12 +160,12 @@ h1,
 }
 
 .compact-list li::after {
-	content: ',';
+	content: ",";
 	padding-right: 0.3rem;
 }
 
 .compact-list li:last-child::after {
-	content: '';
+	content: "";
 	padding-right: 0;
 }
 
@@ -219,7 +219,7 @@ h1,
 	}
 
 	.compact-block .compact-list:before {
-		content: ':';
+		content: ":";
 		margin-right: 5px;
 	}
 
@@ -267,12 +267,12 @@ h1,
 		font-size: 29px;
 	}
 
-	.contact a[href*='https'] {
+	.contact a[href*="https"] {
 		color: white;
 		text-decoration: none;
 	}
 
-	.contact a[href*='https']::after {
+	.contact a[href*="https"]::after {
 		content: attr(href);
 		color: black;
 		text-decoration: underline;

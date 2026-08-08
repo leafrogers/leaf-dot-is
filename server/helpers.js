@@ -1,8 +1,8 @@
+import { asHTML } from '@prismicio/helpers';
 import fs from 'fs';
 import prettier from 'prettier';
-import { asHTML } from '@prismicio/helpers';
-import config from './config.js';
 import bootstrapper from '../client/bootstrapper.js';
+import config from './config.js';
 
 export const logger = console;
 

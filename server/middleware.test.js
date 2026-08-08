@@ -1,4 +1,3 @@
-// eslint-disable-next-line node/no-extraneous-import
 import { jest } from '@jest/globals';
 import config from './config.js';
 import { disallowInProduction } from './middleware.js';

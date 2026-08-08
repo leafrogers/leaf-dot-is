@@ -10,7 +10,10 @@ h1 {
 	font-weight: lighter;
 }
 
-h2, h3, h4, h5 {
+h2,
+h3,
+h4,
+h5 {
 	font-size: 16px;
 	font-weight: normal;
 	margin: 0;
@@ -119,14 +122,20 @@ h1,
 	color: #757575;
 }
 
-.experience { grid-area: experience; }
+.experience {
+	grid-area: experience;
+}
 
 .education {
 	grid-area: education;
 }
 
-.software-platforms { grid-area: software-platforms; }
-.other-interests { grid-area: other-interests; }
+.software-platforms {
+	grid-area: software-platforms;
+}
+.other-interests {
+	grid-area: other-interests;
+}
 .conclusion {
 	align-self: end;
 	color: #757575;
@@ -154,7 +163,7 @@ h1,
 }
 
 .compact-block .compact-list:before {
-	content: ':';
+	content: ":";
 	margin-right: 5px;
 }
 
@@ -166,12 +175,12 @@ h1,
 }
 
 .compact-list li::after {
-	content: ',';
+	content: ",";
 	padding-right: 0.3rem;
 }
 
 .compact-list li:last-child::after {
-	content: '';
+	content: "";
 	padding-right: 0;
 }
 
@@ -179,7 +188,8 @@ h1,
 	font-style: italic;
 }
 
-a, .time {
+a,
+.time {
 	margin-left: 0.8rem;
 }
 

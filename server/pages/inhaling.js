@@ -2,7 +2,7 @@
 /* eslint-disable max-depth */
 import { relativeTimestampStyles } from '../../shared/components/relative-timestamps/styles.js';
 import { importFile, toHtmlDocString } from '../helpers.js';
-import { fetchMeEventTypes, fetchMeEvents } from '../services.js';
+import { fetchMeEvents, fetchMeEventTypes } from '../services.js';
 
 const commonCss = importFile('server/pages/common.css');
 
@@ -211,6 +211,7 @@ const determineParentTitles = (groups) => {
 				}
 			}
 
+			// @ts-ignore
 			group.items = subGroupedItems;
 		}
 		return group;
@@ -285,7 +286,10 @@ const buildEvents = (meEventGroups) => {
 								</p>
 							</header>
 							<div class="group__content">
-								${buildEvent(eventGroup)}
+								${buildEvent(
+									// @ts-ignore
+									eventGroup
+								)}
 							</div>
 						</li>
 					`

@@ -54,22 +54,12 @@ export const controller = async (error, req, res, next) => {
 const getData = ({ error, status = 0 }) => {
 	const publicStatus = status < 400 ? 500 : status;
 
-	try {
-		return {
-			message: config.IS_PRODUCTION ? 'Something went wrong.' : error.message,
-			navLevels: [],
-			status: publicStatus,
-			title: `An error happened (${publicStatus})`
-		};
-	} catch (error) {
-		return {
-			message:
-				'Something unexpected happened that messed up the serving of this page.',
-			navLevels: [],
-			status: publicStatus,
-			title: 'A confusing error happened'
-		};
-	}
+	return {
+		message: config.IS_PRODUCTION ? 'Something went wrong.' : error.message,
+		navLevels: [],
+		status: publicStatus,
+		title: `An error happened (${publicStatus})`
+	};
 };
 
 /**
