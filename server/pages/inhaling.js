@@ -211,7 +211,7 @@ const determineParentTitles = (groups) => {
 				}
 			}
 
-			// @ts-ignore
+			// @ts-expect-error
 			group.items = subGroupedItems;
 		}
 		return group;
@@ -287,7 +287,7 @@ const buildEvents = (meEventGroups) => {
 							</header>
 							<div class="group__content">
 								${buildEvent(
-									// @ts-ignore
+									// @ts-expect-error
 									eventGroup
 								)}
 							</div>

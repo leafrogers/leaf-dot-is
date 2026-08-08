@@ -263,6 +263,16 @@
       "linter": {
         "rules": {}
       }
+    },
+    {
+      "includes": ["types.generated.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useShorthandFunctionType": "off"
+          }
+        }
+      }
     }
   ],
   "assist": {

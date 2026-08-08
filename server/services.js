@@ -28,7 +28,7 @@ const pool = new Pool({
 	'retryConnectionOnError',
 	'waitingForDatabaseToStart'
 ].forEach((event) => {
-	// @ts-ignore
+	// @ts-expect-error
 	pool.on(event, (something) => {
 		console.log(
 			`IN ${event}`,
@@ -91,7 +91,7 @@ export const fetchGrooklets = async () => {
 		const result = await pool.query(`select * from lis.grooklets`);
 		grooklets = result.rows;
 	} catch (error) {
-		// @ts-ignore
+		// @ts-expect-error
 		throw new Error(`Error fetching grooklets: ${error.message}`);
 	}
 
@@ -117,7 +117,7 @@ export const fetchMeEvents = async (eventType) => {
 		`);
 		meEvents = result.rows;
 	} catch (error) {
-		// @ts-ignore
+		// @ts-expect-error
 		throw new Error(`Error fetching me events: ${error.message}`);
 	}
 

@@ -19,9 +19,9 @@ export const getRelativeTime = (date1, date2 = new Date()) => {
 
 	// "Math.abs" accounts for both "past" & "future" scenarios
 	for (const unit in timeUnitsInMs) {
-		// @ts-ignore
+		// @ts-expect-error
 		if (Math.abs(elapsed) > timeUnitsInMs[unit] || unit === 'second') {
-			// @ts-ignore
+			// @ts-expect-error
 			return rtf.format(Math.round(elapsed / timeUnitsInMs[unit]), unit);
 		}
 	}

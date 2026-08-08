@@ -13,7 +13,7 @@ describe('Server middleware', () => {
 		it('calls next with an error if IS_PRODUCTION is true', () => {
 			config.IS_PRODUCTION = true;
 			const stubbedNext = jest.fn();
-			// @ts-ignore
+			// @ts-expect-error
 			disallowInProduction({}, {}, stubbedNext);
 			expect(stubbedNext).toHaveBeenCalledWith(
 				new Error('This method or route is not allowed in production')
@@ -23,7 +23,7 @@ describe('Server middleware', () => {
 		it('calls next without an error if IS_PRODUCTION is false', () => {
 			config.IS_PRODUCTION = false;
 			const stubbedNext = jest.fn();
-			// @ts-ignore
+			// @ts-expect-error
 			disallowInProduction({}, {}, stubbedNext);
 			expect(stubbedNext).toHaveBeenCalledWith();
 		});

@@ -12,7 +12,7 @@ export const politeSetInterval = (func, frequency, ...args) => {
 	function render(now) {
 		if (!previousTimestamp || now - previousTimestamp >= frequency) {
 			previousTimestamp = now;
-			// @ts-ignore
+			// @ts-expect-error
 			func(...args);
 		}
 
