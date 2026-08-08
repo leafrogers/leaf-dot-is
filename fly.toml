@@ -1,9 +1,11 @@
+app = "aged-snowflake-6650"
 primary_region = "lhr"
 
 [build]
   dockerfile = "Dockerfile"
 
 [http_service]
+  auto_stop_machines = "suspend"
   force_https = true
 
 [[vm]]
