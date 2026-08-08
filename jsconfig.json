@@ -3,10 +3,10 @@
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
     "checkJs": true,
-    "module": "ES2020",
+    "module": "es2022",
     "moduleResolution": "Node",
     "strict": true,
-    "target": "ES2021"
+    "target": "es2024"
   },
   "exclude": ["coverage", "public"],
   "include": ["**/*"]

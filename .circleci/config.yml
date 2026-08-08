@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
-  node: circleci/node@4.7.0
+  node: circleci/node@7.2.1
 jobs:
   test:
     executor:
       name: node/default
-      tag: '20.11'
+      tag: '24.10'
     steps:
       - checkout
       - node/install-packages
