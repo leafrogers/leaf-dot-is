@@ -34,6 +34,7 @@ const pool = new Pool({
 			`IN ${event}`,
 			JSON.stringify(
 				something,
+				// eslint-disable-next-line max-nested-callbacks
 				(_, v) => (typeof v === 'bigint' ? v.toString() : v),
 				2
 			)
@@ -111,7 +112,6 @@ export const fetchMeEvents = async (eventType) => {
 			and timestamp <= current_timestamp
 			${eventType ? '' : `and timestamp >= current_timestamp at time zone 'UTC' - interval '6 days'`}
 			${eventType ? `where type_short = '${eventType}'` : ''}
-			and verb = 'inhaling'
 			order by timestamp desc
 			limit 200
 		`);
@@ -131,12 +131,13 @@ export const fetchMeEventTypes = async () => {
 		const result = await pool.query(`
 			select type,type_short as "typeShort"
 			from lis.me_event_types
-			where verb = 'inhaling'
 			order by type asc
 		`);
 		meEventTypes = result.rows;
 	} catch (error) {
-		throw new Error(`Error fetching me event types: ${error.message}`);
+		throw new Error(
+			`Error fetching me event types: ${error instanceof Error ? error.message : error}`
+		);
 	}
 
 	return meEventTypes;
