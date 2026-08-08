@@ -88,7 +88,20 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 
 	describe('GET /contracting/here/is/his/cv', () => {
 		it('serves a 200 status', async () => {
-			const { status, text } = await request.get('/contracting/here/is/his/cv');
+			const { status, headers } = await request.get(
+				'/contracting/here/is/his/cv'
+			);
+
+			expect(status).toBe(302);
+			expect(headers.location).toBe('/contracting/here/is/their/cv');
+		});
+	});
+
+	describe('GET /contracting/here/is/their/cv', () => {
+		it('serves a 200 status', async () => {
+			const { status, text } = await request.get(
+				'/contracting/here/is/their/cv'
+			);
 
 			expect(status).toBe(200);
 			expect(text).toContain('<h1>Leaf Rogers</h1>');
