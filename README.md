@@ -40,6 +40,10 @@ checking your changes:
 - Open a new terminal tab or window and run `npm run start:dev`
 - Go to the URL that’s logged in the console output
 
+### Local Supabase database
+
+See the [local Supabase guide](docs/supabase-local-development.md) for startup, resets, synthetic data, and production boundaries.
+
 ### :pager: Contact
 
 If you have any questions or comments about this app, or need help using it,

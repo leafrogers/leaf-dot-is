@@ -1,0 +1,5 @@
+-- Owner: the-greatest-words; schema: tgw. This is a shared-history marker.
+-- Source: the-greatest-words@f0ca2fa20348f1f8d9ce64ee5ce291f2372f5a58.
+-- Confirmed in production history on 2026-10-30: 20260823000300.
+-- Executable SQL remains in the owning repository. Do not copy it here.
+-- Versions 001/002 differ from recorded SQL; see docs/supabase-migrations.md.
