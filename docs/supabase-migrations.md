@@ -1,7 +1,8 @@
 # Supabase migration workflow
 
 Status: local setup and table baseline verified, 2026-10-30.
-Production remains unchanged. Baseline adoption and integration definitions remain pending.
+Production adopted the table baseline on 2026-11-10 without executing its creation SQL.
+The [integration definitions](supabase-integrations.md) are separate, opt-in SQL files. Verification passed on 2026-11-02. Production adoption completed on 2026-11-10.
 See the [local development guide](supabase-local-development.md) for commands and verification results.
 
 ## Ownership
@@ -36,9 +37,10 @@ That runbook requires local reset, database tests, history inspection, baseline 
 It is historical evidence, not a procedure to repeat against the current production database.
 Production already records all four TGW migrations that the runbook describes as pending.
 
-The current sibling revision `f0ca2fa20348f1f8d9ce64ee5ce291f2372f5a58` lacks the Leaf marker.
-Restoring that marker in the sibling is a prerequisite for its next production migration push.
-This step does not edit the sibling repository or apply its stashes.
+The inspected sibling revision `f0ca2fa20348f1f8d9ce64ee5ce291f2372f5a58` lacked the Leaf marker at that time.
+This is historical evidence, not a current assessment of TGW.
+The owner subsequently instructed us to treat TGW as current and functional unless Leaf changes affect a shared dependency.
+The historical inspection did not edit the sibling repository or apply its stashes.
 
 ## Original Leaf migration
 
@@ -124,7 +126,7 @@ The recorded definitions use `smallint` show IDs and `integer` episode IDs. Curr
 Migration 002 records named constraint removals. The current file discovers and removes unique constraints dynamically.
 These differences do not establish current production drift: later SQL can change the resulting schema.
 They do establish that matching version numbers alone do not prove matching SQL or local parity.
-The sibling owner must reconcile these differences against the live catalog before claiming complete parity.
+These historical observations do not reopen TGW verification under the owner's current scope.
 This repository must not rewrite TGW SQL or repair TGW history to conceal those differences.
 
 ## Baseline adoption and reset boundaries
@@ -173,19 +175,21 @@ records comment-only migrations too.
 These checks establish CLI behavior and the recovered statement's behavior on synthetic data.
 Step 2 subsequently verified a complete local reset and catalog comparison.
 The credential-bearing CDN trigger remains an explicit exception. External schedules remain excluded.
-No production migration or history repair ran during this work.
+No production migration or history repair ran during that local verification.
 
-## Local setup and remaining work
+## Local setup and production adoption
 
 The local setup now includes the pinned CLI, distinct ports, `lis` baseline, original migration, and four foreign markers.
 A fresh reset and 13 database checks passed.
 The read-only catalog comparison matched schema ownership, relations, columns, constraints, indexes, sequences, policies, functions, and default privileges.
 The shared-history preflight verified that production records every foreign marker.
-Only baseline `20260807000000` remains absent from production history, as expected.
+Baseline `20260807000000` entered production history on 2026-11-10. The production dry run then reported no pending migrations.
 
 The [local development guide](supabase-local-development.md) records commands and the integration boundary.
-Production adoption remains pending until webhook and schedule definitions have a reviewed, credential-free representation.
-The sibling still needs its Leaf marker restored and its historical SQL differences reconciled.
-Those TGW issues do not block Leaf's independent local setup.
+The [integration definitions](supabase-integrations.md) now represent the webhook and schedule without credentials in Git.
+Integration verification and the fresh catalog comparison passed on 2026-11-02.
+The [production adoption record](supabase-production-adoption.md) records the completed changes and verification results.
+TGW is assumed current and functional under the owner's instruction. No TGW schema repair is a prerequisite for this work.
+TGW now contains a comment-only marker for the new Leaf baseline version, confirmed in production on 2026-11-10.
 
 The [inventory](supabase-inventory.md) tracks the separate function-source, caller, and credential work.

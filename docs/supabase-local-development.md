@@ -86,17 +86,18 @@ Matching their versions does not establish parity for TGW's separate setup.
 
 The production trigger `purge_cdn_cache_lis_me_events` embeds a Bunny CDN credential in its arguments.
 The baseline omits that trigger entirely.
-Its credential and arguments never enter a repository file.
-There is no replacement webhook or placeholder credential.
+Its credential never enters a repository file.
+Separate [integration definitions](supabase-integrations.md) capture the target and install the trigger using a key from Vault.
+Local startup and reset commands never run that opt-in setup.
 Local event inserts, updates, and deletes therefore send no CDN requests.
 
 The baseline also excludes cron jobs and Vault contents.
 It schedules no crawler, CDN requests, or shared maintenance jobs.
 The local setup does not reproduce deployed Edge Functions or their external callers.
-Those sources and credentials remain separate follow-up work.
+The completed API-key rollout records the function sources and caller checks separately.
 
 This boundary means table parity is possible before integration parity.
-Production baseline adoption remains pending until the webhook and schedule definitions have a reviewed, credential-free representation.
+The separate integration definitions passed verification on 2026-11-02. Production baseline adoption completed on 2026-11-10.
 Do not treat this local baseline as a complete production integration backup.
 
 ## Compare the catalogs
@@ -140,31 +141,19 @@ This comparison does not establish identical database locales or production data
 
 The history preflight found all four foreign marker versions already applied in production.
 Every production version had a corresponding local file.
-The sole unrecorded local version was baseline `20260807000000`, which remains pending adoption.
+The sole unrecorded local version was baseline `20260807000000`. Production adoption recorded it on 2026-11-10.
 TGW's running local stack remained unchanged throughout verification.
 
-## Production adoption remains pending
+## Production baseline adoption
 
-This work does not link the repository, push migrations, repair history, or change production configuration.
-The production ledger lacks `20260807000000` because this is a new baseline for existing objects.
-A normal production push rejects that earlier, unrecorded version.
-Do not use `--include-all` to execute its creation SQL against existing tables.
+Production adoption completed on 2026-11-10 after owner approval.
+The CLI marked baseline `20260807000000` applied without executing its creation SQL.
+All previous history records and catalog definitions remained unchanged.
+The production dry run reported no pending migrations.
+TGW received a comment-only acknowledgment for the new shared version.
+The [adoption record](supabase-production-adoption.md) contains the procedure and verification results.
 
-Before any production adoption:
-
-1. Complete the integration representation and review its intended differences.
-2. Reserve a deployment window across both repositories.
-3. Repeat the local reset and database tests.
-4. Repeat the production catalog comparison through a read-only connection.
-5. Compare every local migration version with the production ledger.
-6. Reject any foreign marker whose version is absent from production.
-7. Reject any production version without a corresponding local file.
-8. Review every difference and pending migration.
-9. Obtain approval for the exact history change after this review.
-
-An approved adoption can mark an equivalent baseline applied without executing its creation SQL.
-The intended repair affects only version `20260807000000`.
-It must preserve all existing Leaf and TGW history.
-After adoption, verify the ledger and require a dry run to report no pending SQL.
-See the [CLI repair reference](https://supabase.com/docs/reference/cli/supabase-migration-repair).
-No repair command belongs in the local startup or reset scripts.
+The baseline represents existing production objects. Do not execute its creation SQL against the existing database.
+Do not use `--include-all` to bypass history checks.
+Future migrations use the [migration workflow](supabase-migrations.md).
+No repair command belongs in local startup or reset scripts.

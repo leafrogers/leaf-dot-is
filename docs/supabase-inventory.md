@@ -1,17 +1,17 @@
 # Supabase inventory and migration ownership
 
-Inventory date: 2026-10-30.
+Initial inventory date: 2026-10-30. Production adoption completed on 2026-11-10.
 
 Status: repository and production metadata inspection complete.
 Migration ownership and the shared-history workflow are defined in [Supabase migration workflow](supabase-migrations.md).
-Function source inspection is complete. The owner confirmed the caller inventory; request inspection remains open.
+Function source and caller request inspections are complete. The owner confirmed successful production checks and legacy-key revocation.
 The [function recovery notes](supabase-functions.md) record deployed authentication and source differences.
 The [local setup](supabase-local-development.md) now reproduces the table catalog, with external integrations explicitly excluded.
 
 ## Purpose
 
 Part 1 establishes what exists, what uses it, and who owns database migrations.
-The inventory will guide the production baseline in part 2.
+The inventory guided the production baseline in part 2. Production adoption completed on 2026-11-10.
 It does not change production schemas, credentials, functions, or migration history.
 
 ## Confirmed repository findings
@@ -71,8 +71,8 @@ The complete `lis` table list is:
 Each table has an identity sequence.
 The schema contains no views or local functions.
 The inventory includes columns, defaults, constraints, indexes, policies, owners, grants, and role memberships.
-Part 2 must preserve all six tables, including the three writing tables outside current website queries.
-Existing duplicate indexes and foreign keys belong in the baseline before any separate cleanup.
+The baseline preserves all six tables, including the three writing tables outside current website queries.
+It also preserves existing duplicate indexes and foreign keys for any separate cleanup.
 
 The `postgres` role owns the schema and tables and bypasses RLS.
 All six tables enable RLS, but none force RLS.
@@ -91,9 +91,9 @@ The sibling uses `tgw_runtime` and `tgw_importer` group roles with separate logi
 | Deployed function | Version | Gateway JWT verification | Inspection result |
 | --- | --- | --- | --- |
 | `crawl-me-events` | 44 | Disabled | Downloaded source uses `@supabase/server`, `auth: "secret:automation"`, and an admin client |
-| `create-me-event` | 39 | Disabled | Recovered handler checks `API_TOKEN` and uses `SUPABASE_SERVICE_ROLE_KEY`; core Apple Shortcut request needs inspection |
-| `read-me-event-types` | 12 | Disabled | Recovered handler checks `API_TOKEN` and uses `SUPABASE_SERVICE_ROLE_KEY`; core Apple Shortcut request needs inspection |
-| `create-writing` | 12 | Disabled | Recovered handler checks `API_TOKEN` and uses `SUPABASE_SERVICE_ROLE_KEY`; owner confirms no active caller |
+| `create-me-event` | 40 | Disabled | Deployed 2026-11-01; custom `API_TOKEN` authentication and modern server-side database secret; owner reports successful check-in event |
+| `read-me-event-types` | 13 | Disabled | Deployed 2026-11-01; custom `API_TOKEN` authentication and modern server-side database secret; owner reports successful Shortcut read |
+| `create-writing` | 13 | Disabled | Deployed 2026-11-01; custom `API_TOKEN` authentication and modern server-side database secret; owner confirms no active caller |
 | `purge-cdn-cache-tgw-site` | 1 | Disabled | Sibling source uses named secret-key authentication |
 
 Disabled gateway JWT verification does not establish whether a handler authenticates requests.
@@ -101,8 +101,9 @@ The crawler already uses the modern secret-key pattern.
 Its source reads books, games, gigs, movies, and music feeds, then upserts `lis.me_events`.
 Its conflict target is `title,title_parent,timestamp,type_id`.
 The dedicated `../leaf-dot-is-edge-functions` repository contains all four handlers and their shared modules.
-Its current source uses named secret keys for all four functions, but production still runs three legacy handlers.
-See the [recovery notes](supabase-functions.md) before deployment or key retirement.
+The three Shortcut handlers now use the modern server-side database secret and retain custom `API_TOKEN` caller authentication.
+The crawler retains its separate named `automation` secret authentication.
+See the [deployment and recovery notes](supabase-functions.md) before further deployment or key retirement.
 
 The active `run-me-event-crawler` job runs every five minutes and calls `crawl-me-events`.
 Its command reads Vault.
@@ -111,16 +112,18 @@ The `purge_cdn_cache_lis_me_events` trigger calls `supabase_functions.http_reque
 It targets `https://api.bunny.net/purge` and supplies an `AccessKey` header.
 Its arguments require secret handling during baseline extraction.
 The [key rollout checklist](supabase-key-rollout.md) contains the captured schedule and redacted webhook definition.
-The schedule sends `apiKey` from Vault's `CRON_SECRET`; its stored value was not checked.
+The schedule sends `apiKey` from Vault's `CRON_SECRET`.
+The 2026-11-01 audit confirmed that its value matches the modern `automation` key without printing either value.
 The webhook runs after each inserted row, with its Bunny credential embedded in the trigger arguments.
 
 Installed extensions include `pg_cron`, `pg_net`, `pg_trgm`, and `supabase_vault`.
 The remaining extensions are `hypopg`, `index_advisor`, `pg_stat_statements`, `pgcrypto`, `pgsodium`, `plpgsql`, and `uuid-ossp`.
 Vault names include `CRON_SECRET`, a generated `cron-*` name, `tgw_cache_purge_secret_key`, and `tgw_cache_purge_url`.
+Production adoption added `lis_bunny_access_key` on 2026-11-10 without changing the trigger or its credential.
 
-### Applied migration history
+### Original migration history
 
-Production records five migrations:
+The initial inspection found five production migrations:
 
 | Version | Name | Repository status |
 | --- | --- | --- |
@@ -133,11 +136,12 @@ Production records five migrations:
 The first migration contains one recorded SQL statement, now recovered through a read-only query.
 The parsed production SQL exactly matches sibling files 003 and 004.
 Files 001 and 002 differ from their production records. The workflow document records the differences.
-Part 2 must create the recovered migration's prerequisite objects before replay.
-Adding only a later `lis` baseline can leave that older migration unable to run during a fresh reset.
-Do not repair history or renumber existing migrations until the complete replay sequence works locally.
+The local baseline now creates the recovered migration's prerequisite objects before replay.
+Fresh local resets pass with all six migration files.
+Production adoption added baseline version `20260807000000` to the shared history, which now contains six versions.
+The [adoption record](supabase-production-adoption.md) documents the completed checks and TGW acknowledgment.
 
-### Secret consumers and remaining checks
+### Secret consumers and original inspection limits
 
 Leaf's production Doppler configuration supplies `PG_CONNECTION_STRING` and Prismic credentials.
 It contains no Supabase API-key variable.
@@ -146,12 +150,17 @@ Edge secret names also include `API_TOKEN`, `DB_SECRET_KEY`, `DB_URL`, `DB_SCHEM
 Legacy and modern Supabase secret names coexist.
 Their presence does not establish active use or key validity.
 
-The three older Leaf handlers still require `API_TOKEN` and `SUPABASE_SERVICE_ROLE_KEY` in production.
-Their callers need coordinated updates before key retirement.
-External callers, manual edits, Fly secret names, Doppler integration ownership, and current exposed API schemas also need confirmation.
+The three Leaf handlers now retain `API_TOKEN` for callers and use the modern server-side database credential in production.
+Their recovered rollback handlers require the revoked `SUPABASE_SERVICE_ROLE_KEY` and remain historical records only.
+No Shortcut header change is required. Keep `API_TOKEN` after Supabase legacy-key retirement.
+The initial inspection did not establish external callers, manual edits, Fly secret names, Doppler integration ownership, or current exposed API schemas.
+The [key rollout record](supabase-key-rollout.md) documents subsequent caller confirmations, Fly checks, and completed legacy-key revocation.
 The authenticator role has no catalog override for exposed schemas; this does not establish the project's API configuration.
 
-## Production inventory to complete
+## Original production inventory checklist
+
+This checklist records the scope of the initial inspection, not pending adoption work.
+The findings in this document and the linked rollout and adoption records contain the results and inspection limits.
 
 | Area | Information required |
 | --- | --- |
@@ -186,20 +195,20 @@ Shared roles, extensions, and project settings require review for both applicati
 
 This decision replaces the earlier recommendation to centralize executable SQL in the sibling or a dedicated database repository.
 The recovered sibling marker supports separate schema ownership.
-The [workflow](supabase-migrations.md) defines marker checks, baseline adoption, local resets, and the remaining implementation work.
+The [workflow](supabase-migrations.md) defines marker checks, baseline adoption, local resets, and future migration procedures.
 
 ## Access status
 
 Doppler and Supabase authentication now work outside the sandbox.
 Production catalog inspection ran inside read-only transactions.
-No production schema, credentials, functions, or migration records changed.
+The original inventory inspection changed no production schema, credentials, functions, or migration records.
 The sibling runtime role correctly denied access to migration history; the administrative connection supplied that inventory.
 
 The Supabase CLI downloaded `crawl-me-events` individually.
 Downloads of the other Leaf functions failed with `InvalidFunctionDownloadResponseError` and `expected multipart response, got application/octet-stream`.
 The same error occurred with the sibling CLI entry point.
 A subsequent read-only Management API download recovered all four bundles.
-The [recovery notes](supabase-functions.md) record their hashes, handler authentication, source repository, and remaining caller checks.
+The [recovery notes](supabase-functions.md) record their hashes, handler authentication, source repository, and completed caller checks.
 
 ## Completion criteria
 

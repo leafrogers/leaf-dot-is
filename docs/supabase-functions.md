@@ -17,7 +17,9 @@ The function repository also contains the original `20260808000000` SQL file.
 That historical copy does not establish a second migration deployment owner.
 The [migration workflow](supabase-migrations.md) governs the shared production ledger.
 
-## Deployed authentication
+## Original deployed authentication: 2026-10-30
+
+This section records the original recovery state. The production deployment update below supersedes its three Shortcut handler versions.
 
 The deployed source differs from the dedicated repository's current source.
 Disabled gateway JWT verification alone does not establish handler authentication.
@@ -25,18 +27,19 @@ Disabled gateway JWT verification alone does not establish handler authenticatio
 | Function | Deployed version | Deployed inbound authentication | Deployed database access | Current repository source |
 | --- | --- | --- | --- | --- |
 | `crawl-me-events` | 44 | Named `automation` secret through `@supabase/server` | Admin client, `lis.me_events` upsert | Same authentication; later persistence and crawler changes |
-| `create-me-event` | 39 | `Authorization` header compared with `API_TOKEN`, after removal of `Bearer ` | `SUPABASE_SERVICE_ROLE_KEY`, `lis.me_events` upsert | Named `automation` secret and admin client |
-| `read-me-event-types` | 12 | Same `API_TOKEN` comparison | `SUPABASE_SERVICE_ROLE_KEY`, `lis.me_event_types` SELECT | Named `automation` secret and admin client |
-| `create-writing` | 12 | Same `API_TOKEN` comparison | `SUPABASE_SERVICE_ROLE_KEY`, `lis.writing` upsert | Named `automation` secret and admin client |
+| `create-me-event` | 39 | `Authorization` header compared with `API_TOKEN`, after removal of `Bearer ` | `SUPABASE_SERVICE_ROLE_KEY`, `lis.me_events` upsert | Custom `API_TOKEN` Bearer check and modern admin client |
+| `read-me-event-types` | 12 | Same `API_TOKEN` comparison | `SUPABASE_SERVICE_ROLE_KEY`, `lis.me_event_types` SELECT | Custom `API_TOKEN` Bearer check and modern admin client |
+| `create-writing` | 12 | Same `API_TOKEN` comparison | `SUPABASE_SERVICE_ROLE_KEY`, `lis.writing` upsert | Custom `API_TOKEN` Bearer check and modern admin client |
 
 All four deployed functions have gateway JWT verification disabled.
 The three older handlers also read `SUPABASE_URL`.
 Their source establishes an active dependency on the legacy service-role key.
 The presence of newer code in Git does not remove that production dependency.
 
-The current repository source uses `auth: "secret:automation"` for all four handlers.
-Its README requires callers to send the named secret in the `apikey` header.
-It uses `SUPABASE_SECRET_KEYS` for named keys.
+The crawler source retains `auth: "secret:automation"`.
+The three Shortcut handlers now retain custom `API_TOKEN` authentication before the Supabase wrapper creates clients.
+Their admin clients use the modern server-side secret from `SUPABASE_SECRET_KEYS` (the production `default` entry).
+Both core Shortcuts keep their existing Authorization headers.
 The deployed key values and caller credentials were not tested during this inspection.
 
 ## Deployment differences
@@ -62,23 +65,32 @@ Check response consumers as well as request headers during caller migration.
 
 | Consumer | Evidence | Remaining check |
 | --- | --- | --- |
-| Crawler schedule | Active `run-me-event-crawler` job sends `apiKey` from Vault's `CRON_SECRET` every five minutes | Check stored key validity without invoking the crawler during inspection |
-| Event-type reads | Owner reports one core Apple Shortcut, used by specialized Shortcuts | Inspect its request, preserve the JSON array response, and check dependent Shortcuts |
-| Manual event creation | Owner reports one core Apple Shortcut, used by specialized Shortcuts; only the success status is consumed | Inspect its request and preserve HTTP `201` |
-| Bruno requests | `../bruno-collections/Leaf.is/Event types.bru` and `../TGG/asdf copy.bru` call `https://api.leaf.is/event-types` with an Authorization header | Confirm the exact Bunny route and update these saved requests during deployment |
+| Crawler schedule | Active `run-me-event-crawler` job sends `apiKey` from Vault's `CRON_SECRET` every five minutes | Audit confirmed that the stored value matches the modern `automation` key; the owner confirmed a scheduled crawl |
+| Event-type reads | Screenshot shows GET `/event-types` with Bearer authorization | Preserve the JSON array response and check dependent Shortcuts |
+| Manual event creation | Screenshot shows POST `/event` with Bearer authorization and a File body; compares the response with `Created` | Preserve HTTP `201` and plain text `Created`, or update the comparison together |
+| Bruno requests | `../bruno-collections/Leaf.is/Event types.bru` and `../TGG/asdf copy.bru` call `https://api.leaf.is/event-types` with an Authorization header | Keep the existing Authorization headers |
 | Writing creation | Owner confirms this is unused work in progress with no active caller | No caller update required for authentication migration |
 | Website | Direct Postgres queries through `PG_CONNECTION_STRING`; owner reports it is the only Me Event reader | No function caller or Supabase API-key dependency found |
 
 The owner confirmed the caller map on 2026-10-30.
 The Shortcuts share one Apple account across an iPhone, a personal laptop, and a work laptop.
 Only these Shortcuts and the scheduled crawler write Me Events.
-The event-creation Shortcut does not consume the response body.
-The current source's JSON success body is compatible if the successful status remains `201`.
+Screenshots reviewed on 2026-10-31 correct the initial status-only caller report.
+Send Event compares the response body with `Created` and shows any different response.
+The function source now preserves plain text `Created` for event creation.
+Its handler test checks the exact response body; the follow-up fix was deployed on 2026-11-01.
 Check both core Shortcuts and their specialized callers after the changes reach each device.
 
 An unauthenticated GET to the Bruno URL returned `401 Unauthorized` on 2026-10-30.
 Response headers identified Bunny CDN, Supabase Edge Runtime, and project `zklsoaixtluzvdidyxsh`.
-This response supports the suspected route, but does not establish the exact target function or header forwarding configuration.
+The Bunny screenshot shows the origin `https://zklsoaixtluzvdidyxsh.supabase.co/functions/v1` with no Host header override.
+The enabled Edge Rules map `/event`, `/event-types`, and `/writing` to `create-me-event`, `read-me-event-types`, and `create-writing` respectively.
+An enabled Block Request rule matches URLs outside those three public URLs.
+On 2026-10-31, the owner confirmed that these endpoints are not cached and have no header forwarding rules.
+For rollout planning, assume all request headers, including `Authorization`, reach the origin.
+Verify authenticated requests through Bunny after deployment.
+Send Event uses a File body without an explicit Content-Type header in the screenshot.
+Completed synthetic captures confirmed exact `application/json` and compatible payloads for all three wrappers.
 The repository search covered the personal repositories, excluding dependencies, build output, environment files, and Git internals.
 The owner subsequently identified the Apple Shortcuts as the active manual Me Event callers.
 Do not copy caller credential values into documentation.
@@ -105,24 +117,41 @@ They do not establish equality with the source repository.
 The bundles and extracted modules remain outside Git in temporary recovery files.
 This document records their findings without dependency bundles or credentials.
 The extraction establishes handler behavior; it does not reproduce the deployed runtime.
+A follow-up prepared rollback source and a passing local smoke check in `../leaf-dot-is-edge-functions/rollback/20261030`.
+The [isolated Edge Runtime rehearsal](supabase-key-rollout.md#isolated-edge-runtime-rehearsal-2026-11-01) passed on 2026-11-01.
+All 35 HTTP assertions and direct database assertions passed for the earlier named-key design and recovered handlers.
+Those inbound authentication results do not validate the revised custom-token source.
+See the [preparation update](supabase-key-rollout.md#preparation-update-2026-10-31) for dependency and validation limits.
 
 ## Local preparation
 
 The dedicated function repository now has compatibility fixes and handler authentication tests.
 These changes are committed as `5a91db1` (`fix: preserve deployed event request behaviour`).
-Validation passed: 28 tests with 33 steps, type checking, and checks for the changed code.
+Initial validation passed: 28 tests with 33 steps, type checking, and checks for the changed code.
+The revised custom-token implementation passed 28 tests with 45 steps and 41 isolated runtime HTTP checks.
 The crawler was not changed or deployed.
 See the [preparation results](supabase-key-rollout.md#local-preparation-results) for coverage and remaining deployment checks.
 
-## Next steps
+## Production deployment update: 2026-11-01
 
-1. Inspect the two core Shortcut requests and check the routing behind `api.leaf.is`.
-2. Review the authentication deployment in the function repository, including request and response compatibility.
-3. Resolve the CDN purge target and secret provisioning from the captured, redacted integration definitions.
-4. Test actual caller requests and database behavior in an isolated environment; verify deployable rollback source.
-5. Coordinate function deployment and caller updates with a rollback plan.
-6. Check that no remaining Leaf or TGW consumer requires legacy keys before retirement.
+The selected handlers are deployed: `create-me-event` version `40`, `read-me-event-types` version `13`, and `create-writing` version `13`.
+They retain custom `API_TOKEN` Bearer authentication and use the modern server-side database secret.
+The crawler remains at version `44`. Gateway JWT verification remains disabled for all four functions.
+All three Bunny routes rejected missing credentials with `401` and an invalid Bearer token with `403`.
+The owner reported successful event-type retrieval and a successful check-in event through the existing Shortcuts after deployment.
+The owner confirmed the check-in event's website display and successful iPhone operation.
+The owner excluded laptop checks from the rollout scope.
+The owner confirmed scheduled collection of a Last.fm song and its display on `/consuming`.
+The production acceptance checks are complete.
+No caller headers, credentials, database migrations, or migration history changed.
 
-Production baseline adoption remains a separate task.
-It requires the integration definitions and a fresh catalog comparison before any migration-history repair.
-No function deployment, credential change, or production history repair ran during this recovery.
+## Completed follow-up
+
+The [rollout record](supabase-key-rollout.md) contains the completed Shortcut checks, isolated runtime results, production checks, and legacy-key audit.
+The [integration definitions](supabase-integrations.md) record the CDN target and credential provisioning.
+Production baseline adoption completed on 2026-11-10 after a fresh catalog comparison.
+The [adoption record](supabase-production-adoption.md) records the history repair and verification results.
+The original recovery made no production changes. The selected function deployment followed on 2026-11-01.
+The owner subsequently confirmed legacy API-key revocation and successful production checks. The API-key migration is complete.
+The recovered legacy handlers require the revoked service-role key and cannot serve as a rollback.
+The function rollout itself required no production history repair.
