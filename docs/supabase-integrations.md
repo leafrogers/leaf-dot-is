@@ -81,14 +81,11 @@ The checks cover credential decoding, repeat installation, trigger identity, ins
 With Leaf's local Docker database running:
 
 ```sh
-docker exec supabase_db_leaf-dot-is createdb -U postgres leaf_integration_test
-docker cp supabase/integrations supabase_db_leaf-dot-is:/tmp/leaf-integration-tests
-docker exec supabase_db_leaf-dot-is psql -X -U postgres -d leaf_integration_test \
-  -v ON_ERROR_STOP=1 -f /tmp/leaf-integration-tests/test.sql
-docker exec supabase_db_leaf-dot-is dropdb -U postgres leaf_integration_test
+npm run db:test:integrations
 ```
 
-The test transaction rolls back its fixtures. Drop the disposable database after success or failure.
+The runner creates a unique disposable database and removes it and its copied fixtures after success or failure.
+The test transaction rolls back its fixtures.
 Do not run this fixture against production or the application database.
 
 ## Verification results

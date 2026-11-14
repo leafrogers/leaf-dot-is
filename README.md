@@ -44,6 +44,10 @@ checking your changes:
 
 See the [local Supabase guide](docs/supabase-local-development.md) for startup, resets, synthetic data, and production boundaries.
 
+### Tests
+
+See the [testing guide](docs/testing.md) for application checks, database checks, CI, deployment gates, and planned upgrades.
+
 ### :pager: Contact
 
 If you have any questions or comments about this app, or need help using it,

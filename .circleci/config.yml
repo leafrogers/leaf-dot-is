@@ -11,7 +11,33 @@ jobs:
       - node/install-packages
       - run:
           command: npm test
+  database-test:
+    machine:
+      image: ubuntu-2404:current
+    resource_class: medium
+    steps:
+      - checkout
+      - node/install:
+          node-version: '24.10.0'
+      - node/install-packages
+      - run:
+          name: Start local Supabase
+          command: npm run db:start
+      - run:
+          name: Replay migrations and synthetic seed
+          command: npm run db:reset
+      - run:
+          name: Run database constraints and isolation checks
+          command: npm run db:test
+      - run:
+          name: Run isolated integration SQL
+          command: npm run db:test:integrations
+      - run:
+          name: Stop local Supabase
+          command: npm run db:stop
+          when: always
 workflows:
   node-tests:
     jobs:
       - test
+      - database-test

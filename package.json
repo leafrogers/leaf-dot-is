@@ -19,7 +19,8 @@
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset --local",
-    "db:test": "supabase test db --local"
+    "db:test": "supabase test db --local",
+    "db:test:integrations": "bash scripts/test-db-integrations.sh"
   },
   "type": "module",
   "repository": {
