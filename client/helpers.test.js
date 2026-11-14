@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { politeSetInterval } from './helpers.js';
 
 it('updates immediately, waits for the interval, and resumes after a long pause', () => {

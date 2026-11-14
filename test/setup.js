@@ -1,7 +1,7 @@
-import { afterAll, afterEach, beforeEach, expect, jest } from '@jest/globals';
+import { afterAll, afterEach, beforeEach, expect, vi } from 'vitest';
 
 // HTTP route tests use local sockets. Outbound service calls must use fixtures.
-const fetch = jest
+const fetch = vi
 	.spyOn(globalThis, 'fetch')
 	.mockRejectedValue(
 		new Error(
@@ -18,5 +18,5 @@ afterEach(() => {
 });
 
 afterAll(() => {
-	jest.restoreAllMocks();
+	vi.restoreAllMocks();
 });

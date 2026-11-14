@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { circleCIState, waitForCircleCI } from './wait-for-circleci.js';
 
 const passedJobs = [
@@ -156,10 +156,10 @@ describe('CircleCI deployment requirements', () => {
 
 describe('Waiting for the exact commit', () => {
 	const sha = 'test-commit';
-	const request = jest.fn(
+	const request = vi.fn(
 		/** @type {typeof fetch} */ (async () => new Response())
 	);
-	const sleep = jest.fn((_ms = 0) => Promise.resolve());
+	const sleep = vi.fn((_ms = 0) => Promise.resolve());
 	const options = {
 		repository: 'example/site',
 		sha,
@@ -171,7 +171,7 @@ describe('Waiting for the exact commit', () => {
 	};
 
 	beforeEach(() => {
-		jest.spyOn(console, 'log').mockReturnValue();
+		vi.spyOn(console, 'log').mockReturnValue();
 		request.mockReset();
 		sleep.mockReset().mockResolvedValue();
 	});

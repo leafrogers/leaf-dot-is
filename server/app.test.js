@@ -1,8 +1,8 @@
-import { jest } from '@jest/globals';
 import { Client, filter } from '@prismicio/client';
 import { parse } from 'node-html-parser';
 import { Pool } from 'postgres-pool';
 import supertest from 'supertest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { weeknote } from '../test/fixtures.js';
 import app from './app.js';
 import config from './config.js';
@@ -12,10 +12,10 @@ const originalFriendlyTitle = config.APP_FRIENDLY_NAME;
 const originalPermalinkBase = config.PERMALINK_BASE_URL;
 const originalIsProduction = config.IS_PRODUCTION;
 
-jest.spyOn(global.console, 'debug').mockReturnValue();
-jest.spyOn(global.console, 'error').mockReturnValue();
-const query = jest.spyOn(Pool.prototype, 'query');
-const getWeeknotes = jest.spyOn(Client.prototype, 'getAllByType');
+vi.spyOn(global.console, 'debug').mockReturnValue();
+vi.spyOn(global.console, 'error').mockReturnValue();
+const query = vi.spyOn(Pool.prototype, 'query');
+const getWeeknotes = vi.spyOn(Client.prototype, 'getAllByType');
 
 describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 	beforeEach(() => {

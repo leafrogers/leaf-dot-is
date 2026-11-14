@@ -9,22 +9,24 @@ npm ci
 npm test
 ```
 
-`npm test` runs Biome, TypeScript checks, and Jest with server, browser, shared component, and deployment gate coverage.
+`npm test` runs Biome, TypeScript checks, and Vitest with server, browser, shared component, and deployment gate coverage.
 The application tests use synthetic database and Prismic responses.
 They need local HTTP sockets for Supertest, but no external services or running database.
+Vitest 5.1.0 runs native ES modules without Jest’s experimental VM flags.
+The database runner uses a separate Vitest configuration, so default runs need no database.
 The test command sets UTC for consistent date formatting.
 Unexpected calls to global `fetch` fail the tests, even when application error handling catches the rejection.
 
 For a focused run:
 
 ```sh
-npm run jest -- --runInBand server/pages/inhaling.test.js
+npm run vitest -- run server/pages/inhaling.test.js
 ```
 
 For coverage without lint:
 
 ```sh
-npm run test:coverage -- --runInBand
+npm run test:coverage
 ```
 
 Use branch coverage to find missing cases. This phase adds no percentage threshold.
@@ -74,7 +76,7 @@ See [local Supabase development](supabase-local-development.md) and [integration
 
 CircleCI runs two parallel jobs in the `node-tests` workflow:
 
-- `test`: application lint, type checks, and Jest coverage.
+- `test`: application lint, type checks, and Vitest coverage.
 - `database-test`: local Supabase startup, migration and seed replay, pgTAP, and isolated integration SQL.
 
 The database job uses a Docker-capable machine and the repository's pinned Supabase CLI.
@@ -100,8 +102,7 @@ This also restores deployment without a test gate.
 
 Keep the complete suite passing between these separate phases:
 
-1. Migrate Jest to the latest stable Vitest. Preserve assertions, offline fixtures, and coverage reporting.
-2. Upgrade outdated packages. Handle breaking changes in focused commits.
-3. Upgrade Node to v26 in local tooling, CI, and deployment.
+1. Upgrade outdated packages. Handle breaking changes in focused commits.
+2. Upgrade Node to v26 in local tooling, CI, and deployment.
 
 Resolve exact package versions and compatibility when each phase starts.

@@ -1,5 +1,5 @@
-import { jest } from '@jest/globals';
 import { JSDOM } from 'jsdom';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getRelativeTime } from './get-relative-time.js';
 import { setUpRelativeTimestamps } from './index.js';
 
@@ -44,13 +44,13 @@ describe('timestamp interactions', () => {
 				}
 			}
 		});
-		jest.useFakeTimers({ doNotFake: ['requestAnimationFrame'] });
-		jest.setSystemTime(now);
+		vi.useFakeTimers({ toFake: ['Date'] });
+		vi.setSystemTime(now);
 		setUpRelativeTimestamps([...document.querySelectorAll('time')]);
 	});
 
 	afterEach(() => {
-		jest.useRealTimers();
+		vi.useRealTimers();
 		for (const name of ['document', 'Element', 'requestAnimationFrame']) {
 			Reflect.deleteProperty(globalThis, name);
 		}
@@ -59,7 +59,7 @@ describe('timestamp interactions', () => {
 
 	it('renders relative text, then updates it as time passes', () => {
 		expect(document.querySelector('time')?.textContent).toBe('2 minutes ago');
-		jest.setSystemTime(new Date(now.getTime() + 60000));
+		vi.setSystemTime(new Date(now.getTime() + 60000));
 		frame(60000);
 		expect(document.querySelector('time')?.textContent).toBe('3 minutes ago');
 	});

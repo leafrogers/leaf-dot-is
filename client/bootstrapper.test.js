@@ -1,5 +1,5 @@
-import { jest } from '@jest/globals';
 import { JSDOM } from 'jsdom';
+import { expect, it, vi } from 'vitest';
 import bootstrapper from './bootstrapper.js';
 
 it.each([
@@ -11,7 +11,7 @@ it.each([
 		{ runScripts: 'outside-only', url: 'https://www.example.test' }
 	);
 	try {
-		const warn = jest
+		const warn = vi
 			.spyOn(dom.window.console, 'warn')
 			.mockReturnValue(undefined);
 		dom.window.eval(bootstrapper);

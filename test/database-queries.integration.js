@@ -1,5 +1,5 @@
-import { jest } from '@jest/globals';
 import { Pool } from 'postgres-pool';
+import { afterAll, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { fetchMeEvents, fetchMeEventTypes } from '../server/services.js';
 
 // The runner supplies an empty disposable database with the real migrations.
@@ -20,9 +20,9 @@ beforeAll(async () => {
 	await client.query(`INSERT INTO lis.me_event_types (id, type, type_short, grouping_threshold)
 		VALUES (1, 'Watching', 'watched', 90), (2, 'Listening', 'listened', 60)`);
 	// Keep fixture timestamps and application queries on one transaction clock.
-	jest
-		.spyOn(Pool.prototype, 'query')
-		.mockImplementation((sql, values) => client.query(sql, values));
+	vi.spyOn(Pool.prototype, 'query').mockImplementation((sql, values) =>
+		client.query(sql, values)
+	);
 });
 
 beforeEach(async () => {
@@ -30,7 +30,7 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
-	jest.restoreAllMocks();
+	vi.restoreAllMocks();
 	if (client) {
 		await client.query('ROLLBACK');
 		await client.release(true);

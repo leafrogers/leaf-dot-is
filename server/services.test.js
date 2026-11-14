@@ -1,8 +1,8 @@
-import { jest } from '@jest/globals';
 import { Pool } from 'postgres-pool';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchMeEvents, fetchMeEventTypes } from './services.js';
 
-const query = jest.spyOn(Pool.prototype, 'query');
+const query = vi.spyOn(Pool.prototype, 'query');
 
 beforeEach(() => {
 	query.mockReset().mockResolvedValue({

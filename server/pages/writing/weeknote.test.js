@@ -1,18 +1,18 @@
-import { jest } from '@jest/globals';
 import { Client } from '@prismicio/client';
 import { parse } from 'node-html-parser';
 import supertest from 'supertest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { weeknote } from '../../../test/fixtures.js';
 import app from '../../app.js';
 import config from '../../config.js';
 
 const request = supertest(app);
-const getByUID = jest.spyOn(Client.prototype, 'getByUID');
+const getByUID = vi.spyOn(Client.prototype, 'getByUID');
 const originalProduction = config.IS_PRODUCTION;
 
 beforeEach(() => {
 	getByUID.mockReset().mockResolvedValue(weeknote());
-	jest.spyOn(console, 'debug').mockReturnValue();
+	vi.spyOn(console, 'debug').mockReturnValue();
 });
 
 afterEach(() => {

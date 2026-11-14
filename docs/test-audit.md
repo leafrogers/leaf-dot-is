@@ -10,14 +10,16 @@ The browser build also passes.
 Database validation passes 18 pgTAP checks, nine SQL assertions, three expected credential errors, and five application query cases.
 
 The standard coverage report now includes server code, browser code, shared components, and the deployment gate.
-The following measurements exclude the separate database run.
+The following measurements use Vitest 5.1.0 with V8 coverage and exclude the separate database run.
+The previous Jest run reported 85.52% server branches and 81.25% overall branches.
+The runner change affects branch attribution; it adds no new application cases.
 
 | Current coverage scope | Statements | Branches | Functions | Lines |
 | --- | ---: | ---: | ---: | ---: |
-| Server | 97.08% | 85.52% | 96.00% | 97.05% |
+| Server | 97.08% | 86.18% | 96.00% | 97.05% |
 | Individual weeknote page | 100.00% | 100.00% | 100.00% | 100.00% |
 | Browser and shared components | 94.11% | 76.00% | 100.00% | 94.00% |
-| All measured JavaScript | 96.11% | 81.25% | 96.87% | 96.05% |
+| All measured JavaScript | 96.11% | 83.48% | 96.87% | 96.05% |
 
 | Area | Added protection |
 | --- | --- |
@@ -38,14 +40,33 @@ The fixed `leaf.is` document-title suffix remains the current contract; the misl
 The single-child test now states its actual contract: no nested list after the parent.
 Rating tests preserve the existing upper bound. They do not introduce a lower bound.
 
-jsdom 26 supports the current Jest runner and Node CI version.
-Review its version during the planned Vitest and dependency upgrades.
+jsdom 26 remains compatible with the current Node CI version.
+Review its version during the planned dependency upgrades.
 Bootstrap tests execute the exported script text; coverage cannot attribute that evaluated text to its source file.
 Browser tests do not validate layout, browser-specific behavior, or deployment infrastructure.
 The live CircleCI-to-GitHub-to-Fly path and shell cleanup failure paths remain unverified.
 The database runner performs cleanup after successful execution; this does not prove every failure path.
-Jest reports a delayed shutdown after the query tests, then exits successfully.
-The current pool package leaves a connection timeout pending; review this during dependency upgrades.
+The earlier Jest query run reported a delayed shutdown from a pending pool connection timeout.
+Vitest exits successfully without that warning; review the pool package during dependency upgrades.
+
+## Vitest migration
+
+The suite now uses Vitest 5.1.0 and its matching V8 coverage provider.
+All 116 application cases and five real PostgreSQL cases pass with their existing behavioral assertions.
+The 18 pgTAP checks and SQL installation checks also pass.
+Formatting, type checks, the browser build, and shell syntax checks pass.
+
+Tests import their APIs explicitly and fake only the date where animation frames use a local recorder.
+Hooks retain their previous order, and the database configuration replaces the default application test selection.
+The outbound fetch guard and synthetic service environment remain enabled.
+The test environment explicitly overrides Vite’s default `BASE_URL` with the application’s empty prefix.
+The middleware assertion checks the custom error’s message and status directly.
+
+Vite requires a newer esbuild peer, so esbuild moves to 0.28.2 in this phase.
+TypeScript uses Bundler resolution to read Vitest’s package exports.
+The application runtime and Node version remain unchanged.
+The Jest packages, configuration, and experimental VM flags are removed.
+The migration follows the [official Vitest guide](https://vitest.dev/guide/migration/jest.html).
 
 ## Original audit
 

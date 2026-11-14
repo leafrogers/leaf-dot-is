@@ -1,14 +1,14 @@
-import { jest } from '@jest/globals';
 import { parse } from 'node-html-parser';
 import { Pool } from 'postgres-pool';
 import supertest from 'supertest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import app from '../app.js';
 import config from '../config.js';
 
 /** @typedef {import('./inhaling.js').MeEvent} MeEvent */
 
 const request = supertest(app);
-const query = jest.spyOn(Pool.prototype, 'query');
+const query = vi.spyOn(Pool.prototype, 'query');
 const originalIsProduction = config.IS_PRODUCTION;
 const eventTypes = [
 	{ type: 'Listening', typeShort: 'listened' },
@@ -51,7 +51,7 @@ const groupContents = (html) =>
 
 beforeEach(() => {
 	events = [];
-	jest.spyOn(console, 'debug').mockReturnValue();
+	vi.spyOn(console, 'debug').mockReturnValue();
 	query.mockReset().mockImplementation(async (sql) => {
 		if (typeof sql === 'string' && sql.includes('from lis.me_events')) {
 			return result(structuredClone(events));

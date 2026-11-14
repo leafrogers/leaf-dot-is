@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { assertNoUndefinedValues } from './config.js';
 
 describe('Server helpers', () => {

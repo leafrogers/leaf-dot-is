@@ -32,6 +32,5 @@ for migration in supabase/migrations/*.sql; do
 done
 LEAF_TEST_DATABASE="$database" TZ=UTC BASE_URL='' PERMALINK_BASE_URL='' \
   PRISMIC_ACCESS_TOKEN='' PRISMIC_REPO_NAME='test' PRISMIC_TYPES_TOKEN='' \
-  PG_CONNECTION_STRING='' node --experimental-vm-modules --no-warnings \
-  node_modules/jest/bin/jest.js --runInBand \
-  --testMatch='**/test/database-queries.integration.js'
+  PG_CONNECTION_STRING='' node node_modules/vitest/vitest.mjs run \
+  --config vitest.database.config.js

@@ -1,13 +1,13 @@
-import { jest } from '@jest/globals';
 import { Client } from '@prismicio/client';
 import { JSDOM } from 'jsdom';
 import supertest from 'supertest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { weeknote } from '../../../test/fixtures.js';
 import app from '../../app.js';
 import config from '../../config.js';
 
 const request = supertest(app);
-const getAllByType = jest.spyOn(Client.prototype, 'getAllByType');
+const getAllByType = vi.spyOn(Client.prototype, 'getAllByType');
 const originalOrigin = config.PERMALINK_BASE_URL;
 
 beforeEach(() => {
