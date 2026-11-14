@@ -192,7 +192,40 @@ describe('Waiting for the exact commit', () => {
 			`https://api.github.com/repos/example/site/commits/${sha}/status?per_page=100`,
 			`https://api.github.com/repos/example/site/commits/${sha}/check-runs?filter=latest&per_page=100`
 		]);
+		for (const [, options] of request.mock.calls) {
+			expect(options?.headers).toEqual({
+				Accept: 'application/vnd.github+json',
+				Authorization: 'Bearer synthetic-token',
+				'X-GitHub-Api-Version': '2022-11-28'
+			});
+		}
 		expect(sleep).not.toHaveBeenCalled();
+	});
+
+	it('accepts a GitHub App workflow through the polling response', async () => {
+		request
+			.mockResolvedValueOnce(Response.json({ object: { sha } }))
+			.mockResolvedValueOnce(Response.json({ statuses: [] }))
+			.mockResolvedValueOnce(
+				Response.json({
+					check_runs: [
+						{
+							...workflow(),
+							name: 'node-tests - a1b2c3d4',
+							app: { slug: 'circleci-app' }
+						}
+					]
+				})
+			);
+		await expect(waitForCircleCI(options)).resolves.toBeUndefined();
+		expect(sleep).not.toHaveBeenCalled();
+	});
+
+	it('rejects main moving while waiting for CI', async () => {
+		respond([]);
+		respond(passedJobs, 'newer-commit');
+		await expect(waitForCircleCI(options)).rejects.toThrow('Main has moved');
+		expect(sleep).toHaveBeenCalledTimes(1);
 	});
 
 	it('waits for missing results and then accepts success', async () => {

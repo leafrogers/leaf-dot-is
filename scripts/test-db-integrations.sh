@@ -24,3 +24,14 @@ test_dir=$(docker exec "$container" mktemp -d /tmp/leaf-integration-tests.XXXXXX
 docker cp supabase/integrations/. "$container:$test_dir/"
 docker exec "$container" psql -X -U postgres -d "$database" \
   -v ON_ERROR_STOP=1 -f "$test_dir/test.sql"
+
+# Exercise application SQL against the real migrated schema in the same empty database.
+for migration in supabase/migrations/*.sql; do
+  docker exec -i "$container" psql -X -U postgres -d "$database" \
+    -v ON_ERROR_STOP=1 < "$migration"
+done
+LEAF_TEST_DATABASE="$database" TZ=UTC BASE_URL='' PERMALINK_BASE_URL='' \
+  PRISMIC_ACCESS_TOKEN='' PRISMIC_REPO_NAME='test' PRISMIC_TYPES_TOKEN='' \
+  PG_CONNECTION_STRING='' node --experimental-vm-modules --no-warnings \
+  node_modules/jest/bin/jest.js --runInBand \
+  --testMatch='**/test/database-queries.integration.js'

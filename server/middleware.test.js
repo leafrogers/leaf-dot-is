@@ -15,6 +15,10 @@ describe('Server middleware', () => {
 			const stubbedNext = jest.fn();
 			// @ts-expect-error
 			disallowInProduction({}, {}, stubbedNext);
+			expect(stubbedNext).toHaveBeenCalledTimes(1);
+			expect(stubbedNext).toHaveBeenCalledWith(
+				expect.objectContaining({ status: 405 })
+			);
 			expect(stubbedNext).toHaveBeenCalledWith(
 				new Error('This method or route is not allowed in production')
 			);

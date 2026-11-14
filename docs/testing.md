@@ -9,7 +9,7 @@ npm ci
 npm test
 ```
 
-`npm test` runs Biome, TypeScript checks, and Jest with server coverage.
+`npm test` runs Biome, TypeScript checks, and Jest with server, browser, shared component, and deployment gate coverage.
 The application tests use synthetic database and Prismic responses.
 They need local HTTP sockets for Supertest, but no external services or running database.
 The test command sets UTC for consistent date formatting.
@@ -28,7 +28,9 @@ npm run test:coverage -- --runInBand
 ```
 
 Use branch coverage to find missing cases. This phase adds no percentage threshold.
-The report measures `server/**`; it does not measure browser behavior.
+The report measures `server/**`, `client/**`, `shared/**/*.js`, and the deployment gate.
+Browser tests use jsdom to exercise timestamp text, updates, toggles, dismissal, and bootstrap fallback.
+They do not test browser layout or visual rendering.
 The `/inhaling` tests cover time boundaries, category changes, repeats, parent groups, ordering, filters, empty results, and dependency failures.
 Service tests cover parameterized filters and query limits.
 Weeknotes tests use document fixtures and check rendered content, dates, links, RSS items, and publication filters.
@@ -49,11 +51,16 @@ npm run db:test:integrations
 
 `db:reset` replaces Leaf's local data with synthetic examples.
 It replays all migrations, including the comment-only TGW history markers.
-`db:test` runs the 13 pgTAP checks against the local application database.
+`db:test` runs the 18 pgTAP checks against the local application database.
 `db:test:integrations` creates an empty disposable database in Leaf's local container.
-It runs the existing SQL integration suite and removes the database and copied fixtures after success or failure.
+It runs SQL installation tests, replays the real migrations, and runs five application query cases.
+It removes the database and copied fixtures after success or failure.
+Query cases use the real PostgreSQL driver and one transaction clock for exact time boundaries.
+They cover category selection, future exclusion, six-day boundaries, field aliases, ordering, and both 200-row limits.
+The runner connects only to Leaf’s local PostgreSQL port, `55322`.
 The suite prints three expected credential errors. Its exit status determines success.
-It uses stub dependencies and synthetic credentials, and sends no HTTP requests.
+SQL installation tests use local recorders and synthetic credentials, and send no HTTP requests.
+They execute the stored crawler command and check its URL, headers, timeout, and credential rotation.
 
 To stop Leaf's stack while retaining its data:
 

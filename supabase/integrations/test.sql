@@ -111,4 +111,29 @@ SELECT pg_temp.assert((SELECT count(*) = 1 AND min(schedule) = '*/5 * * * *'
   FROM cron.job WHERE jobname = 'run-me-event-crawler'), 'Crawler schedule is repeatable and reads its credential at runtime');
 -- There is deliberately no net schema: installation cannot invoke HTTP.
 SELECT pg_temp.assert(to_regnamespace('net') IS NULL, 'No network dependency runs during setup');
+-- Execute the stored command against a local HTTP recorder, never a network extension.
+CREATE SCHEMA net;
+CREATE TABLE net.calls (url text, headers jsonb, timeout_milliseconds integer);
+CREATE FUNCTION net.http_get(url text, headers jsonb, timeout_milliseconds integer)
+RETURNS bigint LANGUAGE plpgsql AS $$
+BEGIN
+  INSERT INTO net.calls VALUES (url, headers, timeout_milliseconds);
+  RETURN 1;
+END $$;
+DO $$
+BEGIN
+  EXECUTE (SELECT command FROM cron.job WHERE jobname = 'run-me-event-crawler');
+END $$;
+SELECT pg_temp.assert((SELECT count(*) = 1 AND bool_and(
+  url = 'https://zklsoaixtluzvdidyxsh.supabase.co/functions/v1/crawl-me-events'
+  AND headers = '{"apiKey":"sb_secret_synthetic"}'::jsonb
+  AND timeout_milliseconds = 5000) FROM net.calls), 'Stored crawler command uses the exact URL, headers and timeout');
+UPDATE vault.decrypted_secrets SET decrypted_secret = 'sb_secret_rotated' WHERE name = 'CRON_SECRET';
+TRUNCATE net.calls;
+DO $$
+BEGIN
+  EXECUTE (SELECT command FROM cron.job WHERE jobname = 'run-me-event-crawler');
+END $$;
+SELECT pg_temp.assert((SELECT count(*) = 1 AND bool_and(headers = '{"apiKey":"sb_secret_rotated"}'::jsonb)
+  FROM net.calls), 'Stored crawler command reads the current credential at execution');
 ROLLBACK;

@@ -186,10 +186,13 @@ describe('GET /inhaling', () => {
 		expect(groupContents(text)).toEqual(['An album First track Second track']);
 	});
 
-	it('renders a single child inline after its parent', async () => {
+	it('renders a single child after its parent without a nested list', async () => {
 		events = [event({ titleParent: 'An album' })];
 		const { text } = await request.get('/inhaling').expect(200);
 		expect(groupContents(text)).toEqual(['An album First track']);
+		const content = groups(text)[0].querySelector('.group__content');
+		expect(content?.querySelectorAll('ol, ul')).toHaveLength(0);
+		expect(content?.innerHTML).toContain('First track');
 	});
 
 	it('creates separate parent subgroups and keeps matching child titles distinct', async () => {
@@ -222,6 +225,10 @@ describe('GET /inhaling/:eventType', () => {
 		expect(text).toContain('Here’s a feed of just listening');
 		expect(text).toContain('<a href="/inhaling">Inhaling</a>');
 		expect(groupContents(text)).toEqual(['First track']);
+		expect(query).toHaveBeenCalledWith(
+			expect.stringContaining('where type_short = $1'),
+			['listened']
+		);
 	});
 
 	it('returns 404 for an unknown category', async () => {
