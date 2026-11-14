@@ -19,6 +19,19 @@ export const doNotCache = (_req, res, next) => {
 };
 
 /**
+ * @param {ExpressError} error
+ * @param {ExpressRequest} req
+ * @param {ExpressResponse} res
+ * @param {NextFunction} next
+ */
+export const doNotCacheErrors = (error, req, res, next) => {
+	if (res.headersSent) {
+		return next(error);
+	}
+	doNotCache(req, res, () => next(error));
+};
+
+/**
  * @param {number} maxAge Maximum cache time in seconds
  * @param {object} options
  * @param {boolean} [options.isPrivate] Set this to true if the response is personalised to a user or account

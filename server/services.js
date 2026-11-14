@@ -99,22 +99,25 @@ export const fetchGrooklets = async () => {
 };
 
 /**
- * @param {string} eventType
+ * @param {string} [eventType]
  */
 export const fetchMeEvents = async (eventType) => {
 	let meEvents = [];
 
 	try {
-		const result = await pool.query(`
+		const result = await pool.query(
+			`
 			select grouping_threshold as "groupingThreshold",title,title_parent as "titleParent",type,type_short as "typeShort",timestamp
 			from lis.me_events
 			join lis.me_event_types on type_id = lis.me_event_types.id
 			and timestamp <= current_timestamp
 			${eventType ? '' : `and timestamp >= current_timestamp at time zone 'UTC' - interval '6 days'`}
-			${eventType ? `where type_short = '${eventType}'` : ''}
+			${eventType ? 'where type_short = $1' : ''}
 			order by timestamp desc
 			limit 200
-		`);
+		`,
+			eventType ? [eventType] : []
+		);
 		meEvents = result.rows;
 	} catch (error) {
 		// @ts-expect-error

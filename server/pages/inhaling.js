@@ -324,7 +324,7 @@ const view = ({ meEventGroups, meEventTypes, navLevels, title }) =>
 		body: `
 			${
 				navLevels.length > 1
-					? `<p>Here’s a feed of just ${meEventGroups[0].type.toLowerCase()} (capped at the last 200, to keep things snappy):</p>`
+					? `<p>Here’s a feed of just ${title.toLowerCase()} (capped at the last 200, to keep things snappy):</p>`
 					: `
 						<p>Here’s a mostly automated feed of things that have happened in m’life this past week.</p>
 						<p>Categories I’m tracking:</p>

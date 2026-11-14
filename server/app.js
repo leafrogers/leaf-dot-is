@@ -6,6 +6,7 @@ import {
 	cacheFor,
 	disallowInProduction,
 	doNotCache,
+	doNotCacheErrors,
 	security
 } from './middleware.js';
 import { controller as cv2015 } from './pages/cv/2015/index.js';
@@ -64,6 +65,6 @@ app.use(doNotCache);
 app.get('/throw-error-in-prod', disallowInProduction);
 
 app.use(cacheFor(oneYearInSecs), catchRejections(notFound));
-app.use(catchErrors);
+app.use(doNotCacheErrors, catchErrors);
 
 export default app;
