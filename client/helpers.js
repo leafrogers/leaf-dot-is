@@ -4,13 +4,17 @@
  * @param {unknown[]} args
  */
 export const politeSetInterval = (func, frequency, ...args) => {
-	let previousTimestamp = 0;
+	/** @type {number | undefined} */
+	let previousTimestamp;
 
 	/**
 	 * @param {number} now
 	 */
 	function render(now) {
-		if (!previousTimestamp || now - previousTimestamp >= frequency) {
+		if (
+			previousTimestamp === undefined ||
+			now - previousTimestamp >= frequency
+		) {
 			previousTimestamp = now;
 			// @ts-expect-error
 			func(...args);
