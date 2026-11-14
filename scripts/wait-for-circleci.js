@@ -11,7 +11,10 @@ export const circleCIState = ({ statuses, checkRuns }) => {
 	const workflow = checkRuns
 		.filter(
 			(check) =>
-				check.name === 'node-tests' && check.app?.slug === 'circleci-checks'
+				(check.name === 'node-tests' &&
+					check.app?.slug === 'circleci-checks') ||
+				(/^node-tests - [0-9a-f]{8}$/.test(check.name) &&
+					check.app?.slug === 'circleci-app')
 		)
 		.sort((a, b) => b.id - a.id)[0];
 	if (workflow) {

@@ -57,6 +57,50 @@ describe('CircleCI deployment requirements', () => {
 	});
 
 	it.each([
+		{ status: 'completed', conclusion: 'success', expected: 'success' },
+		{ status: 'in_progress', conclusion: null, expected: 'pending' },
+		{ status: 'completed', conclusion: 'failure', expected: 'failure' }
+	])('recognizes GitHub App workflow checks: $expected', ({
+		status,
+		conclusion,
+		expected
+	}) => {
+		expect(
+			circleCIState({
+				statuses: [],
+				checkRuns: [
+					{
+						...workflow(),
+						name: 'node-tests - a1b2c3d4',
+						app: { slug: 'circleci-app' },
+						status,
+						conclusion
+					}
+				]
+			})
+		).toBe(expected);
+	});
+
+	it.each([
+		{ name: 'other-workflow - a1b2c3d4', slug: 'circleci-app' },
+		{ name: 'node-tests-extra - a1b2c3d4', slug: 'circleci-app' },
+		{ name: 'node-tests - a1b2c3d', slug: 'circleci-app' },
+		{ name: 'node-tests - a1b2c3d45', slug: 'circleci-app' },
+		{ name: 'node-tests - not-an-id', slug: 'circleci-app' },
+		{ name: 'node-tests - a1b2c3d4', slug: 'other-app' }
+	])('ignores unrelated or malformed GitHub App checks: $name ($slug)', ({
+		name,
+		slug
+	}) => {
+		expect(
+			circleCIState({
+				statuses: [],
+				checkRuns: [{ ...workflow(), name, app: { slug } }]
+			})
+		).toBe('pending');
+	});
+
+	it.each([
 		'failure',
 		'cancelled',
 		'timed_out',
@@ -72,13 +116,26 @@ describe('CircleCI deployment requirements', () => {
 		).toBe('failure');
 	});
 
-	it('waits for the newest workflow attempt even when older results passed', () => {
+	it.each([
+		{ name: 'node-tests', app: { slug: 'circleci-checks' } },
+		{ name: 'node-tests - a1b2c3d4', app: { slug: 'circleci-app' } }
+	])('waits for the newest $name attempt even when older results passed', ({
+		name,
+		app
+	}) => {
 		expect(
 			circleCIState({
 				statuses: passedJobs,
 				checkRuns: [
-					workflow(),
-					{ ...workflow(), id: 2, status: 'in_progress', conclusion: null }
+					{ ...workflow(), name, app },
+					{
+						...workflow(),
+						name,
+						app,
+						id: 2,
+						status: 'in_progress',
+						conclusion: null
+					}
 				]
 			})
 		).toBe('pending');
