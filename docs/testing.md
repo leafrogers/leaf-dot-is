@@ -98,11 +98,18 @@ The deployment wait step has a 25-minute timeout.
 To roll back this CI change, revert the CI commit.
 This also restores deployment without a test gate.
 
-## Next phases
+## Dependency upgrade phase
 
-Keep the complete suite passing between these separate phases:
+The package upgrade phase completed on 2026-11-15, with jsdom deferred to the Node upgrade.
+The updates include Express 5, Biome 2.6, TypeScript 7, Supabase CLI 3, and the current PostgreSQL pool and parsing packages.
 
-1. Upgrade outdated packages. Handle breaking changes in focused commits.
-2. Upgrade Node to v26 in local tooling, CI, and deployment.
+Validation passed: 116 application tests, type checks, lint, the browser build, 18 database checks, and five real database query tests.
+The disposable database integration SQL checks also passed. The dependency audit reported zero vulnerabilities.
+Supabase CLI 3 restored Leaf's retained local database and stopped successfully after verification.
 
-Resolve exact package versions and compatibility when each phase starts.
+## Next phase
+
+Upgrade Node to v26 in local tooling, CI, and deployment. Upgrade jsdom in the same phase.
+The current jsdom release requires Node `^22.22.2`, `^24.15.0`, or `>=26.0.0`, beyond this repository's Node 24.10 baseline.
+
+Keep the complete suite passing. Resolve exact versions and compatibility when the phase starts.
