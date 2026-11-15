@@ -52,7 +52,7 @@
     "@types/supertest": "^7.2.1",
     "@vitest/coverage-v8": "^5.1.0",
     "esbuild": "^0.28.2",
-    "jsdom": "^26.1.0",
+    "jsdom": "^31.0.1",
     "prismic-ts-codegen": "^0.1.31",
     "supabase": "3.1.0",
     "supertest": "^7.3.2",

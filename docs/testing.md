@@ -113,4 +113,14 @@ Local tooling, both CircleCI jobs, the deployment gate, and the Fly Docker image
 The package engine accepts this version and later Node 26 releases.
 With fnm installed, run `fnm install` and `fnm use` to select the version in `.node-version`.
 
-Upgrade jsdom next, then run the application suite, browser build, and real database checks on Node 26.
+The phase completed on 2026-11-15 with jsdom 31.0.1. No application or test changes were required.
+
+Validation on Node 26 passed:
+
+- A clean dependency install, lint, type checks, all 116 application tests, and the browser build.
+- All 18 database checks, five real database query tests, and the disposable integration SQL checks.
+- CircleCI configuration validation and a local production Docker build using Node 26.13.1.
+
+Statement coverage remains 96.11%; branch coverage remains 83.48%. The dependency audit reports zero vulnerabilities.
+Leaf's local database stopped with its data retained. Hosted CI and Fly deployment have not run for these local commits.
+To roll back the runtime migration, revert its commit. Revert the jsdom upgrade first because it requires the newer runtime baseline.
