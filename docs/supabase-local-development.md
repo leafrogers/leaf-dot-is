@@ -7,8 +7,10 @@ See the [migration workflow](supabase-migrations.md) for ownership and deploymen
 ## Start locally
 
 Install Node 24 and start Docker before these commands.
-The CLI is pinned to `2.117.0`, matching TGW.
+The CLI is pinned to `3.1.0`. TGW manages its CLI version separately.
 Supabase recommends a [pinned development dependency](https://supabase.com/docs/guides/local-development/cli/getting-started).
+Version 3 database commands target the local stack by default. Use `--remote` to select a hosted database.
+See the [version 3 migration guide](https://supabase.com/docs/guides/local-development/cli/migrating-to-v3).
 
 ```sh
 npm ci
@@ -44,7 +46,7 @@ Prismic still uses the existing development configuration.
 
 ## Reset and verify
 
-The reset command explicitly selects the local database. It replaces local data with synthetic examples.
+The reset command targets the local database by default. It replaces local data with synthetic examples.
 
 ```sh
 npm run db:reset

@@ -96,7 +96,7 @@ The current local setup does not authorize production changes.
 6. Compare local filenames with production history.
 7. Reject a push if any foreign marker is absent from production history.
 8. Review the SQL for every pending migration.
-9. Run `supabase db push --dry-run --linked` with the pinned CLI.
+9. Run `supabase db push --dry-run --remote` with the pinned CLI.
 10. Require the pending list to contain only the intended migrations owned by this repository.
 11. Apply those migrations from the owning repository.
 12. Verify production behavior and the recorded versions.

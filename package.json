@@ -17,8 +17,8 @@
     "test:watch": "npm run -s vitest -- --watch",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
-    "db:reset": "supabase db reset --local",
-    "db:test": "supabase test db --local",
+    "db:reset": "supabase db reset",
+    "db:test": "supabase test db",
     "db:test:integrations": "bash scripts/test-db-integrations.sh",
     "vitest": "TZ=UTC BASE_URL='' PERMALINK_BASE_URL='' PRISMIC_ACCESS_TOKEN='' PRISMIC_REPO_NAME='test' PRISMIC_TYPES_TOKEN='' PG_CONNECTION_STRING='' vitest"
   },
@@ -54,7 +54,7 @@
     "esbuild": "^0.28.2",
     "jsdom": "^26.1.0",
     "prismic-ts-codegen": "^0.1.31",
-    "supabase": "2.117.0",
+    "supabase": "3.1.0",
     "supertest": "^7.3.2",
     "typescript": "^7.0.2",
     "vitest": "^5.1.0"
