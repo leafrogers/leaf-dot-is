@@ -26,11 +26,12 @@ describe('CircleCI deployment requirements', () => {
 		{ statuses: [] },
 		{ statuses: passedJobs.slice(0, 1) },
 		{ statuses: [{ context: 'unrelated', state: 'success' }] }
-	])('waits when required job statuses are missing: $statuses', ({
-		statuses
-	}) => {
-		expect(circleCIState({ statuses, checkRuns: [] })).toBe('pending');
-	});
+	])(
+		'waits when required job statuses are missing: $statuses',
+		({ statuses }) => {
+			expect(circleCIState({ statuses, checkRuns: [] })).toBe('pending');
+		}
+	);
 
 	it('waits when a required job is pending', () => {
 		expect(
@@ -41,14 +42,17 @@ describe('CircleCI deployment requirements', () => {
 		).toBe('pending');
 	});
 
-	it.each([
-		'failure',
-		'error'
-	])('rejects a required job reporting %s', (state) => {
-		expect(
-			circleCIState({ statuses: [{ ...passedJobs[0], state }], checkRuns: [] })
-		).toBe('failure');
-	});
+	it.each(['failure', 'error'])(
+		'rejects a required job reporting %s',
+		(state) => {
+			expect(
+				circleCIState({
+					statuses: [{ ...passedJobs[0], state }],
+					checkRuns: []
+				})
+			).toBe('failure');
+		}
+	);
 
 	it('accepts a successful CircleCI workflow check when job statuses are disabled', () => {
 		expect(circleCIState({ statuses: [], checkRuns: [workflow()] })).toBe(
@@ -60,26 +64,25 @@ describe('CircleCI deployment requirements', () => {
 		{ status: 'completed', conclusion: 'success', expected: 'success' },
 		{ status: 'in_progress', conclusion: null, expected: 'pending' },
 		{ status: 'completed', conclusion: 'failure', expected: 'failure' }
-	])('recognizes GitHub App workflow checks: $expected', ({
-		status,
-		conclusion,
-		expected
-	}) => {
-		expect(
-			circleCIState({
-				statuses: [],
-				checkRuns: [
-					{
-						...workflow(),
-						name: 'node-tests - a1b2c3d4',
-						app: { slug: 'circleci-app' },
-						status,
-						conclusion
-					}
-				]
-			})
-		).toBe(expected);
-	});
+	])(
+		'recognizes GitHub App workflow checks: $expected',
+		({ status, conclusion, expected }) => {
+			expect(
+				circleCIState({
+					statuses: [],
+					checkRuns: [
+						{
+							...workflow(),
+							name: 'node-tests - a1b2c3d4',
+							app: { slug: 'circleci-app' },
+							status,
+							conclusion
+						}
+					]
+				})
+			).toBe(expected);
+		}
+	);
 
 	it.each([
 		{ name: 'other-workflow - a1b2c3d4', slug: 'circleci-app' },
@@ -88,58 +91,54 @@ describe('CircleCI deployment requirements', () => {
 		{ name: 'node-tests - a1b2c3d45', slug: 'circleci-app' },
 		{ name: 'node-tests - not-an-id', slug: 'circleci-app' },
 		{ name: 'node-tests - a1b2c3d4', slug: 'other-app' }
-	])('ignores unrelated or malformed GitHub App checks: $name ($slug)', ({
-		name,
-		slug
-	}) => {
-		expect(
-			circleCIState({
-				statuses: [],
-				checkRuns: [{ ...workflow(), name, app: { slug } }]
-			})
-		).toBe('pending');
-	});
+	])(
+		'ignores unrelated or malformed GitHub App checks: $name ($slug)',
+		({ name, slug }) => {
+			expect(
+				circleCIState({
+					statuses: [],
+					checkRuns: [{ ...workflow(), name, app: { slug } }]
+				})
+			).toBe('pending');
+		}
+	);
 
-	it.each([
-		'failure',
-		'cancelled',
-		'timed_out',
-		'neutral',
-		'skipped',
-		null
-	])('rejects a completed workflow with conclusion %s', (conclusion) => {
-		expect(
-			circleCIState({
-				statuses: passedJobs,
-				checkRuns: [{ ...workflow(), conclusion }]
-			})
-		).toBe('failure');
-	});
+	it.each(['failure', 'cancelled', 'timed_out', 'neutral', 'skipped', null])(
+		'rejects a completed workflow with conclusion %s',
+		(conclusion) => {
+			expect(
+				circleCIState({
+					statuses: passedJobs,
+					checkRuns: [{ ...workflow(), conclusion }]
+				})
+			).toBe('failure');
+		}
+	);
 
 	it.each([
 		{ name: 'node-tests', app: { slug: 'circleci-checks' } },
 		{ name: 'node-tests - a1b2c3d4', app: { slug: 'circleci-app' } }
-	])('waits for the newest $name attempt even when older results passed', ({
-		name,
-		app
-	}) => {
-		expect(
-			circleCIState({
-				statuses: passedJobs,
-				checkRuns: [
-					{ ...workflow(), name, app },
-					{
-						...workflow(),
-						name,
-						app,
-						id: 2,
-						status: 'in_progress',
-						conclusion: null
-					}
-				]
-			})
-		).toBe('pending');
-	});
+	])(
+		'waits for the newest $name attempt even when older results passed',
+		({ name, app }) => {
+			expect(
+				circleCIState({
+					statuses: passedJobs,
+					checkRuns: [
+						{ ...workflow(), name, app },
+						{
+							...workflow(),
+							name,
+							app,
+							id: 2,
+							status: 'in_progress',
+							conclusion: null
+						}
+					]
+				})
+			).toBe('pending');
+		}
+	);
 
 	it('ignores successful checks from other apps or workflows', () => {
 		expect(

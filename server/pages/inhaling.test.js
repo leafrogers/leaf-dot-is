@@ -95,26 +95,26 @@ describe('GET /inhaling', () => {
 		{ minutes: 59, count: 1 },
 		{ minutes: 60, count: 2 },
 		{ minutes: 61, count: 2 }
-	])('renders $count groups for events $minutes minutes apart with a 60 minute threshold', async ({
-		minutes,
-		count
-	}) => {
-		events = [
-			event(),
-			event({
-				title: 'Second track',
-				timestamp: new Date(Date.UTC(2026, 0, 3, 12, -minutes))
-			})
-		];
-		const { text } = await request.get('/inhaling').expect(200);
-		expect(groups(text)).toHaveLength(count);
-		const contents = groupContents(text).join(' ');
-		expect(contents).toContain('First track');
-		expect(contents).toContain('Second track');
-		expect(contents.indexOf('First track')).toBeLessThan(
-			contents.indexOf('Second track')
-		);
-	});
+	])(
+		'renders $count groups for events $minutes minutes apart with a 60 minute threshold',
+		async ({ minutes, count }) => {
+			events = [
+				event(),
+				event({
+					title: 'Second track',
+					timestamp: new Date(Date.UTC(2026, 0, 3, 12, -minutes))
+				})
+			];
+			const { text } = await request.get('/inhaling').expect(200);
+			expect(groups(text)).toHaveLength(count);
+			const contents = groupContents(text).join(' ');
+			expect(contents).toContain('First track');
+			expect(contents).toContain('Second track');
+			expect(contents.indexOf('First track')).toBeLessThan(
+				contents.indexOf('Second track')
+			);
+		}
+	);
 
 	it('groups by the gap from the previous event rather than the start of the group', async () => {
 		events = [
@@ -239,18 +239,18 @@ describe('GET /inhaling/:eventType', () => {
 });
 
 describe('Inhaling dependency failures', () => {
-	it.each([
-		'events',
-		'event types'
-	])('renders an uncached public error when fetching %s fails', async (dependency) => {
-		config.IS_PRODUCTION = true;
-		if (dependency === 'event types') {
-			query.mockResolvedValueOnce(result([]));
+	it.each(['events', 'event types'])(
+		'renders an uncached public error when fetching %s fails',
+		async (dependency) => {
+			config.IS_PRODUCTION = true;
+			if (dependency === 'event types') {
+				query.mockResolvedValueOnce(result([]));
+			}
+			query.mockRejectedValueOnce(new Error('Private database details'));
+			const { text, headers } = await request.get('/inhaling').expect(500);
+			expect(text).toContain('Something went wrong.');
+			expect(text).not.toContain('Private database details');
+			expect(headers['cache-control']).toContain('no-store');
 		}
-		query.mockRejectedValueOnce(new Error('Private database details'));
-		const { text, headers } = await request.get('/inhaling').expect(500);
-		expect(text).toContain('Something went wrong.');
-		expect(text).not.toContain('Private database details');
-		expect(headers['cache-control']).toContain('no-store');
-	});
+	);
 });

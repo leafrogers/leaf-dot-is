@@ -65,6 +65,6 @@ declare module '@prismicio/client' {
 		): prismic.Client<AllDocumentTypes>;
 	}
 	namespace Content {
-		export type { WeeknotesDocumentData, WeeknotesDocument, AllDocumentTypes };
+		export type { AllDocumentTypes, WeeknotesDocument, WeeknotesDocumentData };
 	}
 }

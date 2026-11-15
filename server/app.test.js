@@ -117,17 +117,17 @@ describe(`The ${config.APP_FRIENDLY_NAME} app`, () => {
 		it.each([
 			{ production: true, tags: ['live'] },
 			{ production: false, tags: ['draft', 'live'] }
-		])('requests the appropriate tags when production=$production', async ({
-			production,
-			tags
-		}) => {
-			config.IS_PRODUCTION = production;
-			await request.get('/writing/weeknotes').expect(200);
-			expect(getWeeknotes).toHaveBeenLastCalledWith('weeknotes', {
-				predicates: [filter.any('document.tags', tags)],
-				orderings: { field: 'my.weeknotes.date', direction: 'desc' }
-			});
-		});
+		])(
+			'requests the appropriate tags when production=$production',
+			async ({ production, tags }) => {
+				config.IS_PRODUCTION = production;
+				await request.get('/writing/weeknotes').expect(200);
+				expect(getWeeknotes).toHaveBeenLastCalledWith('weeknotes', {
+					predicates: [filter.any('document.tags', tags)],
+					orderings: { field: 'my.weeknotes.date', direction: 'desc' }
+				});
+			}
+		);
 
 		it('renders an empty list when there are no weeknotes', async () => {
 			getWeeknotes.mockResolvedValueOnce([]);

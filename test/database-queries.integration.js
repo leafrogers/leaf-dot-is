@@ -73,17 +73,17 @@ it('includes older events for the chosen category while excluding future and oth
 	expect(await fetchMeEvents("unknown' OR '1'='1")).toEqual([]);
 });
 
-it.each([
-	undefined,
-	'listened'
-])('caps category %s at the latest 200 events', async (category) => {
-	await client.query(`INSERT INTO lis.me_events (type_id, timestamp, title)
+it.each([undefined, 'listened'])(
+	'caps category %s at the latest 200 events',
+	async (category) => {
+		await client.query(`INSERT INTO lis.me_events (type_id, timestamp, title)
 		SELECT 2, now() - n * interval '1 minute', 'Track ' || n FROM generate_series(1, 201) n`);
-	const events = await fetchMeEvents(category);
-	expect(events).toHaveLength(200);
-	expect(events[0].title).toBe('Track 1');
-	expect(events[199].title).toBe('Track 200');
-});
+		const events = await fetchMeEvents(category);
+		expect(events).toHaveLength(200);
+		expect(events[0].title).toBe('Track 1');
+		expect(events[199].title).toBe('Track 200');
+	}
+);
 
 it('returns categories alphabetically with their route identifiers', async () => {
 	expect(await fetchMeEventTypes()).toEqual([
