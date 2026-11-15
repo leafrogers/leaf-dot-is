@@ -19,7 +19,9 @@ TBC
 
 This app requires the following to be installed in order to run locally.
 
-- [Node](https://www.nodejs.org) (version 18.x.x)
+- [Node](https://www.nodejs.org) 26.13.1 or a later Node 26 release (see `.node-version`).
+
+With fnm installed, run `fnm install` and `fnm use` in this directory.
 
 ## :running: Running locally
 

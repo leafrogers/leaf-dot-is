@@ -6,7 +6,7 @@ See the [migration workflow](supabase-migrations.md) for ownership and deploymen
 
 ## Start locally
 
-Install Node 24 and start Docker before these commands.
+Install the Node 26 version in `.node-version` and start Docker before these commands.
 The CLI is pinned to `3.1.0`. TGW manages its CLI version separately.
 Supabase recommends a [pinned development dependency](https://supabase.com/docs/guides/local-development/cli/getting-started).
 Version 3 database commands target the local stack by default. Use `--remote` to select a hosted database.

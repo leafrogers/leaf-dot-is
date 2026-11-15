@@ -107,9 +107,10 @@ Validation passed: 116 application tests, type checks, lint, the browser build, 
 The disposable database integration SQL checks also passed. The dependency audit reported zero vulnerabilities.
 Supabase CLI 3 restored Leaf's retained local database and stopped successfully after verification.
 
-## Next phase
+## Node upgrade phase
 
-Upgrade Node to v26 in local tooling, CI, and deployment. Upgrade jsdom in the same phase.
-The current jsdom release requires Node `^22.22.2`, `^24.15.0`, or `>=26.0.0`, beyond this repository's Node 24.10 baseline.
+Local tooling, both CircleCI jobs, the deployment gate, and the Fly Docker image use Node 26.13.1.
+The package engine accepts this version and later Node 26 releases.
+With fnm installed, run `fnm install` and `fnm use` to select the version in `.node-version`.
 
-Keep the complete suite passing. Resolve exact versions and compatibility when the phase starts.
+Upgrade jsdom next, then run the application suite, browser build, and real database checks on Node 26.

@@ -5,7 +5,7 @@ jobs:
   test:
     executor:
       name: node/default
-      tag: '24.10'
+      tag: '26.13.1'
     steps:
       - checkout
       - node/install-packages
@@ -18,7 +18,7 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: '24.10.0'
+          node-version: '26.13.1'
       - node/install-packages
       - run:
           name: Start local Supabase
