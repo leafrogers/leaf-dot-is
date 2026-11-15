@@ -219,7 +219,7 @@ const determineParentTitles = (groups) => {
 };
 
 /**
- * @param {ExpressRequest} req
+ * @param {import('express').Request<{ eventType?: string }>} req
  * @param {ExpressResponse} res
  * @param {NextFunction} next
  */

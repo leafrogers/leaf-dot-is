@@ -13,7 +13,7 @@ import { fetchWeeknote } from '../../services.js';
 const commonCss = importFile('server/pages/common.css');
 
 /**
- * @param {ExpressRequest} req
+ * @param {import('express').Request<{ uid: string }>} req
  * @param {ExpressResponse} res
  * @param {NextFunction} next
  */
