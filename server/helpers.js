@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { asHTML } from '@prismicio/helpers';
+import { asHTML } from '@prismicio/client';
 import prettier from 'prettier';
 import bootstrapper from '../client/bootstrapper.js';
 import config from './config.js';
