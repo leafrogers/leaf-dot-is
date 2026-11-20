@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import { asHTML } from '@prismicio/client';
-import prettier from 'prettier';
 import bootstrapper from '../client/bootstrapper.js';
 import config from './config.js';
 
@@ -106,21 +105,18 @@ export const toHtmlDocString = async ({
 		<link rel="alternate" type="application/rss+xml" href="/writing/weeknotes.rss" title="Weeknotes feed">
 		<title>${title} — leaf.is</title>${maybeStyles}${maybeEnhancer}
 	</head>
-	${await prettier.format(
-		`<body id="top">
-			<a href="#main-content" class="visually-hidden focusable">Skip to main content</a>
-			<div class="container">
-				${toHtmlNavString(navLevels)}
-				<header>
+	<body id="top">
+		<a href="#main-content" class="visually-hidden focusable">Skip to main content</a>
+		<div class="container">
+			${toHtmlNavString(navLevels)}
+			<header>
 				${header || `<h1>${title}</h1>`}
-				</header>
-				<main id="main-content">
-					${body}
-				</main>
-			</div>
-		</body>`,
-		{ parser: 'html' }
-	)}
+			</header>
+			<main id="main-content">
+				${body}
+			</main>
+		</div>
+	</body>
 </html>`;
 };
 

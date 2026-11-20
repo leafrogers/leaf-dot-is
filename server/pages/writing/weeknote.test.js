@@ -51,6 +51,30 @@ it('uses the publication date when a weeknote has no custom date', async () => {
 	);
 });
 
+it('preserves rich text markup, escaped text and preformatted whitespace', async () => {
+	const doc = weeknote();
+	const code = 'const title = "Fish & chips";\n  return title;\n\n';
+	doc.data.body = [
+		{
+			type: 'paragraph',
+			text: 'Fish & chips <today>',
+			spans: [{ type: 'strong', start: 0, end: 4 }]
+		},
+		{ type: 'preformatted', text: code, spans: [] }
+	];
+	getByUID.mockResolvedValueOnce(doc);
+	const { text } = await request
+		.get('/writing/weeknotes/a-quiet-week')
+		.expect(200);
+	const page = parse(text);
+	expect(page.querySelector('main p strong')?.textContent).toBe('Fish');
+	expect(page.querySelector('main p')?.textContent).toBe(
+		'Fish & chips <today>'
+	);
+	expect(page.querySelector('main today')).toBeNull();
+	expect(page.querySelector('pre')?.textContent).toBe(code);
+});
+
 it('connects heading and body footnote references to their notes and return links', async () => {
 	const doc = weeknote();
 	doc.data.title = [{ type: 'heading1', text: 'A quiet week[1]', spans: [] }];
