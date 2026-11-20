@@ -1,0 +1,8 @@
+---
+name: application
+discover: npm run --silent vitest -- list --filesOnly
+run: npm run --silent vitest -- run --coverage --reporter=default --reporter=junit --outputFile="<< outputs.junit >>" --bail 0 << test.atoms >>
+outputs:
+  junit: test-results/application.xml
+options:
+  store-test-results: true

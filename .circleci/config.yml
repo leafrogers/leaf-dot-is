@@ -1,6 +1,19 @@
 version: 2.1
 orbs:
   node: circleci/node@7.2.1
+commands:
+  install-dependencies:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-npm-26-{{ arch }}-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install locked dependencies
+          command: npm ci --prefer-offline --no-audit --no-fund
+      - save_cache:
+          key: v1-npm-26-{{ arch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
 jobs:
   test:
     executor:
@@ -8,9 +21,23 @@ jobs:
       tag: '26.13.1'
     steps:
       - checkout
-      - node/install-packages
+      - install-dependencies
       - run:
-          command: npm test
+          name: Lint syntax, formatting, and types
+          command: npm run lint
+      - run:
+          name: Run application tests with coverage
+          command: circleci testsuite run application
+      - store_artifacts:
+          path: coverage
+          destination: coverage
+      - run:
+          name: Build browser JavaScript
+          command: npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - public/js/init.js
   database-test:
     machine:
       image: ubuntu-2404:current
@@ -19,7 +46,7 @@ jobs:
       - checkout
       - node/install:
           node-version: '26.13.1'
-      - node/install-packages
+      - install-dependencies
       - run:
           name: Start local Supabase
           command: npm run db:start
@@ -36,8 +63,55 @@ jobs:
           name: Stop local Supabase
           command: npm run db:stop
           when: always
+  deploy:
+    executor:
+      name: node/default
+      tag: '26.13.1'
+    environment:
+      FLYCTL_VERSION: '0.5.10'
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Skip superseded main commits
+          command: |
+            main_sha=$(git ls-remote --exit-code origin refs/heads/main | cut -f1)
+            if [ "$CIRCLE_SHA1" != "$main_sha" ]; then
+              echo 'Main has moved; skipping this deployment.'
+              circleci-agent step halt
+            fi
+      - run:
+          name: Install Doppler CLI
+          command: |
+            mkdir -p "$HOME/.local/bin"
+            curl --fail --silent --show-error --location --retry 3 https://cli.doppler.com/install.sh --output /tmp/install-doppler.sh
+            sh /tmp/install-doppler.sh --install-path "$HOME/.local/bin" --no-package-manager
+      - run:
+          name: Install pinned Fly CLI
+          command: |
+            curl --fail --silent --show-error --location https://fly.io/install.sh --output /tmp/install-flyctl.sh
+            sh /tmp/install-flyctl.sh "$FLYCTL_VERSION" --non-interactive
+      - run:
+          name: Deploy app to Fly
+          command: |
+            : "${DOPPLER_TOKEN:?Set DOPPLER_TOKEN in the fly-production context}"
+            test -s public/js/init.js
+            "$HOME/.local/bin/doppler" run --no-fallback --only-secrets FLY_API_TOKEN,FLY_APP_NAME -- sh -eu -c '
+              : "${FLY_API_TOKEN:?Set FLY_API_TOKEN in the Doppler deployment config}"
+              : "${FLY_APP_NAME:?Set FLY_APP_NAME in the Doppler deployment config}"
+              unset DOPPLER_TOKEN
+              exec "$HOME/.fly/bin/flyctl" deploy --app "$FLY_APP_NAME" --remote-only
+            '
 workflows:
   node-tests:
     jobs:
       - test
       - database-test
+      - deploy:
+          requires:
+            - test
+            - database-test
+          context: fly-production
+          serial-group: << pipeline.project.slug >>/fly-production
+          filters: pipeline.git.branch == "main"
