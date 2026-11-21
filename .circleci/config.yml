@@ -74,14 +74,6 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Skip superseded main commits
-          command: |
-            main_sha=$(git ls-remote --exit-code origin refs/heads/main | cut -f1)
-            if [ "$CIRCLE_SHA1" != "$main_sha" ]; then
-              echo 'Main has moved; skipping this deployment.'
-              circleci-agent step halt
-            fi
-      - run:
           name: Install Doppler CLI
           command: |
             mkdir -p "$HOME/.local/bin"
@@ -108,10 +100,10 @@ workflows:
     jobs:
       - test
       - database-test
+      # Temporarily deploy every branch to verify deployment without a PR.
       - deploy:
           requires:
             - test
             - database-test
           context: fly-production
           serial-group: << pipeline.project.slug >>/fly-production
-          filters: pipeline.git.branch == "main"
