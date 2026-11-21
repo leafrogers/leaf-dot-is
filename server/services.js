@@ -113,6 +113,7 @@ export const fetchMeEvents = async (eventType) => {
 			and timestamp <= current_timestamp
 			${eventType ? '' : `and timestamp >= current_timestamp at time zone 'UTC' - interval '6 days'`}
 			${eventType ? 'where type_short = $1' : ''}
+			and verb = 'inhaling'
 			order by timestamp desc
 			limit 200
 		`,
@@ -134,6 +135,7 @@ export const fetchMeEventTypes = async () => {
 		const result = await pool.query(`
 			select type,type_short as "typeShort"
 			from lis.me_event_types
+			where verb = 'inhaling'
 			order by type asc
 		`);
 		meEventTypes = result.rows;

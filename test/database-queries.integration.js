@@ -17,8 +17,10 @@ beforeAll(async () => {
 	client = await pool.connect();
 	await client.query('BEGIN');
 	await client.query("SET LOCAL TIME ZONE 'UTC'");
-	await client.query(`INSERT INTO lis.me_event_types (id, type, type_short, grouping_threshold)
-		VALUES (1, 'Watching', 'watched', 90), (2, 'Listening', 'listened', 60)`);
+	await client.query(`INSERT INTO lis.me_event_types (id, type, type_short, grouping_threshold, verb)
+		VALUES (1, 'Watching', 'watched', 90, 'inhaling'),
+		(2, 'Listening', 'listened', 60, 'inhaling'),
+		(3, 'Exercising', 'exercised', 60, 'living')`);
 	// Keep fixture timestamps and application queries on one transaction clock.
 	vi.spyOn(Pool.prototype, 'query').mockImplementation((sql, values) =>
 		client.query(sql, values)
@@ -42,6 +44,7 @@ it('returns recent events newest first with joined names and camel-case fields',
 	await client.query(`INSERT INTO lis.me_events (type_id, timestamp, title, title_parent) VALUES
 		(1, now() - interval '2 hours', 'Earlier film', 'Series'),
 		(2, now() - interval '1 hour', 'Latest track', NULL),
+		(3, now() - interval '30 minutes', 'Experimental exercise', NULL),
 		(1, now() + interval '1 second', 'Future film', NULL),
 		(2, now() - interval '6 days', 'Boundary track', NULL),
 		(2, now() - interval '6 days 1 second', 'Old track', NULL)`);
@@ -85,7 +88,13 @@ it.each([undefined, 'listened'])(
 	}
 );
 
-it('returns categories alphabetically with their route identifiers', async () => {
+it('excludes non-inhaling events when their category is requested directly', async () => {
+	await client.query(`INSERT INTO lis.me_events (type_id, timestamp, title)
+		VALUES (3, now() - interval '1 hour', 'Experimental exercise')`);
+	expect(await fetchMeEvents('exercised')).toEqual([]);
+});
+
+it('returns only inhaling categories and sorts them alphabetically with their route identifiers', async () => {
 	expect(await fetchMeEventTypes()).toEqual([
 		{ type: 'Listening', typeShort: 'listened' },
 		{ type: 'Watching', typeShort: 'watched' }

@@ -27,6 +27,7 @@ describe('Inhaling database queries', () => {
 		);
 		expect(sql).toMatch(/order by timestamp desc\s+limit 200/);
 		expect(sql).not.toContain('where type_short');
+		expect(sql).toContain("and verb = 'inhaling'");
 	});
 
 	it.each(['listened', "unknown' OR '1'='1"])(
@@ -41,14 +42,17 @@ describe('Inhaling database queries', () => {
 			expect(sql).not.toContain(category);
 			expect(sql).not.toContain("interval '6 days'");
 			expect(sql).toContain('timestamp <= current_timestamp');
+			expect(sql).toContain("and verb = 'inhaling'");
 			expect(sql).toMatch(/order by timestamp desc\s+limit 200/);
 		}
 	);
 
-	it('requests categories in alphabetical order', async () => {
+	it('requests only inhaling categories and sorts them alphabetically', async () => {
 		await expect(fetchMeEventTypes()).resolves.toEqual([]);
 		expect(query).toHaveBeenCalledWith(
-			expect.stringMatching(/from lis.me_event_types\s+order by type asc/)
+			expect.stringMatching(
+				/from lis.me_event_types\s+where verb = 'inhaling'\s+order by type asc/
+			)
 		);
 	});
 });
